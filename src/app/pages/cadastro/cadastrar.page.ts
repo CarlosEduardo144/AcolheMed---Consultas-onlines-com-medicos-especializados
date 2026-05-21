@@ -1,0 +1,162 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { NavController, ToastController } from '@ionic/angular';
+import {
+  IonContent,
+  IonButton,
+  IonInput,
+  IonText,
+} from '@ionic/angular/standalone';
+import { UsuarioModel } from 'src/app/model/usuario.model';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { MedicoModel } from 'src/app/model/medico.model';
+import { PacienteModel } from 'src/app/model/paciente.model';
+import { LoginService } from 'src/app/services/login.service';
+
+type UserType = 'paciente' | 'medico';
+
+// Custom validator: confirmarSenha must match senha
+function passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+  const senha = group.get('senha')?.value;
+  const confirmar = group.get('confirmarSenha')?.value;
+  return senha === confirmar ? null : { passwordMismatch: true };
+}
+
+@Component({
+  selector: 'app-cadastrar',
+  templateUrl: './cadastrar.page.html',
+  styleUrls: ['./cadastrar.page.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    IonContent,
+    IonButton,
+    IonInput,
+    IonText,
+  ],
+})
+export class CadastrarPage {
+  usuario: UserType = 'paciente';
+  cadastrarForm: FormGroup;
+  userType: any;
+
+  constructor(private fb: FormBuilder, private loginService: LoginService,private navController: NavController, private usuarioService: UsuarioService, private toastController: ToastController) {
+    this.cadastrarForm = this.fb.group(
+      {
+        nome: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        telefone: ['', [Validators.required]],
+        cpf: ['', [Validators.required]],
+        dataNascimento: ['', [Validators.required]],
+        crm: [''],
+        senha: ['', [Validators.required, Validators.minLength(4)]],
+        confirmarSenha: ['', [Validators.required]],
+      },
+      { validators: passwordMatchValidator }
+    );
+  } 
+
+  setUserType(type: UserType) {
+    this.userType = type;
+    const crmControl = this.cadastrarForm.get('crm');
+    if (type === 'medico') {
+      crmControl?.setValidators([Validators.required]);
+    } else {
+      crmControl?.clearValidators();
+      crmControl?.setValue('');
+    }
+    crmControl?.updateValueAndValidity();
+  }
+
+  goBack() {
+    this.navController.back();
+  }
+
+  salvar() {
+    if (this.cadastrarForm.valid) {
+      const values = this.cadastrarForm.value;
+      console.log('Cadastro:', { userType: this.userType, ...values });
+
+      let usuario: UsuarioModel;
+      if (this.userType === 'medico') {
+
+        let medico = new MedicoModel();
+
+
+        medico.crm = this.cadastrarForm.value.crm;
+
+        usuario = medico;
+
+      } else {
+
+        usuario = new PacienteModel();
+
+      }
+
+      usuario.tipoUsuario = this.userType;
+      usuario.nome = this.cadastrarForm.value.nome;
+      usuario.email = this.cadastrarForm.value.email;
+      usuario.telefone = this.cadastrarForm.value.telefone;
+      usuario.cpf = this.cadastrarForm.value.cpf;
+      usuario.dataNascimento = this.cadastrarForm.value.dataNascimento;
+      usuario.senha = this.cadastrarForm.value.senha;
+
+      this.usuarioService.salvar(usuario);
+      this.loginService.setUsuario(usuario);
+
+      this.exibirMensagem('Usuário cadastrado com sucesso!!!');
+      this.navController.navigateBack('/login');
+
+    } else {
+      this.cadastrarForm.markAllAsTouched();
+      this.exibirMensagem('erro ao cadastrar usuário');
+    }
+
+  }
+
+
+  async exibirMensagem(texto: string) {
+    const toast = await this.toastController.create({
+      message: texto,
+      duration: 1500
+    });
+    toast.present()
+  }
+
+  get nome() {
+    return this.cadastrarForm.get('nome');
+  }
+
+  get email() {
+    return this.cadastrarForm.get('email');
+  }
+
+  get telefone() {
+    return this.cadastrarForm.get('telefone');
+  }
+
+  get cpf() {
+    return this.cadastrarForm.get('cpf');
+  }
+
+  get dataNascimento() {
+    return this.cadastrarForm.get('dataNascimento');
+  }
+
+  get crm() {
+    return this.cadastrarForm.get('crm');
+  }
+
+  get senha() {
+    return this.cadastrarForm.get('senha');
+  }
+
+  get confirmarSenha() {
+    return this.cadastrarForm.get('confirmarSenha');
+  }
+
+}

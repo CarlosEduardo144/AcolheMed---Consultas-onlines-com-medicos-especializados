@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alterar Dados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, Roboto, Helvetica, sans-serif;
+      background: #FAFAFA;
+      color: #141414;
+      max-width: 428px;
+      margin: 0 auto;
+      min-height: 100vh;
+      overflow-y: auto;
+      padding-bottom: 40px;
+    }
+
+    /* HEADER */
+    .header {
+      display: flex;
+      padding: 16px 16px 8px 16px;
+      justify-content: space-between;
+      align-items: center;
+      background: #FAFAFA;
+    }
+
+    .header-back {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      background: none;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      flex: 1;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 23px;
+      color: #141414;
+      padding-right: 48px;
+    }
+
+    /* PROFILE SECTION */
+    .profile-section {
+      display: flex;
+      padding: 16px;
+      align-items: flex-start;
+    }
+
+    .profile-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 128px;
+      height: 128px;
+    }
+
+    .avatar-img {
+      width: 128px;
+      height: 128px;
+      border-radius: 64px;
+      object-fit: cover;
+      display: block;
+      background: #E0E0E0;
+    }
+
+    .avatar-edit-btn {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 32px;
+      height: 32px;
+      background: #141414;
+      border-radius: 50%;
+      border: 2px solid #FAFAFA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .profile-name {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 28px;
+      color: #141414;
+      text-align: center;
+    }
+
+    .profile-email {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+      color: #737373;
+      text-align: center;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      padding: 16px 16px 8px 16px;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 23px;
+      color: #141414;
+    }
+
+    /* FIELD ROW */
+    .field-row {
+      display: flex;
+      min-height: 72px;
+      padding: 8px 16px;
+      justify-content: space-between;
+      align-items: center;
+      background: #FAFAFA;
+      gap: 12px;
+    }
+
+    .field-row+.field-row {
+      border-top: 1px solid #EDEDED;
+    }
+
+    .field-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .field-label-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      color: #141414;
+      white-space: nowrap;
+    }
+
+    .field-input {
+      font-family: 'Plus Jakarta Sans', -apple-system, Roboto, Helvetica, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 21px;
+      color: #141414;
+      background: #F0F0F0;
+      border: 1.5px solid #E0E0E0;
+      border-radius: 8px;
+      padding: 5px 10px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.18s, background 0.18s;
+      min-width: 0;
+    }
+
+    .field-input::placeholder {
+      color: #B0B0B0;
+    }
+
+    .field-input:focus {
+      border-color: #141414;
+      background: #fff;
+    }
+
+    .field-input-file-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .field-input-file-label {
+      font-family: 'Plus Jakarta Sans', -apple-system, Roboto, Helvetica, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 21px;
+      color: #141414;
+      background: #F0F0F0;
+      border: 1.5px solid #E0E0E0;
+      border-radius: 8px;
+      padding: 5px 10px;
+      flex: 1;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: border-color 0.18s;
+    }
+
+    .field-input-file-label:hover {
+      border-color: #141414;
+    }
+
+    /* Payment row */
+    .payment-row {
+      display: flex;
+      min-height: 72px;
+      padding: 8px 16px;
+      justify-content: space-between;
+      align-items: center;
+      background: #FAFAFA;
+      border-top: 1px solid #EDEDED;
+    }
+
+    .payment-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 24px;
+      border: 1px solid #C4C4C4;
+      border-radius: 4px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .payment-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .payment-label {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      color: #141414;
+    }
+
+    .payment-input {
+      font-family: 'Plus Jakarta Sans', -apple-system, Roboto, Helvetica, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 21px;
+      color: #141414;
+      background: #F0F0F0;
+      border: 1.5px solid #E0E0E0;
+      border-radius: 8px;
+      padding: 5px 10px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.18s, background 0.18s;
+    }
+
+    .payment-input:focus {
+      border-color: #141414;
+      background: #fff;
+    }
+
+    .arrow-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <button class="header-back" onclick="history.back()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M21 12C21 12.4142 20.6642 12.75 20.25 12.75H5.56031L11.0306 18.2194C11.3237 18.5124 11.3237 18.9876 11.0306 19.2806C10.7376 19.5737 10.2624 19.5737 9.96937 19.2806L3.21937 12.5306C3.07854 12.3899 2.99941 12.1991 2.99941 12C2.99941 11.8009 3.07854 11.6101 3.21937 11.4694L9.96937 4.71938C10.2624 4.42632 10.7376 4.42632 11.0306 4.71938C11.3237 5.01243 11.3237 5.48757 11.0306 5.78062L5.56031 11.25H20.25C20.6642 11.25 21 11.5858 21 12Z"
+          fill="#141414" />
+      </svg>
+    </button>
+    <div class="header-title">Alterar dados</div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="profile-section">
+    <div class="profile-inner">
+      <div class="avatar-wrap">
+        <div class="avatar-container">
+          <svg width="145" height="152" viewBox="0 0 145 152" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M35.3438 108.3C40.4792 104.183 46.2188 100.937 52.5625 98.5625C58.9063 96.1875 65.5521 95 72.5 95C79.448 95 86.0938 96.1875 92.4375 98.5625C98.7813 100.937 104.521 104.183 109.656 108.3C113.181 103.972 115.925 99.0638 117.888 93.575C119.852 88.0861 120.833 82.2277 120.833 76C120.833 61.9611 116.126 50.0069 106.711 40.1375C97.2961 30.268 85.8924 25.3333 72.5 25.3333C59.1077 25.3333 47.704 30.268 38.2891 40.1375C28.8742 50.0069 24.1667 61.9611 24.1667 76C24.1667 82.2277 25.1485 88.0861 27.112 93.575C29.0756 99.0638 31.8195 103.972 35.3438 108.3ZM72.5 82.3333C66.5591 82.3333 61.5495 80.1958 57.4714 75.9208C53.3933 71.6458 51.3542 66.3944 51.3542 60.1666C51.3542 53.9388 53.3933 48.6875 57.4714 44.4125C61.5495 40.1375 66.5591 38 72.5 38C78.441 38 83.4506 40.1375 87.5287 44.4125C91.6068 48.6875 93.6459 53.9388 93.6459 60.1666C93.6459 66.3944 91.6068 71.6458 87.5287 75.9208C83.4506 80.1958 78.441 82.3333 72.5 82.3333ZM72.5 139.333C64.1424 139.333 56.2882 137.671 48.9375 134.346C41.5868 131.021 35.1928 126.508 29.7552 120.808C24.3177 115.108 20.0131 108.406 16.8412 100.7C13.6693 92.9944 12.0834 84.7611 12.0834 76C12.0834 67.2388 13.6693 59.0055 16.8412 51.3C20.0131 43.5944 24.3177 36.8916 29.7552 31.1916C35.1928 25.4916 41.5868 20.9791 48.9375 17.6541C56.2882 14.3291 64.1424 12.6666 72.5 12.6666C80.8577 12.6666 88.7119 14.3291 96.0625 17.6541C103.413 20.9791 109.807 25.4916 115.245 31.1916C120.682 36.8916 124.987 43.5944 128.159 51.3C131.331 59.0055 132.917 67.2388 132.917 76C132.917 84.7611 131.331 92.9944 128.159 100.7C124.987 108.406 120.682 115.108 115.245 120.808C109.807 126.508 103.413 131.021 96.0625 134.346C88.7119 137.671 80.8577 139.333 72.5 139.333Z"
+              fill="#1D1B20" />
+          </svg>
+        </div>
+        <label class="avatar-edit-btn" for="foto-perfil" title="Alterar foto">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M5 21C4.45 21 3.975 20.8083 3.575 20.425C3.19167 20.025 3 19.55 3 19V5C3 4.45 3.19167 3.98333 3.575 3.6C3.975 3.2 4.45 3 5 3H19C19.55 3 20.0167 3.2 20.4 3.6C20.8 3.98333 21 4.45 21 5V19C21 19.55 20.8 20.025 20.4 20.425C20.0167 20.8083 19.55 21 19 21H5ZM5 19H19V5H5V19ZM6 17H18L14.25 12L11.25 16L9 13L6 17ZM5 19V5V19Z"
+              fill="white" />
+          </svg>
+        </label>
+        <input type="file" id="foto-perfil" accept="image/*" style="display:none">
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">Sophia Bennett</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEUS DADOS -->
+  <form [formGroup]="alterarForm" (ngSubmit)="salvar()">
+    <div class="section-label">Meus dados</div>
+
+    <div class="field-row">
+      <div class="field-info">
+        <div class="field-label">Nome</div>
+        <input class="field-input" type="text" formControlName="nome" placeholder="Seu nome completo">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-info">
+        <div class="field-label-row">
+          <span class="field-label">Foto</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M5 21C4.45 21 3.975 20.8083 3.575 20.425C3.19167 20.025 3 19.55 3 19V5C3 4.45 3.19167 3.98333 3.575 3.6C3.975 3.2 4.45 3 5 3H19C19.55 3 20.0167 3.2 20.4 3.6C20.8 3.98333 21 4.45 21 5V19C21 19.55 20.8 20.025 20.4 20.425C20.0167 20.8083 19.55 21 19 21H5ZM5 19H19V5H5V19ZM6 17H18L14.25 12L11.25 16L9 13L6 17ZM5 19V5V19Z"
+              fill="#1D1B20" />
+          </svg>
+        </div>
+        <div class="field-input-file-wrap">
+          <label class="field-input-file-label" for="foto-upload" id="foto-label">minhaFoto.jpg</label>
+          <input type="file" id="foto-upload" accept="image/*" style="display:none"
+            onchange="document.getElementById('foto-label').textContent = this.files[0]?.name || 'minhaFoto.jpg'">
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-info">
+        <div class="field-label">Email</div>
+        <input class="field-input" type="email" formControlName="email" placeholder="seu@email.com">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-info">
+        <div class="field-label">Data de nascimento</div>
+        <input class="field-input" formControlName="dataNascimento" type="date">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-info">
+        <div class="field-label">Telefone</div>
+        <input class="field-input" formControlName="telefone" type="tel" placeholder="+55 (11) 99999-0000">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-info">
+        <div class="field-label">Senha</div>
+        <input class="field-input" formControlName="senha" type="password" placeholder="Insira a nova senha">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <ion-button expand="block" type="submit" class="cadastrar-button" [disabled]="!alterarForm.valid">
+        Salvar
+      </ion-button>
+    </div>
+  </form>
+
+  <!-- PAGAMENTO -->
+  <div class="section-label">Pagamento</div>
+
+  <div class="payment-row">
+    <div class="payment-left">
+      <div class="card-icon">
+        <svg width="30" height="18" viewBox="0 0 40 24" fill="none">
+          <rect x="0.5" y="0.5" width="39" height="23" rx="3.5" fill="white" stroke="#C4C4C4" />
+        </svg>
+      </div>
+      <div class="payment-info">
+        <div class="payment-label">Cartão de crédito</div>
+        <input class="payment-input" type="text" value="Visa **** 1234" placeholder="Número do cartão">
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

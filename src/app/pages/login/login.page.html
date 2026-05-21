@@ -1,0 +1,81 @@
+<ion-content class="login-content" [fullscreen]="true">
+  <div class="login-wrapper">
+
+    <!-- Header -->
+    <div class="login-header">
+      <span class="login-title">Login</span>
+    </div>
+
+    <!-- Avatar Icon -->
+    <div class="avatar-container">
+      <svg width="145" height="152" viewBox="0 0 145 152" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M35.3438 108.3C40.4792 104.183 46.2188 100.937 52.5625 98.5625C58.9063 96.1875 65.5521 95 72.5 95C79.448 95 86.0938 96.1875 92.4375 98.5625C98.7813 100.937 104.521 104.183 109.656 108.3C113.181 103.972 115.925 99.0638 117.888 93.575C119.852 88.0861 120.833 82.2277 120.833 76C120.833 61.9611 116.126 50.0069 106.711 40.1375C97.2961 30.268 85.8924 25.3333 72.5 25.3333C59.1077 25.3333 47.704 30.268 38.2891 40.1375C28.8742 50.0069 24.1667 61.9611 24.1667 76C24.1667 82.2277 25.1485 88.0861 27.112 93.575C29.0756 99.0638 31.8195 103.972 35.3438 108.3ZM72.5 82.3333C66.5591 82.3333 61.5495 80.1958 57.4714 75.9208C53.3933 71.6458 51.3542 66.3944 51.3542 60.1666C51.3542 53.9388 53.3933 48.6875 57.4714 44.4125C61.5495 40.1375 66.5591 38 72.5 38C78.441 38 83.4506 40.1375 87.5287 44.4125C91.6068 48.6875 93.6459 53.9388 93.6459 60.1666C93.6459 66.3944 91.6068 71.6458 87.5287 75.9208C83.4506 80.1958 78.441 82.3333 72.5 82.3333ZM72.5 139.333C64.1424 139.333 56.2882 137.671 48.9375 134.346C41.5868 131.021 35.1928 126.508 29.7552 120.808C24.3177 115.108 20.0131 108.406 16.8412 100.7C13.6693 92.9944 12.0834 84.7611 12.0834 76C12.0834 67.2388 13.6693 59.0055 16.8412 51.3C20.0131 43.5944 24.3177 36.8916 29.7552 31.1916C35.1928 25.4916 41.5868 20.9791 48.9375 17.6541C56.2882 14.3291 64.1424 12.6666 72.5 12.6666C80.8577 12.6666 88.7119 14.3291 96.0625 17.6541C103.413 20.9791 109.807 25.4916 115.245 31.1916C120.682 36.8916 124.987 43.5944 128.159 51.3C131.331 59.0055 132.917 67.2388 132.917 76C132.917 84.7611 131.331 92.9944 128.159 100.7C124.987 108.406 120.682 115.108 115.245 120.808C109.807 126.508 103.413 131.021 96.0625 134.346C88.7119 137.671 80.8577 139.333 72.5 139.333Z" fill="#1D1B20"/>
+      </svg>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <div class="input-wrapper" [class.input-error]="email?.invalid && email?.touched">
+          <ion-input
+            formControlName="email"
+            type="email"
+            placeholder="E-mail"
+            class="custom-input"
+            
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="email?.invalid && email?.touched">
+          <ion-text color="danger" *ngIf="email?.errors?.['required']">
+            <small>E-mail é obrigatório.</small>
+          </ion-text>
+          <ion-text color="danger" *ngIf="email?.errors?.['email']">
+            <small>Informe um e-mail válido.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- senha Field -->
+      <div class="form-group">
+        <div class="input-wrapper" [class.input-error]="senha?.invalid && senha?.touched">
+          <ion-input
+            formControlName="senha"
+            type="senha"
+            placeholder="Senha"
+            class="custom-input"
+      
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="senha?.invalid && senha?.touched">
+          <ion-text color="danger" *ngIf="senha?.errors?.['required']">
+            <small>Senha é obrigatória.</small>
+          </ion-text>
+          <ion-text color="danger" *ngIf="senha?.errors?.['minlength']">
+            <small>A senha deve ter no mínimo 6 caracteres.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- Login Button -->
+      <div class="form-group">
+        <ion-button
+          expand="block"
+          type="submit"
+          class="login-button"
+          [disabled]="loginForm.invalid"
+        >
+          Login
+        </ion-button>
+      </div>
+
+      <!-- Sign Up Links -->
+      <div class="signup-container">
+        <ion-text class="signup-text">Não possui conta?</ion-text>
+        <a routerLink="/cadastro" class="signup-link">Cadastrar</a>
+      </div>
+
+    </form>
+  </div>
+</ion-content>

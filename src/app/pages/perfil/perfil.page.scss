@@ -1,0 +1,197 @@
+// perfil.page.scss
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+ion-content.perfil-content {
+  --background: #fafafa;
+  --padding-bottom: 95px; // space for bottom nav
+}
+
+.perfil-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+  font-family: 'Plus Jakarta Sans', -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+// Header
+.perfil-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 16px 8px;
+  background: #fafafa;
+
+  .perfil-title {
+    color: #141414;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 23px;
+    text-align: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+// Profile Info
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+
+  .profile-avatar {
+    width: 128px;
+    height: 128px;
+    border-radius: 64px;
+    object-fit: cover;
+  }
+
+  .profile-name-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-name {
+    color: #141414;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 28px;
+    text-align: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .profile-email {
+    color: #737373;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+// Section Title
+.section-title {
+  padding: 16px 16px 8px;
+  color: #141414;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 23px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+// Menu Items
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72px;
+  padding: 8px 16px;
+  background: #fafafa;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+
+  &--toggle {
+    cursor: default;
+  }
+
+  .menu-item-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+    margin-right: 8px;
+  }
+
+  .menu-item-label {
+    color: #141414;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+
+    &--danger {
+      color: #ff0000;
+    }
+  }
+
+  .menu-item-sublabel {
+    color: #737373;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+// Toggle
+.custom-toggle {
+  --background: #ededed;
+  --background-checked: #141414;
+  --handle-background: #ffffff;
+  --handle-background-checked: #ffffff;
+  --handle-box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.15);
+  --border-radius: 15.5px;
+  --handle-border-radius: 13.5px;
+  width: 51px;
+  height: 31px;
+}
+
+// Bottom Navigation
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 16px 12px;
+  border-top: 1px solid #ededed;
+  background: #fafafa;
+  z-index: 100;
+  max-width: 480px;
+  margin: 0 auto;
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    text-decoration: none;
+    padding-top: 4px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .nav-label {
+    color: #737373;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+
+    &--active {
+      color: #141414;
+    }
+  }
+
+  .nav-item--active svg path {
+    fill: #141414;
+  }
+}

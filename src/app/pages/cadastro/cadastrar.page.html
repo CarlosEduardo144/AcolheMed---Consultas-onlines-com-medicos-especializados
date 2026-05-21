@@ -1,0 +1,205 @@
+<ion-content class="cadastrar-content" [fullscreen]="true">
+  <div class="cadastrar-wrapper">
+
+    <!-- Header -->
+    <div class="cadastrar-header">
+      <button class="back-button" (click)="goBack()" aria-label="Voltar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M21 12C21 12.4142 20.6642 12.75 20.25 12.75H5.56031L11.0306 18.2194C11.3237 18.5124 11.3237 18.9876 11.0306 19.2806C10.7376 19.5737 10.2624 19.5737 9.96937 19.2806L3.21937 12.5306C3.07854 12.3899 2.99941 12.1991 2.99941 12C2.99941 11.8009 3.07854 11.6101 3.21937 11.4694L9.96937 4.71938C10.2624 4.42632 10.7376 4.42632 11.0306 4.71938C11.3237 5.01243 11.3237 5.48757 11.0306 5.78062L5.56031 11.25H20.25C20.6642 11.25 21 11.5858 21 12Z" fill="#141414"/>
+        </svg>
+      </button>
+      <span class="cadastrar-title">Criar conta</span>
+    </div>
+
+    <!-- User Type Toggle -->
+    <div class="toggle-group">
+      <button
+        type="button"
+        class="toggle-btn"
+        [class.active]="userType === 'paciente'"
+        (click)="setUserType('paciente')"
+      >
+        Paciente
+      </button>
+      <button
+        type="button"
+        class="toggle-btn"
+        [class.active]="userType === 'medico'"
+        (click)="setUserType('medico')"
+      >
+        Médico
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="cadastrarForm" (ngSubmit)="salvar()">
+
+      <!-- Nome completo -->
+      <div class="form-group">
+        <div class="input-wrapper" [class.input-error]="nome?.invalid && nome?.touched">
+          <ion-input
+            formControlName="nome"
+            type="text"
+            placeholder="Nome completo"
+            class="custom-input"
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="nome?.invalid && nome?.touched">
+          <ion-text color="danger" *ngIf="nome?.errors?.['required']">
+            <small>Nome é obrigatório.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- E-mail -->
+      <div class="form-group">
+        <div class="input-wrapper" [class.input-error]="email?.invalid && email?.touched">
+          <ion-input
+            formControlName="email"
+            type="email"
+            placeholder="E-mail"
+            class="custom-input"
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="email?.invalid && email?.touched">
+          <ion-text color="danger" *ngIf="email?.errors?.['required']">
+            <small>E-mail é obrigatório.</small>
+          </ion-text>
+          <ion-text color="danger" *ngIf="email?.errors?.['email']">
+            <small>Informe um e-mail válido.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- Telefone -->
+      <div class="form-group">
+        <div class="input-wrapper" [class.input-error]="telefone?.invalid && telefone?.touched">
+          <ion-input
+            formControlName="telefone"
+            type="tel"
+            placeholder="Telefone"
+            class="custom-input"
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="telefone?.invalid && telefone?.touched">
+          <ion-text color="danger" *ngIf="telefone?.errors?.['required']">
+            <small>Telefone é obrigatório.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- CPF -->
+      <div class="form-group">
+        <div class="input-wrapper" [class.input-error]="cpf?.invalid && cpf?.touched">
+          <ion-input
+            formControlName="cpf"
+            type="text"
+            placeholder="CPF"
+            class="custom-input"
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="cpf?.invalid && cpf?.touched">
+          <ion-text color="danger" *ngIf="cpf?.errors?.['required']">
+            <small>CPF é obrigatório.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- dataNascimento -->
+      <div class="form-group">
+        <div class="input-wrapper" [class.input-error]="dataNascimento?.invalid && dataNascimento?.touched">
+          <ion-input
+            formControlName="dataNascimento"
+            type="date"
+            placeholder="dataNascimento (DD/MM/AA)"
+            class="custom-input"
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="dataNascimento?.invalid && dataNascimento?.touched">
+          <ion-text color="danger" *ngIf="dataNascimento?.errors?.['required']">
+            <small>Data de nascimento é obrigatória.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- CRM (apenas para médicos) -->
+      <div class="form-group" *ngIf="userType === 'medico'">
+        <div class="input-wrapper" [class.input-error]="crm?.invalid && crm?.touched">
+          <ion-input
+            formControlName="crm"
+            type="text"
+            placeholder="CRM"
+            class="custom-input"
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="crm?.invalid && crm?.touched">
+          <ion-text color="danger" *ngIf="crm?.errors?.['required']">
+            <small>CRM é obrigatório para médicos.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- Senha -->
+      <div class="form-group">
+        <div class="input-wrapper" [class.input-error]="senha?.invalid && senha?.touched">
+          <ion-input
+            formControlName="senha"
+            type="password"
+            placeholder="Senha"
+            class="custom-input"
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="senha?.invalid && senha?.touched">
+          <ion-text color="danger" *ngIf="senha?.errors?.['required']">
+            <small>Senha é obrigatória.</small>
+          </ion-text>
+          <ion-text color="danger" *ngIf="senha?.errors?.['minlength']">
+            <small>A senha deve ter no mínimo 6 caracteres.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- Confirmar senha -->
+      <div class="form-group">
+        <div
+          class="input-wrapper"
+          [class.input-error]="(confirmarSenha?.invalid && confirmarSenha?.touched) || (cadastrarForm.errors?.['passwordMismatch'] && confirmarSenha?.touched)"
+        >
+          <ion-input
+            formControlName="confirmarSenha"
+            type="password"
+            placeholder="Confirmar senha"
+            class="custom-input"
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="confirmarSenha?.touched">
+          <ion-text color="danger" *ngIf="confirmarSenha?.errors?.['required']">
+            <small>Confirmação de senha é obrigatória.</small>
+          </ion-text>
+          <ion-text color="danger" *ngIf="!confirmarSenha?.errors?.['required'] && cadastrarForm.errors?.['passwordMismatch']">
+            <small>As senhas não coincidem.</small>
+          </ion-text>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-group">
+        <ion-button
+          expand="block"
+          type="submit"
+          class="cadastrar-button"
+          [disabled]="!cadastrarForm.valid"
+        >
+          Criar conta
+        </ion-button>
+      </div>
+
+      <!-- Login Links -->
+      <div class="login-container">
+        <ion-text class="login-text">Já tem uma conta?</ion-text>
+        <a routerLink="/login" class="login-link">Entrar</a>
+      </div>
+
+    </form>
+  </div>
+</ion-content>

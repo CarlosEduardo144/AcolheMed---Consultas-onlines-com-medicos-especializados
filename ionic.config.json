@@ -1,0 +1,7 @@
+{
+  "name": "Acolhimed_Project",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
