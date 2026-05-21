@@ -3,7 +3,7 @@ export class UsuarioModel {
     nome: string;
     email: string;
     senha: string;
-    telefone: number;
+    telefone: string;
     dataNascimento: Date;
     cpf: string;
     tipoUsuario: string;
@@ -17,7 +17,7 @@ export class UsuarioModel {
         this.senha = "";
         this.nome = "";
         this.tipoUsuario = "";
-        this.telefone = 0;
+        this.telefone = "";
         this.foto = "";
     }
 }

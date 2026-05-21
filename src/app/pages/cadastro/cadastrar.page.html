@@ -74,12 +74,7 @@
       <!-- Telefone -->
       <div class="form-group">
         <div class="input-wrapper" [class.input-error]="telefone?.invalid && telefone?.touched">
-          <ion-input
-            formControlName="telefone"
-            type="tel"
-            placeholder="Telefone"
-            class="custom-input"
-          ></ion-input>
+          <input class="field-input" formControlName="telefone" type="tel" [mask]="'(00) 00000-0000'" placeholder="(11) 99999-0000">
         </div>
         <div class="error-messages" *ngIf="telefone?.invalid && telefone?.touched">
           <ion-text color="danger" *ngIf="telefone?.errors?.['required']">
@@ -154,7 +149,7 @@
             <small>Senha é obrigatória.</small>
           </ion-text>
           <ion-text color="danger" *ngIf="senha?.errors?.['minlength']">
-            <small>A senha deve ter no mínimo 6 caracteres.</small>
+            <small>A senha deve ter no mínimo 8 caracteres.</small>
           </ion-text>
         </div>
       </div>

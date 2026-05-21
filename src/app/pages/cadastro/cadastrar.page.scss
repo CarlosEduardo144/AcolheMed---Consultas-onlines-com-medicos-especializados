@@ -1,4 +1,12 @@
 // cadastrar.page.scss
+.field-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #737373;;
+}
 
 ion-content.cadastrar-content {
   --background: #fafafa;
@@ -153,4 +161,5 @@ ion-content.cadastrar-content {
     text-align: center;
     text-decoration: underline;
   }
+
 }

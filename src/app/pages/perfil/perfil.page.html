@@ -7,6 +7,7 @@
     </div>
 
     <!-- Avatar + Info -->
+    @if (usuario) {
     <div class="profile-info">
       <div class="avatar-container">
         <svg width="145" height="152" viewBox="0 0 145 152" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,6 +21,7 @@
         <span class="profile-email">{{ usuario.email }}</span>
       </div>
     </div>
+    }
 
     <!-- Seção: Informações pessoais -->
     <div class="section-title">Informações pessoais</div>

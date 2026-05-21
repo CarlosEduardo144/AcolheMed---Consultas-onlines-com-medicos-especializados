@@ -26,7 +26,7 @@ import { LoginService } from 'src/app/services/login.service';
 export class PerfilPage {
   notificacoesAtivas = false;
 
-  usuario: UsuarioModel;
+  usuario: UsuarioModel | null = null;
 
   constructor(private navController: NavController, private loginService: LoginService) {
     this.usuario = new UsuarioModel();

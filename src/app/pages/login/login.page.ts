@@ -55,7 +55,7 @@ export class LoginPage {
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required, Validators.minLength(6)]],
+      senha: ['', [Validators.required, Validators.minLength(4)]],
     });
 
   }

@@ -5,11 +5,12 @@ import { UsuarioModel } from '../model/usuario.model';
   providedIn: 'root',
 })
 export class LoginService {
-  usuarioLogado!: UsuarioModel;
+  private usuarioLogado: UsuarioModel | null = null;
 
   setUsuario(usuario: UsuarioModel) {
     this.usuarioLogado = usuario;
-    localStorage.setItem('usuario', JSON.stringify(usuario));
+    const { senha, ...usuarioSemSenha } = usuario as any;
+    localStorage.setItem('usuario', JSON.stringify(usuarioSemSenha));
   }
 
   getUsuario() {
@@ -23,11 +24,11 @@ export class LoginService {
   }
 
   isLogado(): boolean {
-    return this.usuarioLogado !== null;
+    return !!this.getUsuario();
   }
 
   logout(){
-    this.usuarioLogado = null!;
+    this.usuarioLogado = null;
     localStorage.removeItem('usuario');
   }
 }

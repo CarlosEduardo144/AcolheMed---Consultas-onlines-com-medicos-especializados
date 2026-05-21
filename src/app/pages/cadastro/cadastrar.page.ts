@@ -14,6 +14,22 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { MedicoModel } from 'src/app/model/medico.model';
 import { PacienteModel } from 'src/app/model/paciente.model';
 import { LoginService } from 'src/app/services/login.service';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+
+function cpfValidator(control: AbstractControl): ValidationErrors | null {
+  const cpf = (control.value ?? '').replace(/\D/g, '');
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return { cpfInvalido: true };
+
+  const calcDigit = (slice: string) => {
+    const sum = slice.split('').reduce((acc, d, i) => acc + +d * (slice.length + 1 - i), 0);
+    const rem = (sum * 10) % 11;
+    return rem === 10 || rem === 11 ? 0 : rem;
+  };
+
+  const d1 = calcDigit(cpf.slice(0, 9));
+  const d2 = calcDigit(cpf.slice(0, 10));
+  return d1 === +cpf[9] && d2 === +cpf[10] ? null : { cpfInvalido: true };
+}
 
 type UserType = 'paciente' | 'medico';
 
@@ -37,20 +53,22 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
     IonButton,
     IonInput,
     IonText,
+    NgxMaskDirective
   ],
+  providers: [provideNgxMask()],
 })
 export class CadastrarPage {
   usuario: UserType = 'paciente';
   cadastrarForm: FormGroup;
   userType: any;
 
-  constructor(private fb: FormBuilder, private loginService: LoginService,private navController: NavController, private usuarioService: UsuarioService, private toastController: ToastController) {
+  constructor(private fb: FormBuilder, private loginService: LoginService, private navController: NavController, private usuarioService: UsuarioService, private toastController: ToastController) {
     this.cadastrarForm = this.fb.group(
       {
         nome: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         telefone: ['', [Validators.required]],
-        cpf: ['', [Validators.required]],
+        cpf: ['', [Validators.required, cpfValidator]],
         dataNascimento: ['', [Validators.required]],
         crm: [''],
         senha: ['', [Validators.required, Validators.minLength(4)]],
@@ -58,7 +76,7 @@ export class CadastrarPage {
       },
       { validators: passwordMatchValidator }
     );
-  } 
+  }
 
   setUserType(type: UserType) {
     this.userType = type;

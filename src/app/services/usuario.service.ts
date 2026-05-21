@@ -9,23 +9,19 @@ export class UsuarioService {
     let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
 
     if (usuario.id == "") {
-      usuario.id = (new Date().getTime() * Math.random()).toString(36).replace('.', '');
+      usuario.id = crypto.randomUUID();
       usuarios.push(usuario);
     } else {
-      let posicao = usuarios.findIndex((temp: UsuarioModel) => temp.id == usuario.id);
-      usuarios[posicao] = usuario;
+      const posicao = usuarios.findIndex((temp: UsuarioModel) => temp.id === usuario.id);
+      if (posicao !== -1) usuarios[posicao] = usuario;
     }
-
-
-    let indexUsuario = usuarios.findIndex((u: UsuarioModel) => u.id === usuario.id);
-    usuarios[indexUsuario] = usuario;
 
     localStorage.setItem('usuarios', JSON.stringify(usuarios));
 
     return usuario;
   }
 
-  listar(usuario: UsuarioModel): UsuarioModel[] {
+  listar(): UsuarioModel[] {
     let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
     return usuarios;
   }
