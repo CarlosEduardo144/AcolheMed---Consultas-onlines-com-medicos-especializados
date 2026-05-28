@@ -1,75 +1,112 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Usuários</ion-title>
+    <ion-buttons slot="start">
+      <ion-avatar class="header-avatar" routerLink="/perfil">
+        <img src="https://i.pravatar.cc/100?img=47" alt="Sofia" />
+      </ion-avatar>
+    </ion-buttons>
+    <ion-title>Início</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="notifications-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="inicio-content" [fullscreen]="true">
-  <ion-list>
-    @for (usuario of usuarios; track usuario.id) {
-    <ion-item-sliding>
-      <ion-item>
-        <ion-thumbnail slot="start">
-          <svg width="145" height="152" viewBox="0 0 145 152" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M35.3438 108.3C40.4792 104.183 46.2188 100.937 52.5625 98.5625C58.9063 96.1875 65.5521 95 72.5 95C79.448 95 86.0938 96.1875 92.4375 98.5625C98.7813 100.937 104.521 104.183 109.656 108.3C113.181 103.972 115.925 99.0638 117.888 93.575C119.852 88.0861 120.833 82.2277 120.833 76C120.833 61.9611 116.126 50.0069 106.711 40.1375C97.2961 30.268 85.8924 25.3333 72.5 25.3333C59.1077 25.3333 47.704 30.268 38.2891 40.1375C28.8742 50.0069 24.1667 61.9611 24.1667 76C24.1667 82.2277 25.1485 88.0861 27.112 93.575C29.0756 99.0638 31.8195 103.972 35.3438 108.3ZM72.5 82.3333C66.5591 82.3333 61.5495 80.1958 57.4714 75.9208C53.3933 71.6458 51.3542 66.3944 51.3542 60.1666C51.3542 53.9388 53.3933 48.6875 57.4714 44.4125C61.5495 40.1375 66.5591 38 72.5 38C78.441 38 83.4506 40.1375 87.5287 44.4125C91.6068 48.6875 93.6459 53.9388 93.6459 60.1666C93.6459 66.3944 91.6068 71.6458 87.5287 75.9208C83.4506 80.1958 78.441 82.3333 72.5 82.3333ZM72.5 139.333C64.1424 139.333 56.2882 137.671 48.9375 134.346C41.5868 131.021 35.1928 126.508 29.7552 120.808C24.3177 115.108 20.0131 108.406 16.8412 100.7C13.6693 92.9944 12.0834 84.7611 12.0834 76C12.0834 67.2388 13.6693 59.0055 16.8412 51.3C20.0131 43.5944 24.3177 36.8916 29.7552 31.1916C35.1928 25.4916 41.5868 20.9791 48.9375 17.6541C56.2882 14.3291 64.1424 12.6666 72.5 12.6666C80.8577 12.6666 88.7119 14.3291 96.0625 17.6541C103.413 20.9791 109.807 25.4916 115.245 31.1916C120.682 36.8916 124.987 43.5944 128.159 51.3C131.331 59.0055 132.917 67.2388 132.917 76C132.917 84.7611 131.331 92.9944 128.159 100.7C124.987 108.406 120.682 115.108 115.245 120.808C109.807 126.508 103.413 131.021 96.0625 134.346C88.7119 137.671 80.8577 139.333 72.5 139.333Z"
-              fill="#1D1B20" />
-          </svg>
-        </ion-thumbnail>
 
-        <ion-label>
-          <h2 class="prod-descricao">{{ usuario.nome }}</h2>
-          <p class="prod-valor">CPF: {{ usuario.cpf }}</p>
-          <p class="prod-valor">Tipo: {{ usuario.tipoUsuario }}</p>
-          @if (usuario.tipoUsuario == "medico") {
-          <p class="prod-valor">
-            CRM: {{ isMedico(usuario).crm }}
-          </p>
-          }
-        </ion-label>
-      </ion-item>
+  <!-- Boas-vindas -->
+  <div class="welcome-section">
+    <h1 class="welcome-text">Bem-vindo,<br />Sofia</h1>
+  </div>
 
-      <ion-item-options side="start">
-        <ion-item-option (click)="excluir(usuario)" color="danger">
-          Excluir
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-    } @empty {
-    <div class="ion-text-center ion-padding">
-      <p>Não há usuários cadastrados.</p>
+  <!-- Cards de estatísticas -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <p class="stat-label">Especialidades<br />disponíveis</p>
+      <p class="stat-value">{{especialidadesDisponiveis}}</p>
     </div>
-    }
-  </ion-list>
+    <div class="stat-card">
+      <p class="stat-label">Médicos<br />disponíveis</p>
+      <p class="stat-value">{{medicosDisponiveis}}</p>
+    </div>
+  </div>
 
-  <!-- Bottom Nav -->
+  <!-- Botão Agendar -->
+  <div class="agendar-wrap">
+    <ion-button expand="block" class="agendar-btn" routerLink="/explorar">
+      Agendar consulta
+    </ion-button>
+  </div>
+
+  <!-- Consultas em andamento -->
+  <div class="section">
+    <h2 class="section-title">Consultas em andamento</h2>
+
+    <div class="consulta-card">
+      <div class="consulta-avatar">
+        <ion-icon name="happy-outline"></ion-icon>
+      </div>
+
+      <div class="consulta-body">
+        <div class="consulta-top">
+          <div class="consulta-info">
+            <p class="consulta-doctor">Dr. Pi'u piu</p>
+            <p class="consulta-time">10:00 h <span class="dot">•</span></p>
+          </div>
+          <ion-button class="btn-chat">
+            <ion-icon name="chatbubble" slot="start"></ion-icon>
+            Chat
+          </ion-button>
+        </div>
+
+        <div class="consulta-bottom">
+          <div class="doctor-icon-wrap">
+            <ion-icon name="person-outline" ></ion-icon>
+          </div>
+          <ion-button class="btn-chamada">
+            Chamada
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <div class="bottom-nav">
     <a routerLink="/inicio" class="nav-item nav-item--active">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3L3 10V21H9V14H15V21H21V10L12 3Z" fill="currentColor" />
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M10.9394 2.59413C11.5321 2.06453 12.4679 2.06453 13.0606 2.59413L20.5606 9.29413C20.8787 9.57825 21.0605 9.98484 21.0605 10.4125V19.5C21.0605 20.3284 20.3889 21 19.5605 21H14.25C13.4216 21 12.75 20.3284 12.75 19.5V15.75H11.25V19.5C11.25 20.3284 10.5784 21 9.75 21H4.43945C3.61103 21 2.93945 20.3284 2.93945 19.5V10.4125C2.93945 9.98484 3.12134 9.57825 3.43945 9.29413L10.9394 2.59413Z"
+          fill="#141414" />
       </svg>
       <span class="nav-label nav-label--active">Home</span>
     </a>
     <a routerLink="/consultas" class="nav-item">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd"
-          d="M19.5 3H17.25V2.25C17.25 1.83579 16.9142 1.5 16.5 1.5C16.0858 1.5 15.75 1.83579 15.75 2.25V3H8.25V2.25C8.25 1.83579 7.91421 1.5 7.5 1.5C7.08579 1.5 6.75 1.83579 6.75 2.25V3H4.5C3.67157 3 3 3.67157 3 4.5V19.5C3 20.3284 3.67157 21 4.5 21H19.5C20.3284 21 21 20.3284 21 19.5V4.5C21 3.67157 20.3284 3 19.5 3ZM6.75 4.5V5.25C6.75 5.66421 7.08579 6 7.5 6C7.91421 6 8.25 5.66421 8.25 5.25V4.5H15.75V5.25C15.75 5.66421 16.0858 6 16.5 6C16.9142 6 17.25 5.66421 17.25 5.25V4.5H19.5V7.5H4.5V4.5H6.75ZM19.5 19.5H4.5V9H19.5V19.5Z" />
+          d="M19.5 3H17.25V2.25C17.25 1.83579 16.9142 1.5 16.5 1.5C16.0858 1.5 15.75 1.83579 15.75 2.25V3H8.25V2.25C8.25 1.83579 7.91421 1.5 7.5 1.5C7.08579 1.5 6.75 1.83579 6.75 2.25V3H4.5C3.67157 3 3 3.67157 3 4.5V19.5C3 20.3284 3.67157 21 4.5 21H19.5C20.3284 21 21 20.3284 21 19.5V4.5C21 3.67157 20.3284 3 19.5 3ZM6.75 4.5V5.25C6.75 5.66421 7.08579 6 7.5 6C7.91421 6 8.25 5.66421 8.25 5.25V4.5H15.75V5.25C15.75 5.66421 16.0858 6 16.5 6C16.9142 6 17.25 5.66421 17.25 5.25V4.5H19.5V7.5H4.5V4.5H6.75ZM19.5 19.5H4.5V9H19.5V19.5Z"
+          fill="#737373" />
       </svg>
       <span class="nav-label">Consultas</span>
     </a>
     <a routerLink="/explorar" class="nav-item">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd"
-          d="M21.5306 20.4694L16.8366 15.7762C19.6629 12.383 19.3204 7.36693 16.0591 4.38935C12.7978 1.41176 7.77134 1.526 4.64867 4.64867C1.526 7.77134 1.41176 12.7978 4.38935 16.0591C7.36693 19.3204 12.383 19.6629 15.7762 16.8366L20.4694 21.5306C20.7624 21.8237 21.2376 21.8237 21.5306 21.5306C21.8237 21.2376 21.8237 20.7624 21.5306 20.4694ZM3.75 10.5C3.75 6.77208 6.77208 3.75 10.5 3.75C14.2279 3.75 17.25 6.77208 17.25 10.5C17.25 14.2279 14.2279 17.25 10.5 17.25C6.77379 17.2459 3.75413 14.2262 3.75 10.5Z" />
+          d="M21.5306 20.4694L16.8366 15.7762C19.6629 12.383 19.3204 7.36693 16.0591 4.38935C12.7978 1.41176 7.77134 1.526 4.64867 4.64867C1.526 7.77134 1.41176 12.7978 4.38935 16.0591C7.36693 19.3204 12.383 19.6629 15.7762 16.8366L20.4694 21.5306C20.7624 21.8237 21.2376 21.8237 21.5306 21.5306C21.8237 21.2376 21.8237 20.7624 21.5306 20.4694ZM3.75 10.5C3.75 6.77208 6.77208 3.75 10.5 3.75C14.2279 3.75 17.25 6.77208 17.25 10.5C17.25 14.2279 14.2279 17.25 10.5 17.25C6.77379 17.2459 3.75413 14.2262 3.75 10.5Z"
+          fill="#737373" />
       </svg>
       <span class="nav-label">Explorar</span>
     </a>
     <a routerLink="/perfil" class="nav-item">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd"
-          d="M21.6497 20.625C21.5157 20.8571 21.268 21.0001 21 21H3C2.73219 20.9997 2.48484 20.8567 2.35106 20.6247C2.21727 20.3927 2.21734 20.1069 2.35125 19.875C3.77906 17.4066 5.97938 15.6366 8.54719 14.7975C5.93645 13.2433 4.68585 10.1364 5.49182 7.2069C6.29779 4.27741 8.96167 2.24745 12 2.24745C15.0383 2.24745 17.7022 4.27741 18.5082 7.2069C19.3141 10.1364 18.0635 13.2433 15.4528 14.7975C18.0206 15.6366 20.2209 17.4066 21.6488 19.875C21.783 20.1069 21.7834 20.3928 21.6497 20.625Z" />
+          d="M12 12C14.4853 12 16.5 9.98528 16.5 7.5C16.5 5.01472 14.4853 3 12 3C9.51472 3 7.5 5.01472 7.5 7.5C7.5 9.98528 9.51472 12 12 12ZM12 13.5C8.13401 13.5 4.91017 15.9976 4.00391 19.5H19.9961C19.0898 15.9976 15.866 13.5 12 13.5ZM12 1.5C15.3137 1.5 18 4.18629 18 7.5C18 9.47392 17.0461 11.2251 15.5736 12.3193C18.4777 13.5308 20.617 16.1452 21 19.3125C21.0266 19.5327 20.9569 19.753 20.8087 19.9181C20.6605 20.0831 20.4492 20.1774 20.2273 20.1774H3.77273C3.55082 20.1774 3.33948 20.0831 3.1913 19.9181C3.04312 19.753 2.9734 19.5327 3 19.3125C3.38302 16.1452 5.52235 13.5308 8.42641 12.3193C6.9539 11.2251 6 9.47392 6 7.5C6 4.18629 8.68629 1.5 12 1.5Z"
+          fill="#737373" />
       </svg>
       <span class="nav-label">Perfil</span>
     </a>
   </div>
+
 </ion-content>

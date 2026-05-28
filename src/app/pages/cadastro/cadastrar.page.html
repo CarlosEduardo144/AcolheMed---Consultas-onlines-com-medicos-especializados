@@ -117,6 +117,16 @@
         </div>
       </div>
 
+      <!-- Especialidade (select) -->
+      <div class="form-group" *ngIf="userType === 'medico'">
+        <div class="input-wrapper">
+          <select class="field-input custom-input" formControlName="especialidade">
+            <option value="" disabled selected>Selecione a especialidade</option>
+            <option *ngFor="let esp of especialidades" [value]="esp.id">{{ esp.nome }}</option>
+          </select>
+        </div>
+      </div>
+
       <!-- CRM (apenas para médicos) -->
       <div class="form-group" *ngIf="userType === 'medico'">
         <div class="input-wrapper" [class.input-error]="crm?.invalid && crm?.touched">
@@ -130,6 +140,23 @@
         <div class="error-messages" *ngIf="crm?.invalid && crm?.touched">
           <ion-text color="danger" *ngIf="crm?.errors?.['required']">
             <small>CRM é obrigatório para médicos.</small>
+          </ion-text>
+        </div>
+      </div>
+
+       <!-- UF de emissao -->
+      <div class="form-group" *ngIf="userType === 'medico'">
+        <div class="input-wrapper" [class.input-error]="uf?.invalid && uf?.touched">
+          <ion-input
+            formControlName="uf"
+            type="text"
+            placeholder="UF de emissão"
+            class="custom-input"
+          ></ion-input>
+        </div>
+        <div class="error-messages" *ngIf="uf?.invalid && uf?.touched">
+          <ion-text color="danger" *ngIf="uf?.errors?.['required']">
+            <small>UF é obrigatório para médicos.</small>
           </ion-text>
         </div>
       </div>

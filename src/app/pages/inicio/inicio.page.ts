@@ -1,111 +1,52 @@
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonIcon, IonToolbar, IonList, IonItemSliding, IonItem, IonThumbnail, IonLabel, IonItemOptions, IonItemOption, ToastController, AlertController, NavController } from '@ionic/angular/standalone';
+import { RouterModule } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { IonIcon,IonButton, IonContent, IonHeader, IonTabBar, IonTabButton, IonTitle,IonToolbar, IonLabel, IonButtons, IonAvatar} from '@ionic/angular/standalone';
 import { UsuarioModel } from 'src/app/model/usuario.model';
+import { EspecialidadeService } from 'src/app/services/especialidade.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { LoginService } from 'src/app/services/login.service';
-import { MedicoModel } from 'src/app/model/medico.model';
-
+ 
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
   standalone: true,
   imports: [
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonList,
-    IonItemSliding,
-    IonItem,
-    IonThumbnail,
-    IonLabel,
-    IonItemOptions,
-    IonItemOption,
-    CommonModule,
-    FormsModule,
-    IonIcon
-  ]
+    IonIcon, RouterModule, IonHeader, IonHeader, IonTabBar, IonTabButton, IonToolbar, IonButtons,IonContent, IonAvatar, IonLabel, IonTitle, IonButton
+  ],
 })
 export class InicioPage implements OnInit {
-
-  usuarios: UsuarioModel[];
-  usuario: UsuarioModel | null = null;
-
-  constructor(private usuarioService: UsuarioService, private navController: NavController, private loginService: LoginService, private alertController: AlertController, private router: Router, private toastController: ToastController) {
-    this.usuarios = [];
+ 
+  patientName = 'Sofia';
+  usuario: UsuarioModel;
+  medicosDisponiveis: number;
+  especialidadesDisponiveis: number;
+ 
+  consultasEmAndamento = [
+    {
+      id: 1,
+      doctor: "Dr. Pi'u piu",
+      time: '10:00 h',
+      avatar: null, // emoji/icon fallback
+    }
+  ];
+ 
+  constructor(private navCtrl: NavController, private usuarioService: UsuarioService, private especialidadeService: EspecialidadeService ) {
     this.usuario = new UsuarioModel();
-    this.usuario = loginService.getUsuario();
-    this.usuarios = this.usuarioService.listar();
+    this.medicosDisponiveis = usuarioService.qtdMedicos();
+    this.especialidadesDisponiveis = especialidadeService.qtdEspecialidades();
   }
-
-  ngOnInit() {
+ 
+  ngOnInit() {}
+ 
+  navigate(path: string) {
+    this.navCtrl.navigateForward(path);
   }
-
-  async excluir(usuario: UsuarioModel) {
-    const alert = await this.alertController.create({
-      header: 'Confirma a exclusão?',
-      message: `Deseja remover: ${usuario.nome}?`,
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Confirmar',
-          cssClass: 'danger',
-          handler: () => {
-            if (!usuario.id) {
-              this.exibirMensagem('Usuário inválido');
-              return;
-            }
-
-            const excluido = this.usuarioService.excluir(usuario.id);
-
-            if (!excluido) {
-              this.exibirMensagem('Erro ao excluir usuário');
-              return;
-            }
-
-            const usuarioLogadoExcluido =
-              this.usuario && usuario.id === this.usuario.id;
-
-            if (usuarioLogadoExcluido) {
-              this.loginService.logout();
-              this.exibirMensagem('O usuário logado foi excluído');
-              this.navController.navigateBack('/login');
-            } else {
-              this.exibirMensagem('Usuário excluído com sucesso');
-            }
-
-            this.ionViewWillEnter();
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async exibirMensagem(texto: string) {
-
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-
-    toast.present();
-
-  }
-
-  isMedico(usuario: UsuarioModel): MedicoModel {
-    return usuario as MedicoModel;
-  }
-
-  ionViewWillEnter() {
-    this.usuarios = this.usuarioService.listar();
+ 
+  
+ 
+  startCall() {
+    this.navCtrl.navigateForward('/chamada');
   }
 }
+ 

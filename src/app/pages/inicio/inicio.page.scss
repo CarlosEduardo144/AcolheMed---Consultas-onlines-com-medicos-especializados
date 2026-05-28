@@ -1,62 +1,233 @@
+$blue:       #29ABE2;
+$blue-dark:  #1a8fbf;
+$black:      #111111;
+$gray:       #6B6B6B;
+$gray-light: #F5F5F5;
+$white:      #FFFFFF;
+$chat-bg:    #E8E0F7;
+$chat-color: #7B5EA7;
+$call-bg:    #00C48C;
+$radius:     16px;
 
-ion-content.inicio-content {
-  --background: #fff;
-  color: #222;
+ion-content.perfil-content {
+  --background: #fafafa;
+  --padding-bottom: 95px; // space for bottom nav
 }
-
-ion-list {
-  background: #fff;
+ 
+// ---- Toolbar ----
+ion-header ion-toolbar {
+  --background: #{$white};
+  --color: #{$black};
+  --border-width: 0;
+  padding: 4px 0;
+ 
+  ion-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: $black;
+  }
 }
-
-ion-item {
-  --background: #fff;
-  color: #222;
-  border-radius: 12px;
-
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+ 
+.header-avatar {
+  width: 36px;
+  height: 36px;
+  margin-left: 8px;
 }
-
-ion-label {
-  color: #222;
+ 
+ion-button.button-clear {
+  --color: #{$black};
 }
-
-.prod-descricao {
-  font-size: 1.1rem;
+ 
+// ---- Content ----
+.inicio-content {
+  --background: #{$white};
+}
+ 
+// ---- Welcome ----
+.welcome-section {
+  padding: 24px 20px 20px;
+}
+ 
+.welcome-text {
+  font-size: 30px;
+  font-weight: 800;
+  color: $black;
+  line-height: 1.15;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+ 
+// ---- Stats ----
+.stats-row {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+ 
+.stat-card {
+  flex: 1;
+  background: $white;
+  border: 1.5px solid #E0E0E0;
+  border-radius: $radius;
+  padding: 16px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+ 
+  &:active {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+ 
+  .stat-label {
+    font-size: 13px;
+    color: $gray;
+    margin: 0 0 10px;
+    line-height: 1.4;
+  }
+ 
+  .stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: $black;
+    margin: 0;
+  }
+}
+ 
+// ---- Agendar Button ----
+.agendar-wrap {
+  padding: 0 20px;
+  margin-bottom: 28px;
+}
+ 
+.agendar-btn {
+  --background: #{$blue};
+  --background-activated: #{$blue-dark};
+  --border-radius: 10px;
+  --color: #{$white};
+  font-size: 14px;
   font-weight: 600;
-  color: #222;
-  margin-bottom: 2px;
-}
-
-.prod-valor {
-  color: #555;
-  font-size: 0.98rem;
+  height: 52px;
+  letter-spacing: 0.2px;
   margin: 0;
 }
-
-ion-thumbnail {
+ 
+// ---- Section ----
+.section {
+  padding: 0 20px;
+}
+ 
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: $black;
+  margin: 0 0 16px;
+  text-align: center;
+}
+ 
+// ---- Consulta Card ----
+.consulta-card {
+  display: flex;
+  gap: 12px;
+  background: $white;
+  border: 1.5px solid #E0E0E0;
+  border-radius: $radius;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+ 
+.consulta-avatar {
+  width: 44px;
+  height: 44px;
+  background: #FFD580;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f5f5;
+  font-size: 26px;
+  flex-shrink: 0;
+  color: #E6A800;
+
+}
+ 
+.consulta-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+ 
+// Top row: nome + botão Chat
+.consulta-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+ 
+.consulta-info {
+  .consulta-doctor {
+    font-size: 15px;
+    font-weight: 700;
+    color: $black;
+    margin: 0 0 2px;
+  }
+ 
+  .consulta-time {
+    font-size: 13px;
+    color: $gray;
+    margin: 0;
+ 
+    .dot {
+      margin-left: 2px;
+    }
+  }
+}
+ 
+.btn-chat {
+  --background: #{$chat-bg};
+  --color: #{$chat-color};
+  --border-radius: 15px;
+  --padding-start: 10px;
+  --padding-end: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  height: 32px;
+  flex-shrink: 0;
+ 
+  ion-icon {
+    font-size: 14px;
+    margin-right: 4px;
+  }
+}
+ 
+// Bottom row: ícone médico + botão Chamada
+.consulta-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.doctor-icon-wrap {
+  width: 36px;
+  height: 36px;
+  background: $gray-light;
   border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  min-width: 56px;
-  min-height: 56px;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  font-size: 20px;
+  color: $gray;
 }
-
-ion-thumbnail svg {
-  width: 40px !important;
-  height: 40px !important;
-  display: block;
-  margin: 0 auto;
+ 
+.btn-chamada {
+  --background: #{$call-bg};
+  --color: #{$white};
+  --border-radius: 15px;
+  font-size: 13px;
+  font-weight: 600;
+  height: 36px;
 }
-
-.ion-text-center p {
-  color: #888;
-}
-
+ 
+// ---- Tab Bar ----
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -103,12 +274,4 @@ ion-thumbnail svg {
   .nav-item--active svg path {
     fill: #141414;
   }
-  .nav-item svg path {
-    fill: #737373;
-  }
-
-  .nav-item--active svg path {
-    fill: #141414;
-  }
-
 }

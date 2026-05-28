@@ -37,6 +37,7 @@ export class AlterarDadosPage implements OnInit {
 
   usuario: UsuarioModel | null;
   alterarForm: FormGroup;
+  showSenha = false;
 
   constructor(private navController: NavController, private toastController: ToastController, private usuarioService: UsuarioService, private loginService: LoginService, private fb: FormBuilder) {
     this.usuario = new UsuarioModel();
@@ -51,11 +52,7 @@ export class AlterarDadosPage implements OnInit {
         telefone: [this.usuario?.telefone ?? '', [Validators.required]],
         dataNascimento: [this.usuario?.dataNascimento ?? '', [Validators.required]],
         cpf: [{ value: this.usuario?.cpf ?? '', disabled: true }, [Validators.required, cpfValidator]],
-        senha: ['', [Validators.minLength(4)]],
-        crm: [{
-          value: (this.usuario as MedicoModel)?.crm ?? '',
-          disabled: this.usuario?.tipoUsuario !== 'medico'
-        }],
+        senha: ['', [Validators.required]],
       },
 
       // { validators: passwordMatchValidator }
@@ -69,7 +66,6 @@ export class AlterarDadosPage implements OnInit {
     let aux: UsuarioModel;
     if (this.usuario?.tipoUsuario === 'medico') {
       const medico = new MedicoModel();
-      medico.crm = this.alterarForm.value.crm;
       aux = medico;
     } else {
       aux = new PacienteModel();

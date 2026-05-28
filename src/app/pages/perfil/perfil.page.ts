@@ -36,18 +36,13 @@ export class PerfilPage {
     }
   }
 
-  irParaMeusDados() {
-    this.navController.navigateForward('/alterar-dados');
-  }
+
 
   logout() {
     this.loginService.logout();
     this.navController.navigateForward('/login');
   }
 
-  irParaAvaliacoes() {
-    this.navController.navigateForward('/avaliacoes');
-  }
 
   toggleNotificacoes(event: any) {
     this.notificacoesAtivas = event.detail.checked;

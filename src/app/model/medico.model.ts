@@ -1,6 +1,22 @@
+import { EspecialidadeModel } from "./especialidade.model";
+import { HorarioDisponivelModel } from "./horario-disponivel.model";
 import { UsuarioModel } from "./usuario.model";
 
 export class MedicoModel extends UsuarioModel {
-  crm!: string;
+  especialidade: EspecialidadeModel;
+  formacaoAcademica: string;
+  sobreMim: string;
+  crm: number;
+  ufEmissao: string;
+  horario: HorarioDisponivelModel[];
 
-}
+  constructor(){
+    super();
+    this.especialidade = new EspecialidadeModel();  
+    this.formacaoAcademica = "";
+    this.crm = 0;
+    this.ufEmissao = "";
+    this.sobreMim = "";
+    this.horario = [];
+  }
+} 

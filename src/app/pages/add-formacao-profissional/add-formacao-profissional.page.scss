@@ -1,0 +1,295 @@
+// ==============================
+// Alterar Formação — Design Premium
+// ==============================
+
+$blue:        #29ABE2;
+$blue-dark:   #1a8fbf;
+$blue-light:  #E8F6FD;
+$black:       #111111;
+$gray:        #6B6B6B;
+$gray-light:  #F7F8FA;
+$border:      #E8E8E8;
+$white:       #FFFFFF;
+$warn:        #F59E0B;
+
+.alterar-content {
+  --background: #F4F7FB;
+}
+
+// ---- Hero Banner ----
+.hero-banner {
+  position: relative;
+  background: linear-gradient(135deg, #29ABE2 0%, #1a6fa8 100%);
+  height: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: 8px;
+}
+
+// Shapes decorativos
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+
+  &-1 {
+    width: 180px;
+    height: 180px;
+    top: -60px;
+    right: -40px;
+  }
+
+  &-2 {
+    width: 100px;
+    height: 100px;
+    bottom: -30px;
+    left: -20px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  &-3 {
+    width: 60px;
+    height: 60px;
+    top: 40px;
+    left: 40px;
+    background: rgba(255,255,255,0.1);
+  }
+}
+
+// Back button
+.header-back {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+
+  &:active {
+    background: rgba(255,255,255,0.35);
+  }
+}
+
+.hero-title-top {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 17px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+}
+
+.hero-icon {
+  background: rgba(255,255,255,0.15);
+  border-radius: 24px;
+  width: 88px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255,255,255,0.25);
+}
+
+.hero-text {
+  text-align: center;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+    margin: 0 0 4px;
+    letter-spacing: -0.3px;
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    margin: 0;
+  }
+}
+
+// ---- Form Card ----
+.form-card {
+  background: $white;
+  border-radius: 28px 28px 0 0;
+  margin-top: -20px;
+  padding: 28px 20px 40px;
+  min-height: calc(100vh - 190px);
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+}
+
+// ---- Section Block ----
+.section-block {
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  .section-icon {
+    width: 36px;
+    height: 36px;
+    background: $blue-light;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: $black;
+    letter-spacing: -0.3px;
+  }
+}
+
+// ---- Field Group ----
+.field-group {
+  margin-bottom: 20px;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+}
+
+.field-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: $black;
+}
+
+// ---- Textarea ----
+.textarea-wrap {
+  position: relative;
+  background: $gray-light;
+  border-radius: 14px;
+  border: 1.5px solid $border;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: $blue;
+    box-shadow: 0 0 0 3px rgba(41,171,226,0.12);
+    background: $white;
+  }
+}
+
+.field-textarea {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: $black;
+  line-height: 1.6;
+  padding: 14px 14px 28px;
+  resize: none;
+  font-family: inherit;
+  box-sizing: border-box;
+  border-radius: 14px;
+
+  &::placeholder {
+    color: #BBBBBB;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+
+.char-count {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 11px;
+  color: #BBBBBB;
+  font-weight: 500;
+
+  span.warn {
+    color: $warn;
+    font-weight: 700;
+  }
+}
+
+// ---- Tip Card ----
+.tip-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: $blue-light;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 28px;
+  border-left: 3px solid $blue;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  p {
+    font-size: 13px;
+    color: #1a6fa8;
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+}
+
+// ---- Salvar Button ----
+.salvar-btn {
+  width: 100%;
+  height: 54px;
+  background: linear-gradient(135deg, $black 0%, #333333 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  transition: opacity 0.2s, transform 0.15s;
+
+  &:active {
+    opacity: 0.88;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background: #CCCCCC;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}

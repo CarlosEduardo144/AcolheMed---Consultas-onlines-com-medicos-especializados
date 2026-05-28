@@ -26,5 +26,21 @@ export const routes: Routes = [
     path: 'alterar-dados',
     loadComponent: () => import('./pages/alterar-dados/alterar-dados.page').then( m => m.AlterarDadosPage)
   },
+  {
+    path: 'consultas',
+    loadComponent: () => import('./pages/consultas/consultas.page').then( m => m.ConsultasPage)
+  },
+  {
+    path: 'explorar',
+    loadComponent: () => import('./pages/explorar/explorar.page').then( m => m.ExplorarPage)
+  },
+  {
+    path: 'add-formacao-profissional',
+    loadComponent: () => import('./pages/add-formacao-profissional/add-formacao-profissional.page').then( m => m.AddFormacaoProfissionalPage)
+  },
+  {
+    path: 'alterar-horario',
+    loadComponent: () => import('./pages/alterar-horario/alterar-horario.page').then( m => m.AlterarHorarioPage)
+  },
 ];
 
