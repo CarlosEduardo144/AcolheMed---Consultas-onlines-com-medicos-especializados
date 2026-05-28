@@ -4,6 +4,7 @@ import { NavController } from '@ionic/angular';
 import { IonIcon,IonButton, IonContent, IonHeader, IonTabBar, IonTabButton, IonTitle,IonToolbar, IonLabel, IonButtons, IonAvatar} from '@ionic/angular/standalone';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { EspecialidadeService } from 'src/app/services/especialidade.service';
+import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
  
 @Component({
@@ -31,11 +32,16 @@ export class InicioPage implements OnInit {
     }
   ];
  
-  constructor(private navCtrl: NavController, private usuarioService: UsuarioService, private especialidadeService: EspecialidadeService ) {
-    this.usuario = new UsuarioModel();
-    this.medicosDisponiveis = usuarioService.qtdMedicos();
-    this.especialidadesDisponiveis = especialidadeService.qtdEspecialidades();
-  }
+  constructor(
+  private navCtrl: NavController,
+  private usuarioService: UsuarioService,
+  private especialidadeService: EspecialidadeService,
+  private loginService: LoginService
+) {
+  this.usuario = this.loginService.getUsuario() ?? new UsuarioModel(); // <-- troca
+  this.medicosDisponiveis = usuarioService.qtdMedicos();
+  this.especialidadesDisponiveis = especialidadeService.qtdEspecialidades();
+}
  
   ngOnInit() {}
  

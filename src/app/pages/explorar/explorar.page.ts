@@ -22,8 +22,6 @@ export class ExplorarPage {
   textoBusca: string = '';
   especialidadesFiltradas: EspecialidadeModel[] = [];
 
-  ngOnit() { }
-
 
 
   constructor(private navCtrl: NavController, private usuarioService: UsuarioService, private especialidadeService: EspecialidadeService) {

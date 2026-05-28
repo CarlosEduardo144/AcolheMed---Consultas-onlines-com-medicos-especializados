@@ -82,19 +82,34 @@ export class CadastrarPage {
       { validators: passwordMatchValidator }
     );
     this.especialidades = especialidadeService.listar();
+    this.setUserType('paciente');
   }
 
   setUserType(type: UserType) {
-    this.userType = type;
-    const crmControl = this.cadastrarForm.get('crm');
-    if (type === 'medico') {
-      crmControl?.setValidators([Validators.required]);
-    } else {
-      crmControl?.clearValidators();
-      crmControl?.setValue('');
-    }
-    crmControl?.updateValueAndValidity();
+  this.userType = type;
+
+  const crmControl = this.cadastrarForm.get('crm');
+  const ufControl = this.cadastrarForm.get('uf');
+  const espControl = this.cadastrarForm.get('especialidade');
+
+  if (type === 'medico') {
+    crmControl?.setValidators([Validators.required]);
+    ufControl?.setValidators([Validators.required]);
+    espControl?.setValidators([Validators.required]);
+  } else {
+    crmControl?.clearValidators();
+    ufControl?.clearValidators();
+    espControl?.clearValidators();
+    // limpa os valores também para não ficarem sujos
+    crmControl?.setValue('');
+    ufControl?.setValue('');
+    espControl?.setValue('');
   }
+
+  crmControl?.updateValueAndValidity();
+  ufControl?.updateValueAndValidity();
+  espControl?.updateValueAndValidity();
+}
 
   goBack() {
     this.navController.back();

@@ -1,0 +1,223 @@
+$blue: #29ABE2;
+$blue-dark: #1a8fbf;
+$black: #111111;
+$gray: #6B6B6B;
+$gray-light: #F5F5F5;
+$white: #FFFFFF;
+$call-bg: #00C48C;
+
+ion-content.agendar-content {
+  --background: #{$white};
+}
+
+ion-header ion-toolbar {
+  --background: #{$white};
+  --color: #{$black};
+  --border-width: 0;
+  ion-title { font-size: 17px; font-weight: 700; }
+}
+
+// Médico resumo
+.medico-resumo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: #EAF7FD;
+  margin: 0 0 4px;
+}
+
+.medico-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #D0EEF8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 26px; color: $blue; }
+}
+
+.medico-nome {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: $black;
+}
+
+.medico-esp {
+  display: block;
+  font-size: 13px;
+  color: $gray;
+}
+
+.sem-medico {
+  padding: 32px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: $gray;
+  a { color: $blue; font-weight: 600; }
+}
+
+// Section label
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 20px 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: $black;
+  ion-icon { color: $blue; font-size: 18px; }
+}
+
+// Dias scroll
+.dias-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0 20px 4px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.dia-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 54px;
+  background: $gray-light;
+  border-radius: 14px;
+  padding: 10px 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+
+  &.selecionado {
+    background: $blue;
+    border-color: $blue-dark;
+    .dia-nome, .dia-num { color: $white; }
+  }
+}
+
+.dia-nome {
+  font-size: 11px;
+  font-weight: 600;
+  color: $gray;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dia-num {
+  font-size: 20px;
+  font-weight: 800;
+  color: $black;
+  margin-top: 2px;
+}
+
+.dia-label-full {
+  padding: 10px 20px 0;
+  font-size: 13px;
+  color: $gray;
+  font-weight: 500;
+}
+
+// Slots
+.periodo-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 20px 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: $black;
+  ion-icon { color: $gray; font-size: 16px; }
+}
+
+.slots-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 20px;
+}
+
+.slot {
+  background: $gray-light;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: $black;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.18s ease;
+
+  &.selecionado {
+    background: #E3F4FB;
+    border-color: $blue;
+    color: $blue;
+  }
+
+  &:hover { border-color: #BDBDBD; }
+}
+
+// Observações
+.obs-wrap {
+  padding: 0 20px;
+  ion-textarea.obs-input {
+    --background: #{$gray-light};
+    --border-radius: 14px;
+    --padding-start: 14px;
+    --padding-end: 14px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --color: #{$black};
+    font-size: 14px;
+  }
+}
+
+// Bottom confirm
+.bottom-confirm {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 20px 28px;
+  background: $white;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
+  z-index: 100;
+}
+
+.resumo-confirm {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px 10px;
+  .resumo-data { font-size: 13px; color: $gray; font-weight: 500; }
+  .resumo-hora { font-size: 13px; color: $blue; font-weight: 700; }
+}
+
+.btn-confirmar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: $call-bg;
+  color: $white;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px;
+  cursor: pointer;
+  transition: opacity 0.18s;
+  ion-icon { font-size: 20px; }
+
+  &.disabled {
+    background: #BDBDBD;
+    cursor: not-allowed;
+  }
+  &:not(.disabled):active { opacity: 0.85; }
+}

@@ -42,5 +42,13 @@ export const routes: Routes = [
     path: 'alterar-horario',
     loadComponent: () => import('./pages/alterar-horario/alterar-horario.page').then( m => m.AlterarHorarioPage)
   },
+  {
+    path: 'medico',
+    loadComponent: () => import('./pages/medico/medico.page').then( m => m.MedicoPage)
+  },
+  {
+    path: 'agendar-consulta',
+    loadComponent: () => import('./pages/agendar-consulta/agendar-consulta.page').then( m => m.AgendarConsultaPage)
+  },
 ];
 

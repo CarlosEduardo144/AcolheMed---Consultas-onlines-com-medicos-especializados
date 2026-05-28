@@ -30,7 +30,7 @@
   <div class="section">
     <h2 class="section-title">Médicos em destaque</h2>
     <div class="horizontal-scroll">
-      <div class="medico-card" *ngFor="let medico of medicos">
+      <div class="medico-card" *ngFor="let medico of medicos" (click)="verMedico(medico)">
         <div class="medico-img-wrap">
           <!-- <img [src]="medico.foto" [alt]="medico.nome" /> -->
         </div>
