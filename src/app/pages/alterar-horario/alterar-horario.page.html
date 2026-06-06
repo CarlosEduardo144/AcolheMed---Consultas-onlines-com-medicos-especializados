@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+      <ion-back-button defaultHref="/perfil" text=""></ion-back-button>
     </ion-buttons>
     <ion-title>Horários de Atendimento</ion-title>
   </ion-toolbar>
@@ -34,7 +34,8 @@
         </div>
         <span class="day-name">{{ day.label }}</span>
         <ion-toggle
-          [(ngModel)]="day.enabled"
+          [checked]="day.enabled"
+          (ionChange)="toggleDay(day, $event.detail.checked)"
           mode="ios"
           class="day-toggle"
         ></ion-toggle>
@@ -42,7 +43,11 @@
 
       <!-- Slots de horário -->
       <div class="slots-wrap">
-        <div class="slot-row" *ngFor="let slot of day.slots">
+        <div
+          class="slot-row"
+          [class.disabled]="!slot.enabled"
+          *ngFor="let slot of day.slots"
+        >
 
           <!-- Label manhã / tarde -->
           <div class="slot-label-wrap">
@@ -50,17 +55,25 @@
             <span class="slot-label">{{ slot.period | titlecase }}</span>
           </div>
 
-          <!-- Inputs de hora (somente hora, minutos fixos em :00) -->
-          <div class="slot-inputs">
+          <ion-toggle
+            [checked]="slot.enabled"
+            [disabled]="!day.enabled"
+            (ionChange)="toggleSlot(day, slot, $event.detail.checked)"
+            mode="ios"
+            class="slot-toggle"
+          ></ion-toggle>
 
-            <div class="hour-picker" (click)="openHourPicker(day, slot, 'start')">
+          <!-- Inputs de hora (somente hora, minutos fixos em :00) -->
+          <div class="slot-inputs" [class.disabled]="!slot.enabled">
+
+            <div class="hour-picker" (click)="openHourPicker(slot, 'start')">
               <span class="hour-value">{{ slot.startHour | hourDisplay }}</span>
               <ion-icon name="chevron-down-outline" class="picker-chevron"></ion-icon>
             </div>
 
             <span class="time-separator">–</span>
 
-            <div class="hour-picker" (click)="openHourPicker(day, slot, 'end')">
+            <div class="hour-picker" (click)="openHourPicker(slot, 'end')">
               <span class="hour-value">{{ slot.endHour | hourDisplay }}</span>
               <ion-icon name="chevron-down-outline" class="picker-chevron"></ion-icon>
             </div>

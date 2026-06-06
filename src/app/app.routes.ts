@@ -20,35 +20,51 @@ export const routes: Routes = [
   },
   {
     path: 'perfil',
-    loadComponent: () => import('./pages/perfil/perfil.page').then( m => m.PerfilPage)
+    loadComponent: () => import('./pages/perfil/perfil.page').then(m => m.PerfilPage)
   },
   {
     path: 'alterar-dados',
-    loadComponent: () => import('./pages/alterar-dados/alterar-dados.page').then( m => m.AlterarDadosPage)
+    loadComponent: () => import('./pages/alterar-dados/alterar-dados.page').then(m => m.AlterarDadosPage)
   },
   {
     path: 'consultas',
-    loadComponent: () => import('./pages/consultas/consultas.page').then( m => m.ConsultasPage)
+    loadComponent: () => import('./pages/consultas/consultas.page').then(m => m.ConsultasPage)
   },
   {
     path: 'explorar',
-    loadComponent: () => import('./pages/explorar/explorar.page').then( m => m.ExplorarPage)
+    loadComponent: () => import('./pages/explorar/explorar.page').then(m => m.ExplorarPage)
   },
   {
     path: 'add-formacao-profissional',
-    loadComponent: () => import('./pages/add-formacao-profissional/add-formacao-profissional.page').then( m => m.AddFormacaoProfissionalPage)
+    loadComponent: () => import('./pages/add-formacao-profissional/add-formacao-profissional.page').then(m => m.AddFormacaoProfissionalPage)
   },
   {
     path: 'alterar-horario',
-    loadComponent: () => import('./pages/alterar-horario/alterar-horario.page').then( m => m.AlterarHorarioPage)
+    loadComponent: () => import('./pages/alterar-horario/alterar-horario.page').then(m => m.AlterarHorarioPage)
   },
   {
     path: 'medico',
-    loadComponent: () => import('./pages/medico/medico.page').then( m => m.MedicoPage)
+    loadComponent: () => import('./pages/medico/medico.page').then(m => m.MedicoPage)
   },
   {
     path: 'agendar-consulta',
-    loadComponent: () => import('./pages/agendar-consulta/agendar-consulta.page').then( m => m.AgendarConsultaPage)
+    loadComponent: () => import('./pages/agendar-consulta/agendar-consulta.page').then(m => m.AgendarConsultaPage)
+  },
+  {
+    path: 'medicos/:id',
+    loadComponent: () => import('./pages/medico/medico.page').then(m => m.MedicoPage)
+  },
+  {
+    path: 'home-medico',
+    loadComponent: () => import('./pages/home-medico/home-medico.page').then(m => m.HomeMedicoPage)
+  },
+  {
+    path: 'pacientes-medico',
+    loadComponent: () => import('./pages/pacientes-medico/pacientes-medico.page').then(m => m.PacientesMedicoPage)
+  },
+  {
+    path: 'agendamentos-medico',
+    loadComponent: () => import('./pages/agendamentos-medico/agendamentos-medico.page').then( m => m.AgendamentosMedicoPage)
   },
 ];
 

@@ -221,3 +221,49 @@ ion-header ion-toolbar {
   }
   &:not(.disabled):active { opacity: 0.85; }
 }
+// Calendário ion-datetime
+.calendario {
+  margin: 0 16px 4px;
+  border-radius: 16px;
+  --background: #{$white};
+  --color: #{$black};
+
+  // Todos os dias: texto preto e legível
+  &::part(calendar-day) {
+    color: $black;
+    font-weight: 500;
+  }
+
+  // Dia de hoje: destaque sutil
+  &::part(calendar-day today) {
+    color: $blue;
+    font-weight: 700;
+  }
+
+  // Dias desabilitados (médico não atende)
+  &::part(calendar-day disabled) {
+    color: #BDBDBD;
+    opacity: 0.5;
+    text-decoration: line-through;
+  }
+
+  // Dia selecionado
+  &::part(calendar-day active),
+  &::part(calendar-day active today) {
+    background: $blue;
+    color: $white;
+    border-radius: 50%;
+    font-weight: 700;
+  }
+}
+
+// Aviso sem horário disponível no dia
+.sem-horario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  font-size: 14px;
+  color: $gray;
+  ion-icon { font-size: 20px; }
+}

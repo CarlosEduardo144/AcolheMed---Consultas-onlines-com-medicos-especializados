@@ -27,21 +27,22 @@
 
   <ng-container *ngIf="medico">
 
-    <!-- Escolha de data -->
+    <!-- Calendário -->
     <div class="section-label">
       <ion-icon name="calendar-outline"></ion-icon>
       Escolha uma data
     </div>
 
-    <div class="dias-scroll">
-      <div class="dia-card"
-           *ngFor="let d of dias"
-           [class.selecionado]="diaSelecionado === d"
-           (click)="selecionarDia(d)">
-        <span class="dia-nome">{{ d.label.split(',')[0] }}</span>
-        <span class="dia-num">{{ d.data.getDate() }}</span>
-      </div>
-    </div>
+    <ion-datetime
+      presentation="date"
+      locale="pt-BR"
+      [min]="minDate"
+      [max]="maxDate"
+      [isDateEnabled]="isDiaDisponivel"
+      (ionChange)="onDataChange($event)"
+      size="cover"
+      class="calendario">
+    </ion-datetime>
 
     <div class="dia-label-full" *ngIf="diaSelecionado">
       {{ diaSelecionado.label }}
@@ -76,6 +77,12 @@
              (click)="selecionarSlot(s)">
           {{ s.horario }}
         </div>
+      </div>
+
+      <!-- Sem horários disponíveis neste dia -->
+      <div class="sem-horario" *ngIf="!slotsManha.length && !slotsTarde.length">
+        <ion-icon name="time-outline"></ion-icon>
+        <span>Nenhum horário disponível neste dia</span>
       </div>
 
       <!-- Observações -->

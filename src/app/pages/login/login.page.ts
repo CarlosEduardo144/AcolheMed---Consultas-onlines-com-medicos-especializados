@@ -83,7 +83,11 @@ export class LoginPage {
 
         this.exibirMensagem('Usuário logado com sucesso!!!');
 
-        this.navController.navigateBack('/perfil');
+        if (aux.tipoUsuario === 'medico') {
+          this.navController.navigateRoot('/home-medico');
+        } else {
+          this.navController.navigateRoot('/inicio');
+        }
 
       } else {
 

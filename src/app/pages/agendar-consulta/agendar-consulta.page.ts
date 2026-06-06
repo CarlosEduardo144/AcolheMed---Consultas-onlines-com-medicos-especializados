@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import {
   NavController, ToastController,
   IonContent, IonHeader, IonTitle, IonToolbar,
-  IonButton, IonButtons, IonBackButton, IonIcon, IonTextarea
+  IonButton, IonButtons, IonBackButton, IonIcon, IonTextarea, IonDatetime
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -25,6 +25,9 @@ const DIA_MAP: { [key: number]: string } = {
   0: 'dom', 1: 'seg', 2: 'ter', 3: 'qua', 4: 'qui', 5: 'sex', 6: 'sab'
 };
 
+const NOMES_DIA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+const NOMES_MES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
 @Component({
   selector: 'app-agendar-consulta',
   templateUrl: './agendar-consulta.page.html',
@@ -33,18 +36,30 @@ const DIA_MAP: { [key: number]: string } = {
   imports: [
     CommonModule, FormsModule, RouterModule,
     IonContent, IonHeader, IonTitle, IonToolbar,
-    IonButton, IonButtons, IonBackButton, IonIcon, IonTextarea
+    IonButton, IonButtons, IonBackButton, IonIcon, IonTextarea, IonDatetime
   ]
 })
 export class AgendarConsultaPage implements OnInit {
 
   medico: MedicoModel | null = null;
-  dias: DiaOpcao[] = [];
   diaSelecionado: DiaOpcao | null = null;
   slots: SlotOpcao[] = [];
   slotSelecionado: SlotOpcao | null = null;
   observacoes = '';
   confirmando = false;
+
+  // Limites do calendário: amanhã até 90 dias à frente
+  readonly minDate = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() );
+    return d.toISOString().split('T')[0];
+  })();
+
+  readonly maxDate = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 90);
+    return d.toISOString().split('T')[0];
+  })();
 
   constructor(
     private router: Router,
@@ -61,40 +76,47 @@ export class AgendarConsultaPage implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.gerarDias();
-  }
+  ngOnInit() {}
 
-  gerarDias() {
-    const nomes = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-    const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
+  // Função passada ao ion-datetime para desabilitar dias que o médico não trabalha.
+  // Precisa ser arrow function para manter o contexto de 'this'.
+  isDiaDisponivel = (dateString: string): boolean => {
+    const horarios = this.medico?.horario ?? [];
+    const agendaConfigurada = this.medico?.horariosConfigurados || horarios.length > 0;
 
-    for (let i = 1; i <= 14; i++) {
-      const data = new Date(hoje);
-      data.setDate(hoje.getDate() + i);
-      const diaSemana = DIA_MAP[data.getDay()];
-      this.dias.push({
-        data,
-        label: `${nomes[data.getDay()]}, ${data.getDate()} ${meses[data.getMonth()]}`,
-        diaSemana
-      });
-    }
-  }
+    // Se a agenda não foi configurada, todos os dias ficam habilitados
+    if (!agendaConfigurada) return true;
 
-  selecionarDia(dia: DiaOpcao) {
-    this.diaSelecionado = dia;
+    const diaSemana = DIA_MAP[new Date(dateString).getUTCDay()];
+    const diasTrabalho = new Set(horarios.map(h => h.diaSemana));
+    return diasTrabalho.has(diaSemana);
+  };
+
+  onDataChange(event: CustomEvent) {
+    const dateString = event.detail.value as string;
+    if (!dateString) return;
+
+    // ion-datetime retorna ISO string; usamos UTC para evitar problemas de fuso
+    const data = new Date(dateString);
+    const diaSemana = DIA_MAP[data.getUTCDay()];
+
+    this.diaSelecionado = {
+      data,
+      label: `${NOMES_DIA[data.getUTCDay()]}, ${data.getUTCDate()} ${NOMES_MES[data.getUTCMonth()]}`,
+      diaSemana
+    };
     this.slotSelecionado = null;
-    this.gerarSlots(dia.diaSemana);
+    this.gerarSlots(diaSemana);
   }
 
   gerarSlots(diaSemana: string) {
     this.slots = [];
     const horarios = this.medico?.horario?.filter(h => h.diaSemana === diaSemana) ?? [];
+    const agendaConfigurada = this.medico?.horariosConfigurados || !!this.medico?.horario?.length;
 
     if (horarios.length === 0) {
-      // padrão se o médico não configurou
+      if (agendaConfigurada) return;
+      // Padrão se o médico ainda não configurou
       this.slots = this.slotsDoIntervalo(9, 12, 'manhã')
         .concat(this.slotsDoIntervalo(13, 17, 'tarde'));
       return;

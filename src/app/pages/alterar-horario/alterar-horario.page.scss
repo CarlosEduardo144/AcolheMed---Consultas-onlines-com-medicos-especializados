@@ -156,6 +156,18 @@ ion-content {
   display: flex;
   align-items: center;
   gap: 10px;
+
+  &.disabled {
+    .slot-dot,
+    .slot-label,
+    .slot-inputs {
+      opacity: 0.42;
+    }
+
+    .slot-inputs {
+      pointer-events: none;
+    }
+  }
 }
 
 .slot-label-wrap {
@@ -182,6 +194,15 @@ ion-content {
   font-size: 12px;
   font-weight: 500;
   color: $text-light;
+}
+
+.slot-toggle {
+  --handle-background: #fff;
+  --background: #d0d5e3;
+  --background-checked: #{$blue-primary};
+  --handle-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
+  transform: scale(0.82);
 }
 
 // ── Inputs de hora ────────────────────────────────────────────────────────────
