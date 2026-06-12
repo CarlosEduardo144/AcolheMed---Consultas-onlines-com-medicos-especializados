@@ -28,6 +28,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 })
 export class MedicoPage implements OnInit {
   medico: MedicoModel | null = null;
+  temHorarioDisponivel = false;
 
   diasSemana = [
     { id: 'seg', label: 'Seg' },
@@ -56,6 +57,20 @@ export class MedicoPage implements OnInit {
     if (id) {
       this.medico = this.usuarioService.getMedicos().find(m => m.id === id) ?? null;
     }
+    this.verificarHorario();
+  }
+
+  verificarHorario() {
+    if (!this.medico?.horario) {
+      return;
+    }
+
+    for (let i = 0; i < this.medico.horario.length; i++) {
+      if (this.medico.horario[i].id) {
+        this.temHorarioDisponivel = true;
+        break;
+      }
+    }
   }
 
   temHorario(diaId: string): boolean {
@@ -67,6 +82,17 @@ export class MedicoPage implements OnInit {
     this.navCtrl.navigateForward('/agendar-consulta', {
       state: { medico: this.medico }
     });
+  }
+
+  async exibirMensagem(texto: string) {
+
+    const toast = await this.toastController.create({
+      message: texto,
+      duration: 1500
+    });
+
+    toast.present();
+
   }
 
   goBack() {

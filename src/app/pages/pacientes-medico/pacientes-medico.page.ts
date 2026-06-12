@@ -123,7 +123,7 @@ export class PacientesMedicoPage implements OnInit {
   }
 
   verDetalhes(consulta: ConsultaModel) {
-    this.navCtrl.navigateForward('/consultas', {
+    this.navCtrl.navigateForward('/agendamentos-medico', {
       state: { consultaId: consulta.id }
     });
   }

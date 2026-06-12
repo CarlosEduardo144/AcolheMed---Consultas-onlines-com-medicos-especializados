@@ -173,6 +173,22 @@ ion-header ion-toolbar {
   ion-icon { font-size: 18px; }
 }
 
+.btn-agendar-disable {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgb(190, 190, 190);
+  color: rgb(114, 114, 114);
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px;
+  ion-icon { font-size: 18px; }
+}
+
 // Empty state
 .empty-state {
   display: flex;

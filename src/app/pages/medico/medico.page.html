@@ -55,10 +55,8 @@
   <div class="section">
     <h2 class="section-title">Disponibilidade</h2>
     <div class="dias-row">
-      <div class="dia-chip"
-           *ngFor="let d of diasSemana"
-           [class.ativo]="temHorario(d.id)"
-           [class.inativo]="!temHorario(d.id)">
+      <div class="dia-chip" *ngFor="let d of diasSemana" [class.ativo]="temHorario(d.id)"
+        [class.inativo]="!temHorario(d.id)">
         {{ d.label }}
       </div>
     </div>
@@ -86,8 +84,16 @@
     <ion-icon name="chatbubble-outline"></ion-icon>
     Chat
   </button>
+  @if (temHorarioDisponivel) {
   <button class="btn-agendar" (click)="agendar()">
     <ion-icon name="calendar-outline"></ion-icon>
     Agendar Consulta
   </button>
+} @else {
+  <button class="btn-agendar-disable" disabled>
+    <ion-icon name="calendar-outline"></ion-icon>
+    Agendar Consulta
+  </button>
+}
+
 </div>
