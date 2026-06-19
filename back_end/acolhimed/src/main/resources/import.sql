@@ -1,0 +1,51 @@
+INSERT INTO tb_especialidades (nome, descricao, imagem_url) VALUES
+(
+    'Cardiologia',
+    'Especialidade responsável pelo diagnóstico e tratamento de doenças do coração e sistema cardiovascular.',
+    'https://images.unsplash.com/photo-1530026405186-ed1f139313f8'
+),
+(
+    'Dermatologia',
+    'Especialidade voltada para prevenção, diagnóstico e tratamento de doenças da pele.',
+    'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d'
+),
+(
+    'Pediatria',
+    'Especialidade médica dedicada ao acompanhamento da saúde de crianças e adolescentes.',
+    'https://images.unsplash.com/photo-1584515933487-779824d29309'
+),
+(
+    'Ortopedia',
+    'Especialidade responsável pelo tratamento de ossos, músculos, articulações e ligamentos.',
+    'https://images.unsplash.com/photo-1576091160550-2173dba999ef'
+),
+(
+    'Neurologia',
+    'Especialidade que trata doenças do sistema nervoso central e periférico.',
+    'https://images.unsplash.com/photo-1559757148-5c350d0d3c56'
+),
+(
+    'Oftalmologia',
+    'Especialidade voltada para o cuidado da visão e tratamento dos olhos.',
+    'https://images.unsplash.com/photo-1580281657527-47f249e8f4df'
+),
+(
+    'Ginecologia',
+    'Especialidade dedicada à saúde do sistema reprodutor feminino.',
+    'https://images.unsplash.com/photo-1631217868264-e6b90bb7e133'
+),
+(
+    'Psiquiatria',
+    'Especialidade focada na prevenção, diagnóstico e tratamento de transtornos mentais.',
+    'https://images.unsplash.com/photo-1573497620053-ea5300f94f21'
+),
+(
+    'Endocrinologia',
+    'Especialidade responsável pelo tratamento de distúrbios hormonais e metabólicos.',
+    'https://images.unsplash.com/photo-1579684385127-1ef15d508118'
+),
+(
+    'Urologia',
+    'Especialidade que trata doenças do trato urinário e sistema reprodutor masculino.',
+    'https://images.unsplash.com/photo-1516549655169-df83a0774514'
+);
