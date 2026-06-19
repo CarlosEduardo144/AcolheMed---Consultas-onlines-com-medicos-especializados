@@ -1,6 +1,5 @@
 package br.cefet.acolhimed.dto;
 
-import br.cefet.acolhimed.entity.Especialidade;
 import br.cefet.acolhimed.entity.Medico;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

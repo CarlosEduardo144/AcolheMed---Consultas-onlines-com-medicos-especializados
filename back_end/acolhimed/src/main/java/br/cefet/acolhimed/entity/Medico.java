@@ -2,14 +2,16 @@ package br.cefet.acolhimed.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 
 @Entity
-@Table(name = "tb_medicos")
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Medico extends Usuario{
@@ -26,7 +28,8 @@ public class Medico extends Usuario{
     @Column(nullable = false, length = 20, unique = false)
     private String ufEmissao;
 
-    @Column(nullable = false, unique = false)
+    @ManyToOne
+    @JoinColumn(name = "especialidade_id", nullable = false)
     private Especialidade especialidade;
 
     @Column(nullable = true, unique = false)

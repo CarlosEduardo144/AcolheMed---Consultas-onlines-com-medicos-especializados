@@ -30,7 +30,7 @@ public class Especialidade {
     @Column(nullable = false, length = 50, unique = true)
     private String nome;
 
-    @Column(nullable = false, length = 100, unique = false)
+    @Column(nullable = false, length = 200, unique = false)
     private String descricao;
 
     @Column(nullable = false, length = 200, unique = false)

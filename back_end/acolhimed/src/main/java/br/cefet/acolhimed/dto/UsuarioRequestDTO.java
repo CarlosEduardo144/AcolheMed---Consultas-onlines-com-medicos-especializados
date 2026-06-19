@@ -32,7 +32,7 @@ public class UsuarioRequestDTO {
     @NotBlank(message = "O campo tipoUsuario é obrigatório")
     private String tipoUsuario;
 
-    @NotBlank(message = "O campo data de Nascimento é obrigatório")
+    @NotNull(message = "O campo data de Nascimento é obrigatório")
     private Date dataNascimento;
 
     private String foto;
