@@ -1,0 +1,99 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/explorar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Perfil do Médico</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="medico-content" *ngIf="medico">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-avatar">
+      <ion-icon name="person-outline"></ion-icon>
+    </div>
+    <h1 class="hero-nome">{{ medico.usuario.nome }}</h1>
+    <p class="hero-esp">SemEspecialidade</p>
+    <div class="hero-rating">
+      <ion-icon name="star"></ion-icon>
+      <ion-icon name="star"></ion-icon>
+      <ion-icon name="star"></ion-icon>
+      <ion-icon name="star"></ion-icon>
+      <ion-icon name="star-outline"></ion-icon>
+      <span>4.0</span>
+    </div>
+  </div>
+
+  <!-- Info cards -->
+  <div class="info-cards">
+    <div class="info-card">
+      <ion-icon name="location-outline"></ion-icon>
+      <span class="info-label">UF</span>
+      <span class="info-value">{{ medico.ufEmissao || '—' }}</span>
+    </div>
+    <div class="info-card">
+      <ion-icon name="school-outline"></ion-icon>
+      <span class="info-label">CRM</span>
+      <span class="info-value">{{ medico.crm || '—' }}</span>
+    </div>
+    <div class="info-card">
+      <ion-icon name="time-outline"></ion-icon>
+      <span class="info-label">Formação</span>
+      <span class="info-value">{{ medico.formacaoAcademica || '—' }}</span>
+    </div>
+  </div>
+
+  <!-- Sobre mim -->
+  <div class="section" *ngIf="medico.sobreMim">
+    <h2 class="section-title">Sobre mim</h2>
+    <p class="sobre-text">{{ medico.sobreMim }}</p>
+  </div>
+
+  <!-- Disponibilidade -->
+  <div class="section">
+    <h2 class="section-title">Disponibilidade</h2>
+    <div class="dias-row">
+      <div class="dia-chip" *ngFor="let d of diasSemana" [class.ativo]="temHorario(d.id)"
+        [class.inativo]="!temHorario(d.id)">
+        {{ d.label }}
+      </div>
+    </div>
+    <p class="disp-hint" *ngIf="!medico.horario?.length">
+      Horários não configurados. Clique em agendar para ver as opções.
+    </p>
+  </div>
+
+  <div style="height: 110px"></div>
+
+</ion-content>
+
+<!-- Não encontrado -->
+<ion-content *ngIf="!medico" class="medico-content">
+  <div class="empty-state">
+    <ion-icon name="person-outline"></ion-icon>
+    <p>Médico não encontrado</p>
+    <ion-button fill="clear" (click)="goBack()">Voltar</ion-button>
+  </div>
+</ion-content>
+
+<!-- Botões flutuantes -->
+<div class="bottom-actions" *ngIf="medico">
+  <button class="btn-chat-float">
+    <ion-icon name="chatbubble-outline"></ion-icon>
+    Chat
+  </button>
+  @if (temHorarioDisponivel) {
+  <button class="btn-agendar" (click)="agendar()">
+    <ion-icon name="calendar-outline"></ion-icon>
+    Agendar Consulta
+  </button>
+} @else {
+  <button class="btn-agendar-disable" disabled>
+    <ion-icon name="calendar-outline"></ion-icon>
+    Agendar Consulta
+  </button>
+}
+
+</div>

@@ -1,0 +1,122 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/explorar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Agendar Consulta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="agendar-content">
+
+  <!-- Médico selecionado -->
+  <div class="medico-resumo" *ngIf="medico">
+    <div class="medico-avatar">
+      <ion-icon name="person-outline"></ion-icon>
+    </div>
+    <div class="medico-info">
+      <span class="medico-nome">{{ medico.usuario.nome }}</span>
+    </div>
+  </div>
+
+  <!-- Aviso se veio sem médico -->
+  <div class="sem-medico" *ngIf="!medico">
+    <p>Nenhum médico selecionado. Volte ao <a routerLink="/explorar">Explorar</a>.</p>
+  </div>
+
+  <ng-container *ngIf="medico">
+
+    <!-- Calendário -->
+    <div class="section-label">
+      <ion-icon name="calendar-outline"></ion-icon>
+      Escolha uma data
+    </div>
+
+    <ion-datetime
+      presentation="date"
+      locale="pt-BR"
+      [min]="minDate"
+      [max]="maxDate"
+      [isDateEnabled]="isDiaDisponivel"
+      (ionChange)="onDataChange($event)"
+      size="cover"
+      class="calendario">
+    </ion-datetime>
+
+    <div class="dia-label-full" *ngIf="diaSelecionado">
+      {{ diaSelecionado.label }}
+    </div>
+
+    <!-- Slots de horário -->
+    <ng-container *ngIf="diaSelecionado">
+
+      <!-- Manhã -->
+      <div class="periodo-header" *ngIf="slotsManha.length">
+        <ion-icon name="sunny-outline"></ion-icon>
+        Manhã
+      </div>
+      <div class="slots-grid" *ngIf="slotsManha.length">
+        <div class="slot"
+             *ngFor="let s of slotsManha"
+             [class.selecionado]="slotSelecionado === s"
+             (click)="selecionarSlot(s)">
+          {{ s.horario }}
+        </div>
+      </div>
+
+      <!-- Tarde -->
+      <div class="periodo-header" *ngIf="slotsTarde.length">
+        <ion-icon name="moon-outline"></ion-icon>
+        Tarde
+      </div>
+      <div class="slots-grid" *ngIf="slotsTarde.length">
+        <div class="slot"
+             *ngFor="let s of slotsTarde"
+             [class.selecionado]="slotSelecionado === s"
+             (click)="selecionarSlot(s)">
+          {{ s.horario }}
+        </div>
+      </div>
+
+      <!-- Sem horários disponíveis neste dia -->
+      <div class="sem-horario" *ngIf="!slotsManha.length && !slotsTarde.length">
+        <ion-icon name="time-outline"></ion-icon>
+        <span>Nenhum horário disponível neste dia</span>
+      </div>
+
+      <!-- Observações -->
+      <div class="section-label" *ngIf="slotSelecionado">
+        <ion-icon name="time-outline"></ion-icon>
+        Observações (opcional)
+      </div>
+      <div class="obs-wrap" *ngIf="slotSelecionado">
+        <ion-textarea
+          [(ngModel)]="observacoes"
+          placeholder="Descreva os sintomas ou motivo da consulta..."
+          rows="3"
+          class="obs-input">
+        </ion-textarea>
+      </div>
+
+    </ng-container>
+
+    <div style="height: 110px"></div>
+
+  </ng-container>
+
+</ion-content>
+
+<!-- Botão confirmar -->
+<div class="bottom-confirm" *ngIf="medico">
+  <div class="resumo-confirm" *ngIf="diaSelecionado && slotSelecionado">
+    <span class="resumo-data">{{ diaSelecionado.label }}</span>
+    <span class="resumo-hora">às {{ slotSelecionado.horario }}</span>
+  </div>
+  <button class="btn-confirmar"
+          [disabled]="!podeConcluir() || confirmando"
+          [class.disabled]="!podeConcluir()"
+          (click)="confirmar()">
+    <ion-icon name="checkmark-circle-outline"></ion-icon>
+    {{ confirmando ? 'Agendando...' : 'Confirmar Agendamento' }}
+  </button>
+</div>

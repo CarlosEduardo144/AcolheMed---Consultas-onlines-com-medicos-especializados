@@ -8,16 +8,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.cefet.acolhimed.dto.MedicoRequestDTO;
 import br.cefet.acolhimed.dto.MedicoResponseDTO;
+import br.cefet.acolhimed.dto.UsuarioRequestDTO;
 import br.cefet.acolhimed.entity.Medico;
+import br.cefet.acolhimed.entity.Usuario;
 import br.cefet.acolhimed.exception.BusinessException;
 import br.cefet.acolhimed.exception.ResourceNotFoundException;
 import br.cefet.acolhimed.repository.MedicoRepository;
+import br.cefet.acolhimed.repository.UsuarioRepository;
 
 @Service
 public class MedicoService {
 
     @Autowired
     private MedicoRepository MedicoRepository;
+
+    @Autowired
+    private UsuarioRepository UsuarioRepository;
 
     @Transactional(readOnly = true)
     public List<MedicoResponseDTO> listar() {
@@ -28,7 +34,7 @@ public class MedicoService {
     @Transactional(readOnly = true)
     public MedicoResponseDTO buscarPorId(String id) {
         Medico Medico = MedicoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Medico não encontrado. Id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Medico nao encontrado. Id: " + id));
 
         return new MedicoResponseDTO(Medico);
     }
@@ -37,18 +43,25 @@ public class MedicoService {
     public MedicoResponseDTO inserir(MedicoRequestDTO dto) {
 
         if (MedicoRepository.existsByCrm(dto.getCrm())) {
-            throw new BusinessException("Já existe uma Medico com esse CRM.");
+            throw new BusinessException("Ja existe uma Medico com esse CRM.");
+        }
+
+        String email = dto.getUsuario().getEmail();
+
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.getUsuario().getNome());
+        usuario.setEmail(email);
+        usuario.setSenha(dto.getUsuario().getSenha());
+        usuario.setTipoUsuario(dto.getUsuario().getTipoUsuario());
+
+        if (!email.equals(usuario.getEmail()) && UsuarioRepository.existsByEmail(email)) {
+            throw new BusinessException("Ja existe um usuario com esse email.");
         }
 
         Medico medico = new Medico();
-        medico.setNome(dto.getNome());
-        medico.setEmail(dto.getEmail());
-        medico.setCpf(dto.getCpf());
-        medico.setSenha(dto.getSenha());
-        medico.setTelefone(dto.getTelefone());
+        medico.setUsuario(usuario);
         medico.setUfEmissao(dto.getUfEmissao());
         medico.setCrm(dto.getCrm());
-        medico.setDataNascimento(dto.getDataNascimento());
 
         return new MedicoResponseDTO(MedicoRepository.save(medico));
     }
@@ -57,26 +70,22 @@ public class MedicoService {
     public MedicoResponseDTO atualizar(String id, MedicoRequestDTO dto) {
 
         Medico medico = MedicoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Medico não encontrado. Id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Medico nao encontrado. Id: " + id));
 
-        if (MedicoRepository.existsByEmail(dto.getEmail())) {
-            throw new BusinessException("Já existe uma usuário com esse email.");
+        Usuario usuario = medico.getUsuario();
+        String email = dto.getUsuario().getEmail();
+       
+        if (!email.equals(usuario.getEmail()) && UsuarioRepository.existsByEmail(email)) {
+            throw new BusinessException("Ja existe um usuario com esse email.");
         }
 
-        medico.setNome(dto.getNome());
-        medico.setEmail(dto.getEmail());
-        medico.setFoto(dto.getFoto());
-        medico.setDataNascimento(dto.getDataNascimento());
-        if (dto.getSenha() != null) {
-            medico.setSenha(dto.getSenha());
-        }
-        medico.setTelefone(dto.getTelefone());
+        medico.setUsuario(usuario);
         medico.setSobreMim(dto.getSobreMim());
         medico.setFormacaoAcademica(dto.getFormacaoAcademica());
         medico.setHorariosConfigurados(dto.isHorariosConfigurados());
-        
+        medico.setUfEmissao(dto.getUfEmissao());
+        medico.setCrm(dto.getCrm());
 
         return new MedicoResponseDTO(MedicoRepository.save(medico));
     }
-
 }

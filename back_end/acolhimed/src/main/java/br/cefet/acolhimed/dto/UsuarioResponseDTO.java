@@ -17,23 +17,18 @@ public class UsuarioResponseDTO {
 	private String id;
     private String nome;
     private String email;
-    private String senha;
     private Date dataNascimento;
     private String tipoUsuario;
     private String foto;
     private String cpf;
-    private String telefone;
-
     
     public UsuarioResponseDTO(Usuario usuario) {
     	this.id = usuario.getId();
         this.nome = usuario.getNome();
         this.email = usuario.getEmail();
-        this.senha = usuario.getEmail();
         this.dataNascimento = usuario.getDataNascimento();
         this.foto = usuario.getFoto();
         this.cpf = usuario.getCpf();
-        this.telefone = usuario.getTelefone();
         this.tipoUsuario = usuario.getTipoUsuario();
     }  	
 

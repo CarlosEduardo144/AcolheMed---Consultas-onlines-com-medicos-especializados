@@ -1,0 +1,125 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Pacientes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="notifications-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="pacientes-content">
+
+  <!-- Busca -->
+  <div class="search-wrap">
+    <div class="search-box">
+      <ion-icon name="search-outline"></ion-icon>
+      <input
+        type="text"
+        placeholder="Procure pelo nome..."
+        [(ngModel)]="textoBusca"
+        (input)="filtrar()"
+      />
+    </div>
+    <button class="filter-btn">
+      <ion-icon name="filter-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Abas -->
+  <div class="tabs-wrap">
+    <button class="tab-btn" [class.active]="abaAtiva === 'todos'" (click)="setAba('todos')">
+      Todos
+    </button>
+    <button class="tab-btn" [class.active]="abaAtiva === 'hoje'" (click)="setAba('hoje')">
+      Hoje
+    </button>
+    <button class="tab-btn" [class.active]="abaAtiva === 'proximos'" (click)="setAba('proximos')">
+      Próximos
+    </button>
+  </div>
+
+  <!-- Contagem -->
+  <div class="count-header" *ngIf="listaFiltrada.length > 0">
+    <span class="count-label">{{ listaFiltrada.length }} paciente{{ listaFiltrada.length !== 1 ? 's' : '' }}</span>
+    <span class="date-hoje" *ngIf="abaAtiva === 'hoje'">{{ dataHojeFormatada }}</span>
+  </div>
+
+  <!-- Estado vazio -->
+  <div class="empty-state" *ngIf="listaFiltrada.length === 0">
+    <ion-icon name="people-outline"></ion-icon>
+    <p>Nenhum paciente encontrado</p>
+  </div>
+
+  <!-- Lista de pacientes -->
+  <div class="paciente-card" *ngFor="let item of listaFiltrada">
+    <div class="card-left">
+      <div class="avatar-circle">
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-info">
+          <p class="card-nome">{{ item.paciente.nome }}</p>
+          <p class="card-sub">{{ item.horario }} h • {{ formatarData(item.data) }}</p>
+        </div>
+        <div class="badge-status" [class]="item.status">
+          {{ statusLabel(item.status) }}
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn-chat" routerLink="/chat">
+          <ion-icon name="chatbubble-outline"></ion-icon>
+          Chat
+        </button>
+        <button class="btn-detalhes" (click)="verDetalhes(item)">
+          Detalhes
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 90px"></div>
+
+  <!-- Bottom Nav Médico -->
+  <div class="bottom-nav" *ngIf="tipoUsuario === 'medico'">
+    <a routerLink="/home-medico" class="nav-item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M20.5153 9.72844L13.0153 2.65219C12.4328 2.1215 11.5588 2.1215 10.9866 2.64188L3.48469 9.72844C3.17573 10.0125 2.99994 10.4131 3 10.8328V19.5C3 20.3284 3.67157 21 4.5 21H9C9.82843 21 10.5 20.3284 10.5 19.5V15H13.5V19.5C13.5 20.3284 14.1716 21 15 21H19.5C20.3284 21 21 20.3284 21 19.5V10.8328C21.000１ １０．４１３１ ２０．８２４３ １０．０１２５ ２０．５１５３ ９．７２８４４Ｚ"
+          fill="#737373" />
+      </svg>
+      <span class="nav-label">Home</span>
+    </a>
+    <a routerLink="/agendamentos-medico" class="nav-item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M19.5 3H17.25V2.25C17.25 1.83579 16.9142 1.5 16.5 1.5C16.0858 1.5 15.75 1.83579 15.75 2.25V3H8.25V2.25C8.25 1.83579 7.91421 1.5 7.5 1.5C7.08579 1.5 6.75 1.83579 6.75 2.25V3H4.5C3.67157 3 3 3.67157 3 4.5V19.5C3 20.3284 3.67157 21 4.5 21H19.5C20.3284 21 21 20.3284 21 19.5V4.5C21 3.67157 20.3284 3 19.5 3ZM19.5 19.5H4.5V9H19.5V19.5Z"
+          fill="#737373" />
+      </svg>
+      <span class="nav-label">Agendamentos</span>
+    </a>
+    <a routerLink="/pacientes-medico" class="nav-item nav-item--active">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11ZM8 11C9.66 11 10.99 9.66 10.99 8C10.99 6.34 9.66 5 8 5C6.34 5 5 6.34 5 8C5 9.66 6.34 11 8 11ZM8 13C5.67 13 1 14.17 1 16.5V19H15V16.5C15 14.17 10.33 13 8 13ZM16 13C15.71 13 15.38 13.02 15.03 13.05C16.19 13.89 17 15.02 17 16.5V19H23V16.5C23 14.17 18.33 13 16 13Z"
+          fill="#141414" />
+      </svg>
+      <span class="nav-label nav-label--active">Pacientes</span>
+    </a>
+    <a routerLink="/perfil" class="nav-item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M12 12C14.4853 12 16.5 9.98528 16.5 7.5C16.5 5.01472 14.4853 3 12 3C9.51472 3 7.5 5.01472 7.5 7.5C7.5 9.98528 9.51472 12 12 12ZM12 13.5C8.13401 13.5 4.91017 15.9976 4.00391 19.5H19.9961C19.0898 15.9976 15.866 13.5 12 13.5Z"
+          fill="#737373" />
+      </svg>
+      <span class="nav-label">Perfil</span>
+    </a>
+  </div>
+
+</ion-content>
