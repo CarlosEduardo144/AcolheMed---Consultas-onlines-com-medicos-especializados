@@ -1,0 +1,441 @@
+$blue: #29ABE2;
+$blue-dark: #1a6fa8;
+$black: #141414;
+$navy: #10243E;
+$gray: #737373;
+$gray-light: #F5F5F5;
+$border: #E8E8E8;
+$white: #FFFFFF;
+$amber: #F5A623;
+$blue-light: #E8F6FD;
+
+.add-horario-content {
+  --background: #{$white};
+}
+
+// ---- Hero Banner ----
+.hero-banner {
+  position: relative;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+  border-radius: 0 0 28px 28px;
+  height: 150px;
+  padding: 20px 20px 20px;
+  overflow: hidden;
+}
+
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+
+  &-1 {
+    width: 180px;
+    height: 180px;
+    top: -80px;
+    right: -50px;
+  }
+
+  &-2 {
+    width: 90px;
+    height: 90px;
+    bottom: -20px;
+    left: -20px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.hero-topbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 14px;
+}
+
+.header-back {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.35);
+  }
+}
+
+.hero-titulos {
+  h1 {
+    font-size: 21px;
+    font-weight: 800;
+    color: $white;
+    margin: 0 0 3px;
+    letter-spacing: -0.3px;
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+  }
+}
+
+// ---- Corpo ----
+.corpo-content {
+  position: relative;
+  z-index: 2;
+  margin-top: -50px;
+  padding: 0 20px;
+}
+
+// ---- Card informativo ----
+.info-card {
+  background: rgb(247, 247, 247);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(15, 40, 70, 0.467);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.info-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.info-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: $blue-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-titulo {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: $black;
+  letter-spacing: -0.2px;
+}
+
+.info-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+
+  &--aberto {
+    transform: rotate(180deg);
+  }
+}
+
+.info-conteudo {
+  padding: 0 18px 18px;
+}
+
+.info-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid lightgray;
+  padding: 7px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #333;
+
+  strong {
+    color: $black;
+    font-weight: 700;
+  }
+}
+
+.dica-box {
+  background: $blue-light;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border: 1px solid lightblue;
+
+  p {
+    font-size: 12.5px;
+    color: #1a6fa8;
+    line-height: 1.55;
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+// ---- Legenda ----
+.legenda-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid $border;
+
+  margin-bottom: 12px;
+}
+
+.legenda-lista {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid lightgray;
+  padding: 7px;
+  border-radius: 10px;
+  gap: 8px;
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #333;
+}
+
+
+.dica-box {
+  background: rgba(239, 246, 248, 0.623);
+  border-radius: 12px;
+  padding: 12px 14px;
+
+  p {
+    font-size: 12.5px;
+    color: #1a6fa8;
+    line-height: 1.55;
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+// ---- Lista de dias ----
+.dias-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.dia-card {
+  background: rgba(236, 236, 236, 0.623);
+  border: 0.5px solid rgb(171, 201, 243);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(15, 40, 70, 0.247);
+  overflow: hidden;
+}
+
+.dia-card--vazio {
+  background: $gray-light;
+  box-shadow: none;
+  border: none;
+}
+
+.dia-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; // agora só entre 2 itens: título e ações
+  padding: 16px 14px 16px 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dia-titulo-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.dia-nome {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: $black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dia-resumo {
+  font-size: 12.5px;
+  color: $gray;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &--ativo {
+    color: $blue-dark;
+    font-weight: 600;
+  }
+}
+
+.dia-chevron {
+  flex-shrink: 0;
+  margin-left: 2px;
+  transition: transform 0.2s ease;
+
+  &--aberto {
+    transform: rotate(180deg);
+  }
+}
+
+
+.acao-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:active {
+    background: $gray-light;
+  }
+
+  &--limpar:active {
+    background: #FEE2E2;
+  }
+}
+
+// ---- Períodos ----
+.dia-periodos {
+  border-top: 1px solid $border;
+  padding: 6px 8px 10px;
+}
+
+.periodo-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+
+  &:active {
+    background: $gray-light;
+    border-radius: 10px;
+  }
+}
+
+.periodo-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid #C7C7C7;
+  background: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  &--marcado {
+    background: $black;
+    border-color: $black;
+  }
+}
+
+.dia-acoes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.periodo-nome {
+  flex: 1;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: $black;
+}
+
+.periodo-horario {
+  font-size: 13px;
+  color: $gray;
+  flex-shrink: 0;
+}
+
+// ---- Resumo + salvar ----
+.resumo-total {
+  text-align: center;
+  font-size: 13px;
+  color: $gray;
+  font-weight: 500;
+  margin: 0 0 14px;
+}
+
+.salvar-btn {
+  width: 100%;
+  height: 54px;
+  background: linear-gradient(135deg, $black 0%, #333333 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s, transform 0.15s;
+
+  &:active {
+    opacity: 0.88;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background: #CCCCCC;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+.bottom-spacer {
+  height: 32px;
+}

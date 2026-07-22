@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/medicos")
-@CrossOrigin(origins = "http://localhost:8100")
 @Tag(name = "Medico")
 public class MedicoController {
 
@@ -36,13 +34,6 @@ public class MedicoController {
     public ResponseEntity<List<MedicoResponseDTO>> listar() {
         List<MedicoResponseDTO> Medicos = MedicoService.listar();
         return ResponseEntity.ok(Medicos);
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Buscar Medico por ID")
-    public ResponseEntity<MedicoResponseDTO> buscarPorId(@PathVariable String id) {
-    	MedicoResponseDTO medicoResponseDTO = MedicoService.buscarPorId(id);
-        return ResponseEntity.ok(medicoResponseDTO);
     }
 
     @PostMapping

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonButton, ToastController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonButton, ToastController, IonText } from '@ionic/angular/standalone';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { MedicoModel } from 'src/app/model/medico.model';
 import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { PacienteModel } from 'src/app/model/paciente.model';
 
 function cpfValidator(control: AbstractControl): ValidationErrors | null {
   const cpf = (control.value ?? '').replace(/\D/g, '');
@@ -28,76 +29,87 @@ function cpfValidator(control: AbstractControl): ValidationErrors | null {
   templateUrl: './alterar-dados.page.html',
   styleUrls: ['./alterar-dados.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, ReactiveFormsModule, NgxMaskDirective],
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonText, ReactiveFormsModule, NgxMaskDirective],
   providers: [provideNgxMask()]
 })
 
 export class AlterarDadosPage implements OnInit {
 
-  usuario: UsuarioModel | MedicoModel | null;
+  usuario!: UsuarioModel | MedicoModel;
   alterarForm: FormGroup;
   showSenha = false;
 
   constructor(private navController: NavController, private toastController: ToastController, private usuarioService: UsuarioService, private loginService: LoginService, private fb: FormBuilder) {
-    this.usuario = loginService.getUsuario();
-    const usuarioBase = loginService.getUsuarioBase(this.usuario);
-    if (!this.usuario) {
-      this.navController.navigateBack('/login');
-    }
+    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+      next: (usuario) => {
+        this.usuario = usuario;
+
+        if (!this.usuario) {
+          this.navController.navigateBack('/login');
+        }
+
+        this.alterarForm.patchValue({
+          nome: this.usuario.nome,
+          email: this.usuario.email,
+          dataNascimento: this.usuario.dataNascimento,
+          cpf: this.usuario.cpf
+        });
+      },
+      error: (erro) => {
+        console.error(erro);
+        this.exibirMensagem(erro.error.message);
+      }
+    });
+
     this.alterarForm = this.fb.group(
       {
-        nome: [usuarioBase?.nome ?? '', [Validators.required]],
-        email: [usuarioBase?.email ?? '', [Validators.required, Validators.email]],
-        dataNascimento: [usuarioBase?.dataNascimento ?? '', [Validators.required]],
-        cpf: [usuarioBase?.cpf ?? '', [Validators.required]],
+        nome: [this.usuario?.nome ?? '', [Validators.required]],
+        email: [this.usuario?.email ?? '', [Validators.required, Validators.email]],
+        dataNascimento: [this.usuario?.dataNascimento ?? '', [Validators.required]],
+        cpf: [this.usuario?.cpf ?? '', [Validators.required, cpfValidator]],
         senha: [''],
-      },
-
-      // { validators: passwordMatchValidator }
+      }
     );
   }
 
   ngOnInit() {
+    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+      next: (usuario) => {
+        this.usuario = usuario;
+
+        if (!this.usuario) {
+          this.navController.navigateBack('/login');
+        }
+      },
+      error: (erro) => {
+        console.error(erro);
+        this.exibirMensagem(erro.error.message);
+      }
+    });
   }
 
   salvar() {
-    if (!this.usuario) {
-      return;
-    }
-    debugger
-    const tipoUsuario = this.loginService.getTipoUsuario(this.usuario);
-    let aux: UsuarioModel | MedicoModel;
+    let usuarioAtualizado;
 
-    if (tipoUsuario === 'medico') {
-      const medicoAtual = this.usuario as MedicoModel;
-      aux = {
-        ...medicoAtual,
-        usuario: {
-          ...(medicoAtual.usuario ?? new UsuarioModel()),
-        },
-      } as MedicoModel;
+    if (this.loginService.getTipoUsuario() == "medico") {
+      usuarioAtualizado = new MedicoModel();
     } else {
-      aux = { ...(this.usuario as UsuarioModel) } as UsuarioModel;
+      usuarioAtualizado = new PacienteModel();
     }
 
-    const usuarioBase = tipoUsuario === 'medico'
-      ? (aux as MedicoModel).usuario
-      : aux as UsuarioModel;
+    usuarioAtualizado = this.usuario;
 
-    usuarioBase.id = this.loginService.getUsuarioId(this.usuario);
-    usuarioBase.nome = this.alterarForm.value.nome;
-    usuarioBase.email = this.alterarForm.value.email;
-    usuarioBase.dataNascimento = this.alterarForm.value.dataNascimento;
-    usuarioBase.cpf = this.alterarForm.value.cpf;
-    usuarioBase.tipoUsuario = tipoUsuario;
-
-    if (this.alterarForm.value.senha) {
-      usuarioBase.senha = this.alterarForm.value.senha;
+    usuarioAtualizado.nome = this.alterarForm.value.nome;
+    usuarioAtualizado.email = this.alterarForm.value.email;
+    usuarioAtualizado.senha = this.alterarForm.value.senha;
+    usuarioAtualizado.dataNascimento = this.alterarForm.value.dataNascimento;
+    if (usuarioAtualizado.dataNascimento.includes('T')) {
+      usuarioAtualizado.dataNascimento = usuarioAtualizado.dataNascimento.split('T')[0];
     }
+    usuarioAtualizado.cpf = this.alterarForm.value.cpf;
 
-    this.usuarioService.salvar(aux).subscribe({
-      next: (usuarioSalvo) => {
-        this.loginService.setUsuario(usuarioSalvo);
+    this.usuarioService.salvar(usuarioAtualizado).subscribe({
+      next: () => {
         this.exibirMensagem('Usuário atualizado com sucesso!!!');
       },
       error: (erro) => {
@@ -113,6 +125,18 @@ export class AlterarDadosPage implements OnInit {
       duration: 1500
     });
     toast.present()
+  }
+
+  get email() {
+    return this.alterarForm.get('email');
+  }
+
+  get cpf() {
+    return this.alterarForm.get('cpf');
+  }
+
+  get dataNascimento() {
+    return this.alterarForm.get('dataNascimento');
   }
 
 }

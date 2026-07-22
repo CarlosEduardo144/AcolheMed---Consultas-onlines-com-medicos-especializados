@@ -1,32 +1,33 @@
 package br.cefet.acolhimed.dto;
 
-import br.cefet.acolhimed.entity.Especialidade;
 import br.cefet.acolhimed.entity.Medico;
-import lombok.Getter;
+import br.cefet.acolhimed.enums.TipoUsuario;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-public class MedicoResponseDTO {
-    private String id;
-    private UsuarioResponseDTO usuario;
+public class MedicoResponseDTO extends UsuarioResponseDTO {
     private String sobreMim;
     private String crm;
     private String formacaoAcademica;
-    private boolean horariosConfigurados;
     private String ufEmissao;
-    private Especialidade[] especialidades;
+    private EspecialidadeResponseDTO[] especialidades;
 
     public MedicoResponseDTO(Medico medico) {
-        this.id = medico.getId();
-        this.usuario = new UsuarioResponseDTO(medico.getUsuario());
-        this.especialidades = medico.getEspecialidade();
+        this.setId(medico.getId());
+        this.setNome(medico.getNome());
+        this.setEmail(medico.getEmail());
+        this.setDataNascimento(medico.getDataNascimento());
+        this.setCpf(medico.getCpf());
+        this.setFoto(medico.getFoto());
+        this.setTipoUsuario(TipoUsuario.medico);
         this.sobreMim = medico.getSobreMim();
         this.crm = medico.getCrm();
         this.formacaoAcademica = medico.getFormacaoAcademica();
-        this.horariosConfigurados = Boolean.TRUE.equals(medico.getHorariosConfigurados());
         this.ufEmissao = medico.getUfEmissao();
+        this.especialidades = medico.getEspecialidades().stream()
+                .map(medicoEspec -> new EspecialidadeResponseDTO(medicoEspec.getEspecialidade()))
+                .toArray(EspecialidadeResponseDTO[]::new);
     }
 }

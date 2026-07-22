@@ -1,126 +1,338 @@
 // login.page.scss
 
+$blue:        #29ABE2;
+$blue-dark:   #1a6fa8;
+$black:       #141414;
+$navy:        #10243E;
+$gray:        #737373;
+$gray-light:  #F5F5F5;
+$border:      #E8E8E8;
+$white:       #FFFFFF;
+
 ion-content.login-content {
-  --background: #fafafa;
+  --background: #F4F7FB;
 }
 
 .login-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
+  position: relative;
+  min-height: 100dvh;
   max-width: 480px;
   margin: 0 auto;
-  padding-bottom: 32px;
+  padding-bottom: 24px;
+  overflow: hidden;
 }
 
-// Header
-.login-header {
+// ---- Hero ----
+.hero-banner {
+  position: relative;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+  border-radius: 0 0 20px 20px;
+  padding: 30px 30px 90px; // padding-bottom generoso, o card sobrepõe por cima
+  overflow: hidden;
+}
+
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+
+  &-1 { width: 200px; height: 200px; top: -90px; right: -60px; }
+  &-2 { width: 100px; height: 100px; bottom: 10px; left: -30px; background: rgba(255, 255, 255, 0.06); }
+}
+
+.brand-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 16px 8px;
-  background-color: #fafafa;
-
-  .login-title {
-    color: #141414;
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 23px;
-    text-align: center;
-  }
+  flex-shrink: 0;
 }
 
-// Avatar
-.avatar-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 32px;
-  padding-bottom: 16px;
+.brand-nome {
+  font-size: 17px;
+  font-weight: 800;
+  font-family: 'Nunito', Arial, sans-serif;
+  color: rgb(255, 255, 255);
+  letter-spacing: -0.2px;
 }
 
-// Form Groups
+.hero-titulo {
+  position: relative;
+  z-index: 2;
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: $white;
+  margin: 0 0 10px;
+  letter-spacing: -0.4px;
+}
+
+.hero-subtitulo {
+  position: relative;
+  z-index: 2;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+  margin: 0;
+  max-width: 320px;
+}
+
+// ---- Card branco ----
+.form-card {
+  position: relative;
+  z-index: 3;
+  background: $white;
+  border-radius: 24px;
+  margin: -64px 20px 0;
+  padding: 24px 20px;
+  box-shadow: 0 10px 30px rgba(15, 40, 70, 0.12);
+}
+
+// ---- Form Groups ----
 .form-group {
-  padding: 12px 16px;
+  margin-bottom: 16px;
+}
 
-  .input-wrapper {
-    height: 56px;
-    padding: 0 16px;
+.input-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: $navy;
+  margin-bottom: 6px;
+}
+
+.input-wrapper {
+  position: relative;
+  height: 52px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 14px;
+  background-color: $gray-light;
+  border: 1.5px solid transparent;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: $blue;
+    background-color: $white;
+    box-shadow: 0 0 0 3px rgba(41, 171, 226, 0.12);
+  }
+
+  &.input-error {
+    border-color: var(--ion-color-danger, #eb445a);
+  }
+
+  .input-icon {
+    flex-shrink: 0;
+  }
+
+  .toggle-senha {
+    background: transparent;
+    border: none;
+    padding: 4px;
     display: flex;
     align-items: center;
-    border-radius: 8px;
-    background-color: #ededed;
-    overflow: hidden;
-    transition: border 0.2s ease;
-    border: 2px solid transparent;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
 
-    &.input-error {
-      border-color: var(--ion-color-danger, #eb445a);
-    }
+  ion-input.custom-input {
+    --background: transparent;
+    --color: #{$navy};
+    --placeholder-color: #A6B3BF;
+    --placeholder-opacity: 1;
+    --padding-start: 0;
+    --padding-end: 0;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 24px;
+    width: 100%;
+  }
+}
 
-    ion-input.custom-input {
-      --background: transparent;
-      --color: #737373;
-      --placeholder-color: #737373;
-      --placeholder-opacity: 1;
-      --padding-start: 0;
-      --padding-end: 0;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 24px;
-      width: 100%;
+.error-messages {
+  margin-top: 6px;
+  padding-left: 4px;
+
+  ion-text small {
+    font-size: 12px;
+  }
+}
+
+// ---- Lembrar de mim / Esqueci a senha ----
+.options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 2px 20px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $navy;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .checkbox-visual {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid #C7C7C7;
+    background: $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    svg {
+      opacity: 0;
+      transition: opacity 0.15s ease;
     }
   }
 
-  .error-messages {
-    margin-top: 4px;
-    padding-left: 4px;
+  input:checked ~ .checkbox-visual {
+    background: $blue;
+    border-color: $blue;
 
-    ion-text small {
-      font-size: 12px;
+    svg {
+      opacity: 1;
     }
   }
 }
 
-// Login Button
+.forgot-link {
+  color: $blue;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+// ---- Login Button ----
 .login-button {
-  --background: #141414;
-  --background-activated: #333333;
-  --background-hover: #2a2a2a;
-  --border-radius: 8px;
-  --color: #fafafa;
-  --box-shadow: none;
+  --background: linear-gradient(135deg, #{$blue} 0%, #{$blue-dark} 100%);
+  --background-activated: #{$blue-dark};
+  --background-hover: #{$blue-dark};
+  --border-radius: 30px;
+  --color: #ffffff;
+  --box-shadow: 0 6px 18px rgba(41, 171, 226, 0.3);
   font-size: 16px;
   font-weight: 700;
   line-height: 24px;
-  height: 48px;
+  height: 52px;
   margin: 0;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.2px;
+
+  &[disabled] {
+    --background: #CCCCCC;
+    --box-shadow: none;
+  }
 }
 
-// Sign Up
+// ---- Divisor ----
+.divider-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 4px;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: $border;
+}
+
+.divider-texto {
+  font-size: 12px;
+  font-weight: 600;
+  color: $gray;
+  letter-spacing: 0.4px;
+}
+
+// ---- Google Button ----
+.google-button {
+  width: 100%;
+  height: 52px;
+  border-radius: 30px;
+  border: 1.5px solid $border;
+  background: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: $navy;
+  cursor: pointer;
+
+  &:active {
+    background: $gray-light;
+  }
+}
+
+// ---- Sign Up ----
 .signup-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 4px 16px 12px;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-bottom: 25px;
+  text-align: center;
+}
 
-  .signup-text {
-    color: #737373;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 21px;
-    text-align: center;
-  }
+.signup-text {
+  color: $gray;
+  font-size: 14px;
+  font-weight: 400;
+}
 
-  .signup-link {
-    color: #737373;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 21px;
-    text-align: center;
-    text-decoration: underline;
-  }
+.signup-link {
+  color: $blue;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+// ---- Termos ----
+.termos-texto {
+  text-align: center;
+  font-size: 11.5px;
+  color: #A6B3BF;
+  line-height: 1.5;
+  padding: 0 32px;
+  margin: 0;
 }

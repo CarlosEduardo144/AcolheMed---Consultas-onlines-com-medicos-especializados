@@ -1,191 +1,256 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import {
-  NavController, ToastController,
-  IonContent, IonHeader, IonTitle, IonToolbar,
-  IonButton, IonButtons, IonBackButton, IonIcon, IonTextarea, IonDatetime
-} from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import {
-  calendarOutline, timeOutline, personOutline,
-  checkmarkCircleOutline, chevronBackOutline, sunnyOutline, moonOutline
-} from 'ionicons/icons';
-import { MedicoModel } from 'src/app/model/medico.model';
-import { ConsultaModel } from 'src/app/model/consulta.model';
-import { ConsultaService } from 'src/app/services/consulta.service';
+import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { HorarioModel } from 'src/app/model/horario.model';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { ActivatedRoute } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
+import { HorarioService } from 'src/app/services/horario.service';
+import { ToastController } from '@ionic/angular';
 
-interface DiaOpcao { data: Date; label: string; diaSemana: string; }
-interface SlotOpcao { horario: string; periodo: 'manhã' | 'tarde'; }
+interface DiaCalendario {
+  data: Date;
+  numero: number;
+  desabilitado: boolean;      // fora do mês, no passado, ou sem disponibilidade
+  temDisponibilidade: boolean;
+  mesAtual: boolean;           // pertence ao mês exibido (vs. dias de padding)
+}
 
-const DIA_MAP: { [key: number]: string } = {
-  0: 'dom', 1: 'seg', 2: 'ter', 3: 'qua', 4: 'qui', 5: 'sex', 6: 'sab'
+const MAPA_DIA_SEMANA: Record<number, string> = {
+  0: 'domingo',
+  1: 'segunda',
+  2: 'terca',
+  3: 'quarta',
+  4: 'quinta',
+  5: 'sexta',
+  6: 'sabado',
 };
 
-const NOMES_DIA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-const NOMES_MES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const PERIODOS = { //configuracao dos limites de cada turno
+  manha: { inicio: 8, fim: 11 },
+  tarde: { inicio: 13, fim: 17 },
+  noite: { inicio: 18, fim: 20 },
+};
+
+const DURACAO_CONSULTA_MINUTOS = 30; //duração de cada consulta
+const JANELA_MAXIMA_MESES = 1; // permite navegar até o próximo mês, além do atual
+
 
 @Component({
-  selector: 'app-agendar-consulta',
+  selector: 'app-agendar-cosulta',
   templateUrl: './agendar-consulta.page.html',
   styleUrls: ['./agendar-consulta.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule, FormsModule, RouterModule,
-    IonContent, IonHeader, IonTitle, IonToolbar,
-    IonButton, IonButtons, IonBackButton, IonIcon, IonTextarea, IonDatetime
-  ]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
-export class AgendarConsultaPage implements OnInit {
 
-  medico: MedicoModel | null = null;
-  diaSelecionado: DiaOpcao | null = null;
-  slots: SlotOpcao[] = [];
-  slotSelecionado: SlotOpcao | null = null;
+export class AgendarCosultaPage implements OnInit {
+
+  medico!: any;
+  horariosSemana: HorarioModel[] = [];
+
+  mesExibido!: Date;
+  diasCalendario: DiaCalendario[] = [];
+  diaSelecionado: DiaCalendario | null = null;
+  horarioSelecionado: string | null = null;
+  horariosDoDia: string[] = [];
   observacoes = '';
-  confirmando = false;
 
-  // Limites do calendário: amanhã até 90 dias à frente
-  readonly minDate = (() => {
-    const d = new Date();
-    d.setDate(d.getDate() );
-    return d.toISOString().split('T')[0];
-  })();
+  private hoje = new Date();
+  private limiteMinimo!: Date;
+  private limiteMaximo!: Date;
 
-  readonly maxDate = (() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 90);
-    return d.toISOString().split('T')[0];
-  })();
-
-  constructor(
-    private router: Router,
-    private navCtrl: NavController,
-    private toastController: ToastController,
-    private consultaService: ConsultaService,
-    private loginService: LoginService
+  constructor(private usuarioService: UsuarioService,
+    private route: ActivatedRoute,
+    private loginService: LoginService,
+    private horarioService: HorarioService,
+    private toastController: ToastController
   ) {
-    const nav = this.router.getCurrentNavigation();
-    this.medico = nav?.extras?.state?.['medico'] ?? null;
-    addIcons({
-      calendarOutline, timeOutline, personOutline,
-      checkmarkCircleOutline, chevronBackOutline, sunnyOutline, moonOutline
+  }
+
+  ngOnInit() {
+    this.carregarMedico();
+    this.hoje.setHours(0, 0, 0, 0);
+    this.limiteMinimo = new Date(this.hoje.getFullYear(), this.hoje.getMonth(), 1);
+    this.limiteMaximo = new Date(this.hoje.getFullYear(), this.hoje.getMonth() + JANELA_MAXIMA_MESES, 1);
+    this.mesExibido = new Date(this.hoje.getFullYear(), this.hoje.getMonth(), 1);
+  }
+
+
+  carregarMedico() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.usuarioService.buscarPorId(id).subscribe({
+        next: (medico) => {
+          this.medico = medico;
+          this.carregarHorarios(this.medico.id);
+        },
+        error: (err) => console.error('Erro ao carregar médico', err)
+      });
+    }
+  }
+
+  carregarHorarios(medicoId: string) {
+    this.horarioService.buscarPorMedico(medicoId).subscribe({
+      next: (horarios) => {
+        this.horariosSemana = horarios;
+        this.gerarCalendario();
+
+      },
+      error: (erro) => {
+        console.error(erro);
+        this.exibirMensagem(erro.error.message);
+      }
     });
   }
 
-  ngOnInit() {}
+  get nomeMesAno(): string {
+    return this.mesExibido.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+      .replace(/^\w/, c => c.toUpperCase());
+  }
 
-  // Função passada ao ion-datetime para desabilitar dias que o médico não trabalha.
-  // Precisa ser arrow function para manter o contexto de 'this'.
-  isDiaDisponivel = (dateString: string): boolean => {
-    const horarios = this.medico?.horario ?? [];
-    const agendaConfigurada = this.medico?.horariosConfigurados || horarios.length > 0;
+  get podeVoltarMes(): boolean {
+    return this.mesExibido.getTime() > this.limiteMinimo.getTime();
+  }
 
-    // Se a agenda não foi configurada, todos os dias ficam habilitados
-    if (!agendaConfigurada) return true;
+  get podeAvancarMes(): boolean {
+    return this.mesExibido.getTime() < this.limiteMaximo.getTime();
+  }
 
-    const diaSemana = DIA_MAP[new Date(dateString).getUTCDay()];
-    const diasTrabalho = new Set(horarios.map(h => h.diaSemana));
-    return diasTrabalho.has(diaSemana);
-  };
+  mesAnterior() {
+    if (!this.podeVoltarMes) return;
+    this.mesExibido = new Date(this.mesExibido.getFullYear(), this.mesExibido.getMonth() - 1, 1);
+    this.gerarCalendario();
+  }
 
-  onDataChange(event: CustomEvent) {
-    const dateString = event.detail.value as string;
-    if (!dateString) return;
+  proximoMes() {
+    if (!this.podeAvancarMes) return;
+    this.mesExibido = new Date(this.mesExibido.getFullYear(), this.mesExibido.getMonth() + 1, 1);
+    this.gerarCalendario();
+  }
 
-    // ion-datetime retorna ISO string; usamos UTC para evitar problemas de fuso
-    const data = new Date(dateString);
-    const diaSemana = DIA_MAP[data.getUTCDay()];
+  private gerarCalendario() {
+    const ano = this.mesExibido.getFullYear();
+    const mes = this.mesExibido.getMonth();
+    const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
+    const totalDiasMes = new Date(ano, mes + 1, 0).getDate();
 
-    this.diaSelecionado = {
-      data,
-      label: `${NOMES_DIA[data.getUTCDay()]}, ${data.getUTCDate()} ${NOMES_MES[data.getUTCMonth()]}`,
-      diaSemana
+    const dias: DiaCalendario[] = [];
+
+    // padding do início (dias vazios antes do dia 1)
+    for (let i = 0; i < primeiroDiaSemana; i++) {
+      dias.push({ data: new Date(ano, mes, 1 - (primeiroDiaSemana - i)), numero: 0, desabilitado: true, temDisponibilidade: false, mesAtual: false });
+    }
+
+    for (let dia = 1; dia <= totalDiasMes; dia++) {
+      const data = new Date(ano, mes, dia);
+      const noPassado = data.getTime() < this.hoje.getTime();
+      const temDisp = !noPassado && this.diaTemDisponibilidade(data);
+
+      dias.push({
+        data,
+        numero: dia,
+        desabilitado: noPassado || !temDisp,
+        temDisponibilidade: temDisp,
+        mesAtual: true,
+      });
+    }
+
+    this.diasCalendario = dias;
+    this.diaSelecionado = null;
+    this.horarioSelecionado = null;
+    this.horariosDoDia = [];
+  }
+
+  private diaTemDisponibilidade(data: Date): boolean {
+    const chaveDia = MAPA_DIA_SEMANA[data.getDay()];
+    const config = this.horariosSemana.find(h => h.dia === chaveDia);
+    if (!config) return false;
+    return !!(config.manha || config.tarde || config.noite);
+  }
+
+  selecionarDia(dia: DiaCalendario) {
+    if (dia.desabilitado || !dia.mesAtual) return;
+    this.diaSelecionado = dia;
+    this.horarioSelecionado = null;
+    this.horariosDoDia = this.gerarHorariosDoDia(dia.data);
+  }
+
+  private gerarHorariosDoDia(data: Date): string[] {
+    const chaveDia = MAPA_DIA_SEMANA[data.getDay()];
+    const config = this.horariosSemana.find(h => h.dia === chaveDia);
+    if (!config) return [];
+
+    const horarios: string[] = [];
+    const ehHoje = data.getTime() === this.hoje.getTime();
+    const agora = new Date();
+
+    (['manha', 'tarde', 'noite'] as const).forEach(periodo => {
+      if (!config[periodo]) return;
+
+      const { inicio, fim } = PERIODOS[periodo];
+      let horaAtual = new Date(data);
+      horaAtual.setHours(inicio, 0, 0, 0);
+      const horaLimite = new Date(data);
+      horaLimite.setHours(fim, 0, 0, 0);
+
+      while (horaAtual < horaLimite) {
+        if (!ehHoje || horaAtual > agora) {
+          const hh = horaAtual.getHours().toString().padStart(2, '0');
+          const mm = horaAtual.getMinutes().toString().padStart(2, '0');
+          horarios.push(`${hh}:${mm}`);
+        }
+        horaAtual = new Date(horaAtual.getTime() + DURACAO_CONSULTA_MINUTOS * 60000);
+      }
+    });
+
+    return horarios;
+  }
+
+  selecionarHorario(horario: string) {
+    this.horarioSelecionado = horario;
+  }
+
+  get podeConfirmar(): boolean {
+    return !!this.diaSelecionado && !!this.horarioSelecionado;
+  }
+
+  /*
+  mediaAvaliacoes(): number {
+    if (!this.medico?.avaliacoes?.length) return 0;
+    const soma = this.medico.avaliacoes.reduce((acc, av) => acc + av.nota, 0);
+    return soma / this.medico.avaliacoes.length;
+  }
+
+  mediaFormatada(): string {
+    return this.mediaAvaliacoes().toFixed(1).replace('.', ',');
+  }
+
+  totalAvaliacoes(): number {
+    return this.medico?.avaliacoes?.length ?? 0;
+  }*/
+
+  confirmarAgendamento() {
+    /*
+    if (!this.podeConfirmar) return;
+
+    const payload = {
+      medicoId: this.medico.id,
+      data: this.diaSelecionado!.data,
+      horario: this.horarioSelecionado,
+      observacoes: this.observacoes,
     };
-    this.slotSelecionado = null;
-    this.gerarSlots(diaSemana);
+
+    //envio pro serviço/API já existente
+    */
   }
 
-  gerarSlots(diaSemana: string) {
-    this.slots = [];
-    const horarios = this.medico?.horario?.filter(h => h.diaSemana === diaSemana) ?? [];
-    const agendaConfigurada = this.medico?.horariosConfigurados || !!this.medico?.horario?.length;
-
-    if (horarios.length === 0) {
-      if (agendaConfigurada) return;
-      // Padrão se o médico ainda não configurou
-      this.slots = this.slotsDoIntervalo(9, 12, 'manhã')
-        .concat(this.slotsDoIntervalo(13, 17, 'tarde'));
-      return;
-    }
-
-    for (const h of horarios) {
-      const inicio = new Date(h.horarioInicio).getHours();
-      const fim = new Date(h.horarioFim).getHours();
-      const periodo = h.periodo as 'manhã' | 'tarde';
-      this.slots.push(...this.slotsDoIntervalo(inicio, fim, periodo));
-    }
-  }
-
-  slotsDoIntervalo(inicio: number, fim: number, periodo: 'manhã' | 'tarde'): SlotOpcao[] {
-    const result: SlotOpcao[] = [];
-    for (let h = inicio; h < fim; h++) {
-      result.push({ horario: `${String(h).padStart(2, '0')}:00`, periodo });
-    }
-    return result;
-  }
-
-  get slotsManha(): SlotOpcao[] {
-    return this.slots.filter(s => s.periodo === 'manhã');
-  }
-
-  get slotsTarde(): SlotOpcao[] {
-    return this.slots.filter(s => s.periodo === 'tarde');
-  }
-
-  selecionarSlot(slot: SlotOpcao) {
-    this.slotSelecionado = slot;
-  }
-
-  podeConcluir(): boolean {
-    return !!this.diaSelecionado && !!this.slotSelecionado;
-  }
-
-  async confirmar() {
-    if (!this.podeConcluir() || !this.medico) return;
-    this.confirmando = true;
-
-    const usuario = this.loginService.getUsuario();
-    const consulta = new ConsultaModel();
-    consulta.medico = this.medico;
-    if (!usuario) {
-      this.confirmando = false;
-      return;
-    }
-    const paciente = this.loginService.getUsuarioBase(usuario);
-    if (!paciente) {
-      this.confirmando = false;
-      return;
-    }
-    consulta.paciente = paciente;
-    consulta.data = this.diaSelecionado!.data.toISOString().split('T')[0];
-    consulta.horario = this.slotSelecionado!.horario;
-    //consulta.especialidade = this.medico.especialidade?.nome ?? '';
-    consulta.observacoes = this.observacoes;
-
-    this.consultaService.agendar(consulta);
-
+  async exibirMensagem(texto: string) {
     const toast = await this.toastController.create({
-      message: '✅ Consulta agendada com sucesso!',
-      duration: 2200,
-      color: 'success',
-      position: 'bottom'
+      message: texto,
+      duration: 1500,
     });
     toast.present();
-
-    this.confirmando = false;
-    this.navCtrl.navigateRoot('/consultas');
   }
 }

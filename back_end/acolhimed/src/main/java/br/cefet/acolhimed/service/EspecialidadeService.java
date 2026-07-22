@@ -18,8 +18,9 @@ public class EspecialidadeService {
 
     @Transactional(readOnly = true)
     public List<EspecialidadeResponseDTO> listar() {
-        List<Especialidade> especialidades = especialidadeRepository.findAll();
-        return especialidades.stream().map(EspecialidadeResponseDTO::new).toList();
+
+        return especialidadeRepository.findAllByOrderByNomeAsc()
+                .stream().map(EspecialidadeResponseDTO::new).toList();
     }
 
     @Transactional(readOnly = true)

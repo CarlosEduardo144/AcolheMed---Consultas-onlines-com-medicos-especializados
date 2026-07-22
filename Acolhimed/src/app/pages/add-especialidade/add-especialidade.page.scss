@@ -1,0 +1,260 @@
+// ==============================
+// Selecionar Especialidades — mesmo padrão visual do Perfil Profissional
+// ==============================
+
+$blue:        #29ABE2;
+$blue-dark:   #1a8fbf;
+$blue-light:  #E8F6FD;
+$black:       #111111;
+$gray:        #6B6B6B;
+$gray-light:  #F7F8FA;
+$border:      #E8E8E8;
+$white:       #FFFFFF;
+
+.especialidades-content {
+  --background: #F4F7FB;
+}
+
+// ---- Hero Banner ----
+.hero-banner {
+  position: relative;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 44px 24px 28px;
+  box-sizing: border-box;
+}
+
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+
+  &-1 { width: 180px; height: 180px; top: -60px; right: -40px; }
+  &-2 { width: 100px; height: 100px; bottom: -30px; left: -20px; background: rgba(255,255,255,0.06); }
+  &-3 { width: 60px; height: 60px; top: 30px; left: 30px; background: rgba(255,255,255,0.1); }
+}
+
+// Botão fechar (X)
+.header-close {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+  z-index: 3;
+
+  &:active {
+    background: rgba(255,255,255,0.35);
+  }
+}
+
+.hero-icon {
+  background: rgba(255,255,255,0.15);
+  border-radius: 22px;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  position: relative;
+  z-index: 2;
+}
+
+.hero-text {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    margin: 0;
+    line-height: 1.25;
+    letter-spacing: -0.4px;
+  }
+}
+
+// ---- Form Card ----
+.form-card {
+  background: $white;
+  border-radius: 28px 28px 0 0;
+  margin-top: -20px;
+  padding: 24px 20px 32px;
+  min-height: calc(100vh - 180px);
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+}
+
+// ---- Tip Card ----
+.tip-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: $blue-light;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border-left: 3px solid $blue;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  p {
+    font-size: 13px;
+    color: #1a6fa8;
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+}
+
+// ---- Lista de especialidades ----
+.lista-especialidades {
+  background: $white;
+  margin-bottom: 24px;
+
+  ion-item {
+    --background: #{$white};
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --border-color: #{$border};
+
+    ion-avatar {
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      border-radius: 50%;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    ion-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: $black;
+    }
+
+  }
+}
+
+.custom-checkbox {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.checkmark {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  background: #fff;
+  transition: .2s;
+}
+
+.custom-checkbox input:checked + .checkmark {
+  background: #000;
+}
+
+.custom-checkbox input:checked + .checkmark::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+// ---- Salvar Button ----
+.salvar-btn {
+  width: 100%;
+  height: 54px;
+  background: linear-gradient(135deg, $black 0%, #333333 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  letter-spacing: 0.4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  transition: opacity 0.2s, transform 0.15s;
+
+  &:active {
+    opacity: 0.88;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background: #CCCCCC;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+.hero-text {
+  text-align: center;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+    margin: 0 0 4px;
+    letter-spacing: -0.3px;
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    margin: 0;
+  }
+}

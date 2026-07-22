@@ -6,6 +6,7 @@ import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MedicoModel } from 'src/app/model/medico.model';
+import { PacienteModel } from 'src/app/model/paciente.model';
 
 @Component({
   selector: 'app-add-formacao-profissional',
@@ -17,15 +18,30 @@ import { MedicoModel } from 'src/app/model/medico.model';
 export class AddFormacaoProfissionalPage implements OnInit {
 
 
-  usuario: MedicoModel | null;
+  usuario!: any;
   alterarForm: FormGroup;
 
   constructor(private navController: NavController, private toastController: ToastController, private usuarioService: UsuarioService, private loginService: LoginService, private fb: FormBuilder) {
     this.usuario = new MedicoModel();
-    this.usuario = loginService.getMedico();
-    if (!this.usuario) {
-      this.navController.navigateBack('/login');
-    }
+    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+      next: (usuario) => {
+        if (!this.usuario) {
+          this.navController.navigateBack('/login');
+        }
+
+        this.usuario = usuario;
+
+         this.alterarForm.patchValue({
+          formacaoAcademica: this.usuario.formacaoAcademica,
+          sobreMim: this.usuario.sobreMim,
+        });
+      },
+      error: (erro) => {
+        console.error(erro);
+        this.exibirMensagem(erro.error.message);
+      }
+    });
+
     this.alterarForm = this.fb.group(
       {
         formacaoAcademica: [this.usuario?.formacaoAcademica ?? '', [Validators.required]],
@@ -45,8 +61,7 @@ export class AddFormacaoProfissionalPage implements OnInit {
       this.usuario.sobreMim = this.alterarForm.value.sobreMim;
 
       this.usuarioService.salvar(this.usuario).subscribe({
-        next: (usuarioSalvo) => {
-          this.loginService.setUsuario(usuarioSalvo);
+        next: () => {
           this.exibirMensagem('Alterado com sucesso!!!');
         },
         error: (erro) => {

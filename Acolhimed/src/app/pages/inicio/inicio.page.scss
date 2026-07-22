@@ -1,233 +1,399 @@
-$blue:       #29ABE2;
-$blue-dark:  #1a8fbf;
-$black:      #111111;
-$gray:       #6B6B6B;
+$blue: #29ABE2;
+$blue-dark: #1a6fa8;
+$black: #141414;
+$gray: #737373;
 $gray-light: #F5F5F5;
-$white:      #FFFFFF;
-$chat-bg:    #E8E0F7;
-$chat-color: #7B5EA7;
-$call-bg:    #00C48C;
-$radius:     16px;
+$border: #E8E8E8;
+$white: #FFFFFF;
+$green: #22C55E;
 
-ion-content.perfil-content {
-  --background: #fafafa;
-  --padding-bottom: 95px; // space for bottom nav
-}
- 
-// ---- Toolbar ----
-ion-header ion-toolbar {
-  --background: #{$white};
-  --color: #{$black};
-  --border-width: 0;
-  padding: 4px 0;
- 
-  ion-title {
-    font-size: 17px;
-    font-weight: 600;
-    color: $black;
-  }
-}
- 
-.header-avatar {
-  width: 36px;
-  height: 36px;
-  margin-left: 8px;
-}
- 
-ion-button.button-clear {
-  --color: #{$black};
-}
- 
-// ---- Content ----
 .inicio-content {
   --background: #{$white};
 }
- 
-// ---- Welcome ----
-.welcome-section {
-  padding: 24px 20px 20px;
+
+.inicio-wrapper {
+  position: relative;
 }
- 
-.welcome-text {
-  font-size: 30px;
-  font-weight: 800;
-  color: $black;
-  line-height: 1.15;
-  margin: 0;
-  letter-spacing: -0.5px;
+
+// ---- Hero Banner ----
+.hero-banner {
+  position: relative;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+  padding: 20px 20px 28px;
+  border-radius: 0 0 25px 25px;
+  overflow: hidden;
 }
- 
-// ---- Stats ----
-.stats-row {
+
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+
+  &-1 {
+    width: 200px;
+    height: 200px;
+    top: -90px;
+    right: -60px;
+  }
+
+  &-2 {
+    width: 100px;
+    height: 100px;
+    bottom: -30px;
+    left: -30px;
+    background: rgba(255, 255, 255, 0.33);
+  }
+}
+
+// ---- Topbar ----
+.hero-topbar {
+  position: relative;
+  z-index: 2;
   display: flex;
-  gap: 12px;
-  padding: 0 20px;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 24px;
 }
- 
-.stat-card {
-  flex: 1;
-  background: $white;
-  border: 1.5px solid #E0E0E0;
-  border-radius: $radius;
-  padding: 16px;
-  cursor: pointer;
-  transition: box-shadow 0.2s;
- 
-  &:active {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
- 
-  .stat-label {
-    font-size: 13px;
-    color: $gray;
-    margin: 0 0 10px;
-    line-height: 1.4;
-  }
- 
-  .stat-value {
-    font-size: 28px;
-    font-weight: 800;
-    color: $black;
-    margin: 0;
-  }
-}
- 
-// ---- Agendar Button ----
-.agendar-wrap {
-  padding: 0 20px;
-  margin-bottom: 28px;
-}
- 
-.agendar-btn {
-  --background: #{$blue};
-  --background-activated: #{$blue-dark};
-  --border-radius: 10px;
-  --color: #{$white};
-  font-size: 14px;
-  font-weight: 600;
-  height: 52px;
-  letter-spacing: 0.2px;
-  margin: 0;
-}
- 
-// ---- Section ----
-.section {
-  padding: 0 20px;
-}
- 
-.section-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: $black;
-  margin: 0 0 16px;
-  text-align: center;
-}
- 
-// ---- Consulta Card ----
-.consulta-card {
+
+.usuario-info {
   display: flex;
-  gap: 12px;
-  background: $white;
-  border: 1.5px solid #E0E0E0;
-  border-radius: $radius;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  align-items: center;
+  gap: 10px;
 }
- 
-.consulta-avatar {
-  width: 44px;
-  height: 44px;
-  background: #FFD580;
+
+.avatar-usuario {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  color: $white;
+  font-weight: 800;
+  font-size: 15px;
+  overflow: hidden;
   flex-shrink: 0;
-  color: #E6A800;
 
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
- 
-.consulta-body {
+
+.saudacao {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 1px;
 }
- 
-// Top row: nome + botão Chat
-.consulta-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
+
+.saudacao-label {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
 }
- 
-.consulta-info {
-  .consulta-doctor {
-    font-size: 15px;
-    font-weight: 700;
-    color: $black;
-    margin: 0 0 2px;
-  }
- 
-  .consulta-time {
-    font-size: 13px;
-    color: $gray;
-    margin: 0;
- 
-    .dot {
-      margin-left: 2px;
-    }
-  }
+
+.saudacao-nome {
+  font-size: 15px;
+  color: $white;
+  font-weight: 700;
 }
- 
-.btn-chat {
-  --background: #{$chat-bg};
-  --color: #{$chat-color};
-  --border-radius: 15px;
-  --padding-start: 10px;
-  --padding-end: 12px;
-  font-size: 13px;
-  font-weight: 600;
-  height: 32px;
-  flex-shrink: 0;
- 
-  ion-icon {
-    font-size: 14px;
-    margin-right: 4px;
-  }
-}
- 
-// Bottom row: ícone médico + botão Chamada
-.consulta-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
- 
-.doctor-icon-wrap {
-  width: 36px;
-  height: 36px;
-  background: $gray-light;
+
+.btn-notificacao {
+  position: relative;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
   display: flex;
   align-items: center;
-  justify-content: start;
-  font-size: 20px;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.badge-notificacao {
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FACC15;
+  border: 1.5px solid $blue-dark;
+}
+
+// ---- Headline ----
+.hero-headline {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 20px;
+
+  h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: $white;
+    line-height: 1.2;
+    margin: 0 0 10px;
+    letter-spacing: -0.4px;
+  }
+
+  p {
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 320px;
+  }
+}
+
+// ---- CTA Card ----
+.cta-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: $white;
+  border: none;
+  border-radius: 18px;
+  padding: 14px 16px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(15, 40, 70, 0.18);
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.cta-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: $blue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cta-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.cta-titulo {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: $black;
+}
+
+.cta-subtitulo {
+  font-size: 12.5px;
   color: $gray;
 }
- 
-.btn-chamada {
-  --background: #{$call-bg};
-  --color: #{$white};
-  --border-radius: 15px;
-  font-size: 13px;
-  font-weight: 600;
-  height: 36px;
+
+.cta-seta {
+  flex-shrink: 0;
 }
- 
-// ---- Tab Bar ----
+
+// ---- Corpo ----
+.corpo-content {
+  padding: 24px 20px 0;
+}
+
+// ---- Stats ----
+.stats-row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  flex: 1;
+  background: $white;
+  border: 1.5px solid $border;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: rgba(41, 171, 226, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-label {
+  font-size: 12.5px;
+  color: $gray;
+  font-weight: 500;
+}
+
+.stat-numero {
+  font-size: 24px;
+  font-weight: 800;
+  color: $black;
+  letter-spacing: -0.4px;
+}
+
+// ---- Seção ----
+.secao-titulo {
+  font-size: 18px;
+  font-weight: 800;
+  color: $black;
+  margin: 0 0 14px;
+  font-family: 'Nunito', Arial, sans-serif;
+  letter-spacing: -0.2px;
+}
+
+// ---- Consulta em andamento ----
+.consulta-card {
+  background: $white;
+  border: 1.5px solid $border;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+}
+
+.consulta-topo {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid $border;
+}
+
+.avatar-medico-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar-medico {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: $blue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $white;
+  font-weight: 800;
+  font-size: 16px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: $green;
+  border: 2px solid $white;
+}
+
+.consulta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  justify-content: center;
+}
+
+.medico-nome {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: $black;
+}
+
+.medico-especialidade {
+  font-size: 12.5px;
+  color: $gray;
+}
+
+.consulta-horario-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin-top: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(41, 171, 226, 0.1);
+  color: $blue-dark;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.dot-chip {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: $blue-dark;
+}
+
+.consulta-acoes {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-chat,
+.btn-chamada {
+  flex: 1;
+  height: 44px;
+  border-radius: 22px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-chat {
+  background: $gray-light;
+  color: $blue;
+  border: 1.5px solid $border;
+}
+
+.btn-chamada {
+  background: linear-gradient(135deg, $blue 0%, $blue-dark 100%);
+  color: $white;
+  box-shadow: 0 4px 14px rgba(41, 171, 226, 0.3);
+}
+
+.bottom-spacer {
+  height: 96px;
+}
+
+// ---- Bottom Nav ----
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -235,27 +401,37 @@ ion-button.button-clear {
   right: 0;
   height: 72px;
   background: $white;
-  border-top: 1px solid #F0F0F0;
+  border-top: 1px solid $border;
   display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 0 8px;
   z-index: 100;
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 6px 14px;
+}
+
+.nav-icon-wrap--active {
+  background: rgba(41, 171, 226, 0.12);
+  border-radius: 12px;
+  padding: 4px 14px;
 }
 
 .nav-label {
-  font-size: 10px;
-  color: #737373;
+  font-size: 10.5px;
+  color: $gray;
   font-weight: 500;
-  &--active { color: $black; font-weight: 700; }
+
+  &--active {
+    color: $blue;
+    font-weight: 700;
+  }
 }

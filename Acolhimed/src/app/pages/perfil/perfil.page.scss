@@ -1,21 +1,32 @@
-// perfil.page.scss
+$blue: #29ABE2;
+$blue-dark: #1a6fa8;
+$black: #141414;
+$gray: #737373;
+$gray-light: #F5F5F5;
+$border: #E8E8E8;
+$white: #FFFFFF;
+$green: #22C55E;
+$red: #EF4444;
+$red-light: #FEE2E2;
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-
-ion-content.perfil-content {
-  --background: #fafafa;
-  --padding-bottom: 95px; // space for bottom nav
+.perfil-content {
+  --background: #{$white};
 }
 
+.perfil-wrapper {
+  position: relative;
+}
+
+// ---- Hero Banner ----
 .hero-banner {
   position: relative;
-  background: linear-gradient(135deg, #29ABE2 0%, #1a6fa8 100%);
-  padding-bottom: 48px;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+  padding: 32px 20px 28px;
+  border-radius: 0 0 25px 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-  padding-top: 56px;
 }
 
 .hero-shapes {
@@ -27,237 +38,250 @@ ion-content.perfil-content {
 .shape {
   position: absolute;
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.166);
 
   &-1 {
     width: 200px;
     height: 200px;
-    top: -80px;
-    right: -50px;
-    background: rgba(255,255,255,0.08);
+    top: -90px;
+    right: -60px;
   }
+
   &-2 {
-    width: 110px;
-    height: 110px;
-    bottom: 10px;
+    width: 100px;
+    height: 100px;
+    bottom: -30px;
     left: -30px;
-    background: rgba(255,255,255,0.06);
-  }
-  &-3 {
-    width: 60px;
-    height: 60px;
-    top: 30px;
-    left: 50px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.185);
   }
 }
 
-// ---- Avatar ----
 .avatar-wrap {
   position: relative;
-  width: 104px;
-  height: 104px;
-  margin-bottom: 12px;
   z-index: 2;
+  margin-bottom: 14px;
 }
 
-.avatar-img {
-  width: 104px;
-  height: 104px;
-  border-radius: 52px;
+.hero-topbar {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.hero-titulo {
+  font-size: 24px;
+  font-weight: 800;
+  color: $white;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.avatar-usuario {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $white;
+  font-weight: 800;
+  font-size: 34px;
   overflow: hidden;
-  border: 3px solid rgba(255,255,255,0.7);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  background: #cce8f4;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center top;
-    display: block;
   }
 }
 
-.avatar-name {
+.status-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: $green;
+  border: 3px solid $blue-dark;
+}
+
+.usuario-nome {
+  position: relative;
+  z-index: 2;
+  font-size: 21px;
+  font-weight: 800;
+  color: $white;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+
+.usuario-email {
+  position: relative;
+  z-index: 2;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+// ---- Corpo ----
+.corpo-content {
+  padding: 24px 20px 0;
+}
+
+.secao-titulo {
   font-size: 18px;
   font-weight: 800;
-  color: white;
-  margin: 0 0 4px;
-  z-index: 2;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: $black;
+  margin: 0 0 14px;
+  letter-spacing: -0.2px;
+  font-family: 'Nunito', Arial, sans-serif;
+
+  &:not(:first-child) {
+    margin-top: 28px;
+  }
 }
 
-.avatar-email {
-  font-size: 13px;
-  color: rgba(255,255,255,0.8);
-  margin: 0;
-  z-index: 2;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-// Profile Info
-.profile-info {
+// ---- Tip Card ----
+.tip-card {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-
-  .profile-name-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .profile-name {
-    color: black;
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 28px;
-    text-align: center;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-
-  .profile-email {
-    color: #737373;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
-    text-align: center;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-}
-
-// Section card separator (white card that slides over banner)
-.form-card {
-  background: #fafafa;
-  border-radius: 28px 28px 0 0;
-  margin-top: -24px;
-  padding: 20px 16px 8px;
-  position: relative;
-  z-index: 3;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-  font-size: 18px;
-  font-weight: 700;
-  color: #141414;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-// Section Title
-.section-title {
-  padding: 16px 16px 8px;
-  color: #141414;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 23px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-// Menu Items
-.menu-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 72px;
-  padding: 8px 16px;
-  background: #fafafa;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-
-  &--toggle {
-    cursor: default;
-  }
-
-  .menu-item-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    flex: 1;
-    margin-right: 8px;
-  }
-
-  .menu-item-label {
-    color: #141414;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 24px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-
-    &--danger {
-      color: #ff0000;
-    }
-  }
-
-  .menu-item-sublabel {
-    color: #737373;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 21px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
+  align-items: flex-start;
+  gap: 10px;
+  background: rgb(249, 236, 236);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border-left: 3px solid #b70101;
 
   svg {
     flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  p {
+    font-size: 12px;
+    color: #b70101;
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 500;
   }
 }
 
-// Toggle
-.custom-toggle {
-  --background: #ededed;
-  --background-checked: #141414;
-  --handle-background: #ffffff;
-  --handle-background-checked: #ffffff;
-  --handle-box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.15);
-  --border-radius: 15.5px;
-  --handle-border-radius: 13.5px;
-  width: 51px;
-  height: 31px;
+// ---- Cards de opções ----
+.opcoes-card {
+  background: $white;
+  border: 1.5px solid $border;
+  border-radius: 18px;
+  overflow: hidden;
 }
 
-.hero-title-top {
-  position: absolute;
-  top: 22px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 17px;
+.opcao-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $border;
+  }
+
+  &:active {
+    background: $gray-light;
+  }
+}
+
+.opcao-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(41, 171, 226, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &-danger {
+    background: $red-light;
+  }
+}
+
+.opcao-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.opcao-titulo {
+  font-size: 15px;
   font-weight: 700;
-  color: white;
-  white-space: nowrap;
-  z-index: 2;
+  color: $black;
+
+  &-danger {
+    color: $red;
+  }
 }
 
-// Bottom Navigation
+.opcao-subtitulo {
+  font-size: 12.5px;
+  color: $gray;
+}
+
+.opcao-seta {
+  flex-shrink: 0;
+}
+
+.bottom-spacer {
+  height: 96px;
+}
+
+// ---- Bottom Nav ----
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   height: 72px;
-  background: white;
-  border-top: 1px solid #F0F0F0;
+  background: $white;
+  border-top: 1px solid $border;
   display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 0 8px;
   z-index: 100;
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 6px 14px;
+}
+
+.nav-icon-wrap--active {
+  background: rgba(41, 171, 226, 0.12);
+  border-radius: 12px;
+  padding: 4px 14px;
 }
 
 .nav-label {
-  font-size: 10px;
-  color: #737373;
+  font-size: 10.5px;
+  color: $gray;
   font-weight: 500;
-  &--active { color: black; font-weight: 700; }
+
+  &--active {
+    color: $blue;
+    font-weight: 700;
+  }
 }

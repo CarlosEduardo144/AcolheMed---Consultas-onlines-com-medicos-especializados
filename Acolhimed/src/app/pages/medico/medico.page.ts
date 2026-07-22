@@ -1,108 +1,89 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import {
-  NavController, ToastController,
-  IonContent, IonHeader, IonTitle, IonToolbar,
-  IonButton, IonButtons, IonBackButton, IonIcon
-} from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import {
-  star, starOutline, locationOutline, schoolOutline,
-  timeOutline, calendarOutline, chatbubbleOutline,
-  callOutline, chevronBackOutline, personOutline
-} from 'ionicons/icons';
-import { MedicoModel } from 'src/app/model/medico.model';
+import { FormsModule } from '@angular/forms';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonFooter, IonButton } from '@ionic/angular/standalone';
+import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { RouterLink } from '@angular/router'; 
 
 @Component({
   selector: 'app-medico',
   templateUrl: './medico.page.html',
   styleUrls: ['./medico.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule, RouterModule,
-    IonContent, IonHeader, IonTitle, IonToolbar,
-    IonButton, IonButtons, IonBackButton, IonIcon
-  ]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonFooter, IonButton, RouterLink]
 })
 export class MedicoPage implements OnInit {
-  medico: MedicoModel | null = null;
-  temHorarioDisponivel = false;
 
-  diasSemana = [
-    { id: 'seg', label: 'Seg' },
-    { id: 'ter', label: 'Ter' },
-    { id: 'qua', label: 'Qua' },
-    { id: 'qui', label: 'Qui' },
-    { id: 'sex', label: 'Sex' },
-    { id: 'sab', label: 'Sáb' },
-  ];
+  medico: any;
+  totalAvaliacoes: number;
+  percentualPorNota: number;
+  fotoAmpliada = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    private navCtrl: NavController,
-    private usuarioService: UsuarioService,
-    private toastController: ToastController
-  ) {
-    addIcons({
-      star, starOutline, locationOutline, schoolOutline,
-      timeOutline, calendarOutline, chatbubbleOutline,
-      callOutline, chevronBackOutline, personOutline
-    });
+  constructor(private route: ActivatedRoute,
+    private medicoService: UsuarioService) {
+    this.totalAvaliacoes = 10;
+    this.percentualPorNota = 4;
   }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.usuarioService.buscarMedicoPorId(id).subscribe({
-      next: (medico) => {
-        this.medico = medico;
-        this.verificarHorario();
-      },
-      error: (erro) => {
-        this.exibirMensagem(erro.error.message);
-      }
-    });
+      this.medicoService.buscarPorId(id).subscribe({
+        next: (medico) => this.medico = medico,
+        error: (err) => console.error('Erro ao carregar médico', err)
+      });
     }
   }
 
-  verificarHorario() {
-    if (!this.medico?.horario) {
-      return;
-    }
-
-    for (let i = 0; i < this.medico.horario.length; i++) {
-      if (this.medico.horario[i].id) {
-        this.temHorarioDisponivel = true;
-        break;
-      }
-    }
+  toggleFotoAmpliada() {
+    this.fotoAmpliada = !this.fotoAmpliada;
   }
 
-  temHorario(diaId: string): boolean {
-    return this.medico?.horario?.some(h => h.diaSemana === diaId) ?? false;
+  /*
+  get totalAvaliacoes(): number {
+    return this.medico?.avaliacoes?.length ?? 0;
   }
 
-  agendar() {
-    if (!this.medico) return;
-    this.navCtrl.navigateForward('/agendar-consulta', {
-      state: { medico: this.medico }
-    });
+  get mediaAvaliacoes(): number {
+    if (!this.totalAvaliacoes) return 0;
+    const soma = this.medico.avaliacoes.reduce((acc, av) => acc + av.nota, 0);
+    return soma / this.totalAvaliacoes;
   }
 
-  async exibirMensagem(texto: string) {
-
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 1500
-    });
-
-    toast.present();
-
+  get mediaFormatada(): string {
+    return this.mediaAvaliacoes.toFixed(1).replace('.', ',');
   }
 
-  goBack() {
-    this.navCtrl.back();
+  get qualidadeLabel(): string {
+    const m = this.mediaAvaliacoes;
+    if (m >= 4.5) return 'Excelente';
+    if (m >= 3.5) return 'Muito bom';
+    if (m >= 2.5) return 'Bom';
+    if (m >= 1.5) return 'Regular';
+    return 'Ruim';
   }
+
+  // Percentual de preenchimento da estrela grande (média), usado no overlay
+  get percentualEstrelaMedia(): number {
+    return (this.mediaAvaliacoes / 5) * 100;
+  }
+
+  // Quantidade de avaliações para uma nota específica (5,4,3,2,1)
+  quantidadePorNota(nota: number): number {
+    return this.medico?.avaliacoes?.filter(av => av.nota === nota).length ?? 0;
+  }
+
+  // Percentual da barra de distribuição para uma nota específica
+  percentualPorNota(nota: number): number {
+    if (!this.totalAvaliacoes) return 0;
+    return (this.quantidadePorNota(nota) / this.totalAvaliacoes) * 100;
+  }
+
+  // Array [1..5] usado no *ngFor para desenhar estrelas de cada avaliação individual
+  estrelasArray(nota: number): boolean[] {
+    return [1, 2, 3, 4, 5].map(i => i <= nota);
+  }
+  */
+
 }

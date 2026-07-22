@@ -1,202 +1,380 @@
 $blue: #29ABE2;
-$black: #111111;
-$gray: #6B6B6B;
+$blue-dark: #1a6fa8;
+$black: #141414;
+$navy: #10243E;
+$gray: #737373;
 $gray-light: #F5F5F5;
+$border: #E8E8E8;
 $white: #FFFFFF;
-$call-bg: #00C48C;
-$chat-bg: #E8E0F7;
-$chat-color: #7B5EA7;
+$amber: #F5A623;
+$blue-light: #E8F6FD;
 
-ion-content.medico-content { --background: #{$white}; }
-
-ion-header ion-toolbar {
-  --background: #{$white};
-  --color: #{$black};
-  --border-width: 0;
-  ion-title { font-size: 17px; font-weight: 700; }
+.perfil-content {
+  --background: #{$gray-light}; // fundo cinza claro atrás dos cards, pra eles se destacarem
 }
 
-// Hero
-.hero {
+// ---- Hero Banner ----
+.hero-banner {
+  position: relative;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+  padding: 32px 20px 45px;
+  border-radius: 0 0 25px 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 28px 20px 20px;
-  background: linear-gradient(180deg, #EAF7FD 0%, $white 100%);
+  overflow: hidden;
 }
 
-.hero-avatar {
-  width: 90px;
-  height: 90px;
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
   border-radius: 50%;
-  background: #D0EEF8;
+  background: rgba(255, 255, 255, 0.08);
+
+  &-1 {
+    width: 200px;
+    height: 200px;
+    top: -90px;
+    right: -60px;
+  }
+
+  &-2 {
+    width: 100px;
+    height: 100px;
+    bottom: -10px;
+    left: -30px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  &-3 {
+    width: 60px;
+    height: 60px;
+    top: 30px;
+    left: 30px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.hero-topbar {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-back {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
-  border: 3px solid $white;
-  box-shadow: 0 4px 16px rgba(41,171,226,0.15);
-  ion-icon { font-size: 46px; color: $blue; }
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.35);
+  }
 }
 
-.hero-nome {
-  font-size: 20px;
+.hero-titulo {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: $white;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.hero-topbar-spacer {
+  width: 40px;
+  flex-shrink: 0;
+}
+
+// ---- Foto ----
+.foto-wrap {
+  position: relative;
+  z-index: 2;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.foto-medico {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+}
+
+// ---- Overlay foto ampliada ----
+.foto-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 32px;
+  box-sizing: border-box;
+  animation: fadeIn 0.15s ease;
+}
+
+.foto-ampliada {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// ---- Corpo (fundo) ----
+.perfil-corpo {
+  position: relative;
+  z-index: 2;
+  margin-top: -36px;
+  border-radius: 28px 28px 0 0;
+  padding: 10px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+// ---- Card base (cada bloco de informação) ----
+.info-card {
+  background: $white;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 2px 10px rgba(15, 40, 70, 0.241);
+}
+
+// ---- Dados principais ----
+.dados-principais {
+  padding-top: 20px;
+}
+
+.nome-medico {
+  font-size: 22px;
   font-weight: 800;
   color: $black;
   margin: 0 0 4px;
-  text-align: center;
+  letter-spacing: -0.3px;
 }
 
-.hero-esp {
+.crm-medico {
   font-size: 14px;
   color: $gray;
-  margin: 0 0 10px;
+  margin: 0 0 12px;
+  font-weight: 500;
 }
 
-.hero-rating {
+.chips-linha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.chip-especialidade {
+  background: $blue-light;
+  color: $blue-dark;
+}
+
+.chip-nota {
+  background: #FEF3E2;
+  color: #B5750E;
+}
+
+.pills-linha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  background: $gray-light;
+  border-radius: 20px;
+  padding: 7px 12px 7px 10px;
+  white-space: nowrap;
+}
+
+// ---- Seções (Sobre mim / Formação / Avaliações) ----
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    background: $blue-light;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: $black;
+    letter-spacing: -0.2px;
+  }
+}
+
+.section-text {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-line;
+}
+
+// ---- Avaliações: resumo ----
+.resumo-avaliacoes {
+  display: flex;
+  gap: 24px;
+  padding: 16px;
+  background: $gray-light;
+  border-radius: 16px;
+  align-items: center;
+}
+
+.resumo-media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.numero-media {
+  font-size: 34px;
+  font-weight: 800;
+  color: $black;
+  line-height: 1;
+}
+
+.estrelas-media {
+  font-size: 15px;
+  color: $amber;
+  letter-spacing: 2px;
+  margin: 6px 0 4px;
+}
+
+.label-qtd {
+  font-size: 11.5px;
+  color: $gray;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.resumo-barras {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.barra-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.barra-label {
+  font-size: 11.5px;
+  color: $gray;
+  width: 22px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 2px;
-  ion-icon { font-size: 16px; color: #FACC15; }
-  span { font-size: 13px; font-weight: 600; color: $black; margin-left: 4px; }
 }
 
-// Info cards
-.info-cards {
-  display: flex;
-  gap: 10px;
-  padding: 16px 20px;
+.star-mini {
+  color: $amber;
+  font-size: 11px;
 }
 
-.info-card {
+.barra-fundo {
   flex: 1;
-  background: $gray-light;
-  border-radius: 14px;
-  padding: 12px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  text-align: center;
-
-  ion-icon { font-size: 20px; color: $blue; }
-  .info-label { font-size: 10px; color: $gray; font-weight: 500; }
-  .info-value { font-size: 12px; color: $black; font-weight: 700; }
+  height: 6px;
+  background: #E4E7EC;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-// Sections
-.section {
-  padding: 4px 20px 16px;
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: $black;
-  margin: 0 0 12px;
-}
-
-.sobre-text {
-  font-size: 14px;
-  color: $gray;
-  line-height: 1.6;
-  margin: 0;
-}
-
-// Dias
-.dias-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.dia-chip {
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-
-  &.ativo { background: $blue; color: $white; }
-  &.inativo { background: $gray-light; color: #BDBDBD; }
-}
-
-.disp-hint {
-  font-size: 12px;
-  color: $gray;
-  margin: 10px 0 0;
-  font-style: italic;
-}
-
-// Bottom actions
-.bottom-actions {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  gap: 10px;
-  padding: 12px 20px 28px;
-  background: $white;
-  box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
-  z-index: 100;
-}
-
-.btn-chat-float {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: $chat-bg;
-  color: $chat-color;
-  border: none;
-  border-radius: 14px;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 14px 18px;
-  cursor: pointer;
-  ion-icon { font-size: 18px; }
-}
-
-.btn-agendar {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: $blue;
-  color: $white;
-  border: none;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 700;
-  padding: 14px;
-  cursor: pointer;
-  ion-icon { font-size: 18px; }
-}
-
-.btn-agendar-disable {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: rgb(190, 190, 190);
-  color: rgb(114, 114, 114);
-  border: none;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 700;
-  padding: 14px;
-  ion-icon { font-size: 18px; }
-}
-
-// Empty state
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.barra-preenchida {
   height: 100%;
-  gap: 12px;
-  ion-icon { font-size: 56px; color: #BDBDBD; }
-  p { font-size: 15px; color: $gray; margin: 0; }
+  background: $blue;
+  border-radius: 4px;
+}
+
+// ---- Footer ----
+.footer-agendar ion-toolbar {
+  --background: #ffffff;
+}
+
+.botao-agendar {
+  --background: linear-gradient(135deg, $black 0%, #333333 100%);
+  --border-radius: 16px;
+  --box-shadow: 0 8px 20px rgba(16, 36, 62, 0.363);
+  --font-weight: 700;
+  color: white;
+  height: 54px;
+  letter-spacing: 0.2px;
+  font-size: 14px;
+
+  background: linear-gradient(135deg, $black 0%, #333333 100%);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+
+  &:active {
+    opacity: 0.88;
+    transform: scale(0.98);
+  }
 }

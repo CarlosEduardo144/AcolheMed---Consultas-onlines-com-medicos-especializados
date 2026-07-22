@@ -44,6 +44,7 @@ import { LoginService } from 'src/app/services/login.service';
 export class LoginPage {
 
   loginForm: FormGroup;
+  showSenha = false;
 
   constructor(
     private fb: FormBuilder,
@@ -74,18 +75,10 @@ export class LoginPage {
       senha: this.loginForm.value.senha
     };
 
-    console.log('Enviando credenciais ao backend:', JSON.stringify(credenciais));
-
     this.usuarioService.login(credenciais).subscribe({
-      next: (usuarioSalvo) => {
-        this.loginService.setUsuario(usuarioSalvo);
-
-        this.exibirMensagem('Usuário autenticado com sucesso!!!');
-        if (this.loginService.getTipoUsuario(usuarioSalvo) === 'medico') {
-          this.navController.navigateRoot('/home-medico');
-        } else {
-          this.navController.navigateRoot('/inicio');
-        }
+      next: (usuario) => {
+        this.loginService.setUsuario(usuario.id, usuario.tipoUsuario);
+        this.navController.navigateRoot('/inicio');
       },
       error: (erro) => {
         console.error(erro);

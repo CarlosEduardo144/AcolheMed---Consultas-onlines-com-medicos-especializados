@@ -1,0 +1,238 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+<ion-content class="add-horario-content" [fullscreen]="true">
+  <div class="page-wrapper">
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+      <div class="hero-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+      </div>
+
+      <div class="hero-topbar">
+        <button class="header-back" routerLink="/perfil">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M21 12C21 12.4142 20.6642 12.75 20.25 12.75H5.56031L11.0306 18.2194C11.3237 18.5124 11.3237 18.9876 11.0306 19.2806C10.7376 19.5737 10.2624 19.5737 9.96937 19.2806L3.21937 12.5306C3.07854 12.3899 2.99941 12.1991 2.99941 12C2.99941 11.8009 3.07854 11.6101 3.21937 11.4694L9.96937 4.71938C10.2624 4.42632 10.7376 4.42632 11.0306 4.71938C11.3237 5.01243 11.3237 5.48757 11.0306 5.78062L5.56031 11.25H20.25C20.6642 11.25 21 11.5858 21 12Z"
+              fill="white" />
+          </svg>
+        </button>
+
+        <div class="hero-titulos">
+          <h1 style="font-family: 'Nunito', Arial, sans-serif;">Adicionar horário</h1>
+          <p>Defina sua disponibilidade semanal</p>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Corpo branco -->
+    <div class="corpo-content">
+
+      <!-- Card informativo -->
+      <div class="info-card">
+        <button type="button" class="info-header" (click)="toggleInfoExpandido()">
+          <div class="info-header-left">
+            <div class="info-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#29ABE2" stroke-width="1.8" />
+                <path d="M12 11V16M12 8H12.01" stroke="#29ABE2" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </div>
+            <span class="info-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Como funcionam os
+              horários?</span>
+          </div>
+
+          <svg class="info-chevron" [class.info-chevron--aberto]="infoExpandido" width="18" height="18"
+            viewBox="0 0 24 24" fill="none">
+            <path d="M6 9L12 15L18 9" stroke="#141414" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <div class="info-conteudo" *ngIf="infoExpandido">
+
+          <div class="info-lista">
+            <div class="info-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="4" stroke="#F5A623" stroke-width="1.6" />
+                <path d="M12 3V5M12 19V21M3 12H5M19 12H21M5.6 5.6L7 7M17 17L18.4 18.4M18.4 5.6L17 7M7 17L5.6 18.4"
+                  stroke="#F5A623" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+              <span><strong>Manhã:</strong> 8h às 11h</span>
+            </div>
+
+            <div class="info-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M12 3V13M6 13H18M4 17H20M6 21H18" stroke="#F5A623" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+              <span><strong>Tarde:</strong> 13h às 17h</span>
+            </div>
+
+            <div class="info-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M20 14.5C18.8 15.4 17.3 16 15.6 16C11.4 16 8 12.6 8 8.4C8 6.7 8.6 5.2 9.5 4C6 5 3.5 8.2 3.5 12C3.5 16.7 7.3 20.5 12 20.5C15.8 20.5 19 18 20 14.5Z"
+                  stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
+              </svg>
+              <span><strong>Noite:</strong> 18h às 20h</span>
+            </div>
+
+            <div class="info-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#29ABE2" stroke-width="1.6" />
+                <path d="M12 7V12L15.5 14" stroke="#29ABE2" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span>Consultas de <strong>30 em 30 minutos</strong></span>
+            </div>
+          </div>
+
+          <div class="dica-box">
+            <p>Dica: você pode alterar sua disponibilidade a qualquer momento. Pacientes só verão os períodos que você
+              marcar aqui.</p>
+          </div>
+
+          <div class="legenda-header">
+            <div class="info-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#29ABE2" stroke-width="1.8" />
+                <path d="M12 11V16M12 8H12.01" stroke="#29ABE2" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </div>
+            <span class="info-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Legenda</span>
+          </div>
+
+          <div class="legenda-lista">
+            <div class="legenda-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <rect x="9" y="9" width="12" height="12" rx="2" stroke="#29ABE2" stroke-width="1.7" />
+                <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                  stroke="#29ABE2" stroke-width="1.7" />
+              </svg>
+              <span>- Aplica a configuração do dia para todos.</span>
+            </div>
+
+            <div class="legenda-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M4 7H20M9 7V4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V7M18 7L17.3 19C17.2 20.1 16.3 21 15.2 21H8.8C7.7 21 6.8 20.1 6.7 19L6 7"
+                  stroke="#EF4444" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>- Desmarca todas opções do horário.</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Lista de dias -->
+      <div class="dias-lista">
+        <div class="dia-card" *ngFor="let dia of diasSemana" [class.dia-card--vazio]="!diaConfigurado(dia)">
+
+          <button type="button" class="dia-header" (click)="toggleExpandido(dia)">
+            <div class="dia-titulo-wrap">
+              <span style="font-family: 'Nunito', Arial, sans-serif; text-transform: uppercase;" class="dia-nome">{{ dia.dia }}</span>
+              <span class="dia-resumo" [class.dia-resumo--ativo]="diaConfigurado(dia)">{{ resumoDia(dia) }}</span>
+            </div>
+
+            <div class="dia-acoes">
+              <button *ngIf="diaConfigurado(dia)" type="button" class="acao-icon" title="Copiar para os demais dias"
+                (click)="copiarParaTodos(dia, $event)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <rect x="9" y="9" width="12" height="12" rx="2" stroke="#a0a0a0" stroke-width="1.7" />
+                  <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+                    stroke="#a0a0a0" stroke-width="1.7" />
+                </svg>
+              </button>
+
+              <button *ngIf="diaConfigurado(dia)" type="button" class="acao-icon acao-icon--limpar" title="Limpar dia"
+                (click)="limparDia(dia, $event)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M4 7H20M9 7V4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V7M18 7L17.3 19C17.2 20.1 16.3 21 15.2 21H8.8C7.7 21 6.8 20.1 6.7 19L6 7"
+                    stroke="#EF4444" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+
+              <svg class="dia-chevron" [class.dia-chevron--aberto]="dia.expandido" width="18" height="18"
+                viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="#141414" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+
+          <div class="dia-periodos" *ngIf="dia.expandido">
+
+            <button type="button" class="periodo-item" (click)="togglePeriodo(dia, 'manha', $event)">
+              <span class="periodo-checkbox" [class.periodo-checkbox--marcado]="dia.manha">
+                <svg *ngIf="dia.manha" width="11" height="9" viewBox="0 0 11 9" fill="none">
+                  <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="4" stroke="#F5A623" stroke-width="1.6" />
+                <path d="M12 3V5M12 19V21M3 12H5M19 12H21M5.6 5.6L7 7M17 17L18.4 18.4M18.4 5.6L17 7M7 17L5.6 18.4"
+                  stroke="#F5A623" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+              <span class="periodo-nome">Manhã</span>
+              <span class="periodo-horario">8h – 11h</span>
+            </button>
+
+            <button type="button" class="periodo-item" (click)="togglePeriodo(dia, 'tarde', $event)">
+              <span class="periodo-checkbox" [class.periodo-checkbox--marcado]="dia.tarde">
+                <svg *ngIf="dia.tarde" width="11" height="9" viewBox="0 0 11 9" fill="none">
+                  <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M12 3V13M6 13H18M4 17H20M6 21H18" stroke="#F5A623" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+              <span class="periodo-nome">Tarde</span>
+              <span class="periodo-horario">13h – 17h</span>
+            </button>
+
+            <button type="button" class="periodo-item" (click)="togglePeriodo(dia, 'noite', $event)">
+              <span class="periodo-checkbox" [class.periodo-checkbox--marcado]="dia.noite">
+                <svg *ngIf="dia.noite" width="11" height="9" viewBox="0 0 11 9" fill="none">
+                  <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M20 14.5C18.8 15.4 17.3 16 15.6 16C11.4 16 8 12.6 8 8.4C8 6.7 8.6 5.2 9.5 4C6 5 3.5 8.2 3.5 12C3.5 16.7 7.3 20.5 12 20.5C15.8 20.5 19 18 20 14.5Z"
+                  stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
+              </svg>
+              <span class="periodo-nome">Noite</span>
+              <span class="periodo-horario">18h – 20h</span>
+            </button>
+
+        </div>
+      </div>
+  </div>
+
+  <!-- Resumo + salvar -->
+  <p class="resumo-total">{{ labelDiasConfigurados }}</p>
+
+  <button style="font-family: 'Nunito', Arial, sans-serif;" type="button" class="salvar-btn" (click)="salvarHorario()">
+     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16L21 8V19C21 20.1046 20.1046 21 19 21Z"
+            stroke="white" stroke-width="2" stroke-linejoin="round" />
+          <path d="M17 21V13H7V21M7 3V8H15" stroke="white" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+    Salvar horários
+  </button>
+
+  <div class="bottom-spacer"></div>
+  </div>
+
+  </div>
+</ion-content>

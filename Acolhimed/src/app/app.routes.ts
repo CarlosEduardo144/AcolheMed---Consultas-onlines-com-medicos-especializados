@@ -39,32 +39,32 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/add-formacao-profissional/add-formacao-profissional.page').then(m => m.AddFormacaoProfissionalPage)
   },
   {
-    path: 'alterar-horario',
-    loadComponent: () => import('./pages/alterar-horario/alterar-horario.page').then(m => m.AlterarHorarioPage)
+    path: 'consultas',
+    loadComponent: () => import('./pages/consultas/consultas.page').then( m => m.ConsultasPage)
+  },
+  {
+    path: 'add-especialidade',
+    loadComponent: () => import('./pages/add-especialidade/add-especialidade.page').then( m => m.AddEspecialidadePage)
   },
   {
     path: 'medico',
-    loadComponent: () => import('./pages/medico/medico.page').then(m => m.MedicoPage)
+    loadComponent: () => import('./pages/medico/medico.page').then( m => m.MedicoPage)
+  },
+  {
+    path: 'medico/:id',
+    loadComponent: () => import('./pages/medico/medico.page').then( m => m.MedicoPage)
+  },
+  {
+    path: 'add-horario',
+    loadComponent: () => import('./pages/add-horario/add-horario.page').then( m => m.AddHorarioPage)
   },
   {
     path: 'agendar-consulta',
-    loadComponent: () => import('./pages/agendar-consulta/agendar-consulta.page').then(m => m.AgendarConsultaPage)
+    loadComponent: () => import('./pages/agendar-consulta/agendar-consulta.page').then( m => m.AgendarCosultaPage)
   },
   {
-    path: 'medicos/:id',
-    loadComponent: () => import('./pages/medico/medico.page').then(m => m.MedicoPage)
-  },
-  {
-    path: 'home-medico',
-    loadComponent: () => import('./pages/home-medico/home-medico.page').then(m => m.HomeMedicoPage)
-  },
-  {
-    path: 'pacientes-medico',
-    loadComponent: () => import('./pages/pacientes-medico/pacientes-medico.page').then(m => m.PacientesMedicoPage)
-  },
-  {
-    path: 'agendamentos-medico',
-    loadComponent: () => import('./pages/agendamentos-medico/agendamentos-medico.page').then( m => m.AgendamentosMedicoPage)
+    path: 'agendar-consulta/:id',
+    loadComponent: () => import('./pages/agendar-consulta/agendar-consulta.page').then( m => m.AgendarCosultaPage)
   },
 ];
 

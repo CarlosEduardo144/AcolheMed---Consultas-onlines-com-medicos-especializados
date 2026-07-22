@@ -3,8 +3,7 @@ package br.cefet.acolhimed.dto;
 import java.sql.Date;
 
 import br.cefet.acolhimed.entity.Usuario;
-
-
+import br.cefet.acolhimed.enums.TipoUsuario;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,7 @@ public class UsuarioResponseDTO {
     private String nome;
     private String email;
     private Date dataNascimento;
-    private String tipoUsuario;
+    private TipoUsuario tipoUsuario;
     private String foto;
     private String cpf;
     

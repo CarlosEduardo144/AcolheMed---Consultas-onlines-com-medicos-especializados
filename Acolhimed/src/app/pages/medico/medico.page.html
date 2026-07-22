@@ -1,99 +1,170 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button text="" defaultHref="/explorar"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Perfil do Médico</ion-title>
-  </ion-toolbar>
-</ion-header>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
-<ion-content class="medico-content" *ngIf="medico">
+<ion-content class="perfil-content" [fullscreen]="true">
 
-  <!-- Hero -->
-  <div class="hero">
-    <div class="hero-avatar">
-      <ion-icon name="person-outline"></ion-icon>
+  <!-- Hero Banner -->
+  <div class="hero-banner">
+    <div class="hero-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
     </div>
-    <h1 class="hero-nome">{{ medico.usuario.nome }}</h1>
-    <p class="hero-esp">SemEspecialidade</p>
-    <div class="hero-rating">
-      <ion-icon name="star"></ion-icon>
-      <ion-icon name="star"></ion-icon>
-      <ion-icon name="star"></ion-icon>
-      <ion-icon name="star"></ion-icon>
-      <ion-icon name="star-outline"></ion-icon>
-      <span>4.0</span>
-    </div>
-  </div>
 
-  <!-- Info cards -->
-  <div class="info-cards">
-    <div class="info-card">
-      <ion-icon name="location-outline"></ion-icon>
-      <span class="info-label">UF</span>
-      <span class="info-value">{{ medico.ufEmissao || '—' }}</span>
+    <div class="hero-topbar">
+      <button class="header-back" onclick="history.back()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M21 12C21 12.4142 20.6642 12.75 20.25 12.75H5.56031L11.0306 18.2194C11.3237 18.5124 11.3237 18.9876 11.0306 19.2806C10.7376 19.5737 10.2624 19.5737 9.96937 19.2806L3.21937 12.5306C3.07854 12.3899 2.99941 12.1991 2.99941 12C2.99941 11.8009 3.07854 11.6101 3.21937 11.4694L9.96937 4.71938C10.2624 4.42632 10.7376 4.42632 11.0306 4.71938C11.3237 5.01243 11.3237 5.48757 11.0306 5.78062L5.56031 11.25H20.25C20.6642 11.25 21 11.5858 21 12Z"
+            fill="white" />
+        </svg>
+      </button>
+
+      <div class="hero-topbar-spacer"></div>
     </div>
-    <div class="info-card">
-      <ion-icon name="school-outline"></ion-icon>
-      <span class="info-label">CRM</span>
-      <span class="info-value">{{ medico.crm || '—' }}</span>
-    </div>
-    <div class="info-card">
-      <ion-icon name="time-outline"></ion-icon>
-      <span class="info-label">Formação</span>
-      <span class="info-value">{{ medico.formacaoAcademica || '—' }}</span>
+
+    <div class="foto-wrap" (click)="toggleFotoAmpliada()">
+      <img class="foto-medico" [src]="medico?.foto" [alt]="medico?.nome" />
     </div>
   </div>
 
-  <!-- Sobre mim -->
-  <div class="section" *ngIf="medico.sobreMim">
-    <h2 class="section-title">Sobre mim</h2>
-    <p class="sobre-text">{{ medico.sobreMim }}</p>
+  <!-- Overlay foto ampliada -->
+  <div class="foto-overlay" *ngIf="fotoAmpliada" (click)="toggleFotoAmpliada()">
+    <img class="foto-ampliada" [src]="medico?.foto" [alt]="medico?.nome" (click)="$event.stopPropagation()" />
   </div>
 
-  <!-- Disponibilidade -->
-  <div class="section">
-    <h2 class="section-title">Disponibilidade</h2>
-    <div class="dias-row">
-      <div class="dia-chip" *ngFor="let d of diasSemana" [class.ativo]="temHorario(d.id)"
-        [class.inativo]="!temHorario(d.id)">
-        {{ d.label }}
+  <!-- Fundo cinza claro por trás dos cards -->
+  <div class="perfil-corpo">
+
+    <!-- Card: Dados principais -->
+    <div class="info-card dados-principais">
+      <h1 class="nome-medico" style="font-family: 'Nunito', Arial, sans-serif;">Dr. {{ medico?.nome }}</h1>
+      <p class="crm-medico">CRM {{ medico?.crm }}</p>
+
+      <div class="chips-linha" *ngIf="medico?.especialidades?.length">
+        <span class="chip chip-especialidade" *ngFor="let especialidade of medico?.especialidades">
+          {{ especialidade.nome }}
+        </span>
+
+        <!-- Nota geral: placeholder até sistema de avaliações estar implementado -->
+        <span class="chip chip-nota">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L14.9 8.6L22 9.3L16.7 14.1L18.2 21.2L12 17.6L5.8 21.2L7.3 14.1L2 9.3L9.1 8.6L12 2Z"
+              fill="#F5A623" stroke="#F5A623" stroke-width="1.5" stroke-linejoin="round" />
+          </svg>
+          4.9
+        </span>
+      </div>
+
+      <!-- Pills extras: local/experiência — placeholder até esses campos existirem no model -->
+      <div class="pills-linha">
+        <span class="pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 21C12 21 5 14.5 5 9.5C5 5.91 7.91 3 11.5 3H12.5C16.09 3 19 5.91 19 9.5C19 14.5 12 21 12 21Z"
+              stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
+            <circle cx="12" cy="9.5" r="2.2" stroke="#29ABE2" stroke-width="1.6" />
+          </svg>
+          Atendimento online
+        </span>
+        <span class="pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="#29ABE2" stroke-width="1.6" />
+            <path d="M12 7V12L15.5 14" stroke="#29ABE2" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          8+ anos de experiência
+        </span>
       </div>
     </div>
-    <p class="disp-hint" *ngIf="!medico.horario?.length">
-      Horários não configurados. Clique em agendar para ver as opções.
-    </p>
+
+    <!-- Card: Sobre mim -->
+    <div class="info-card section-block" *ngIf="medico?.sobreMim">
+      <div class="section-header">
+        <div class="section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="8" r="4" stroke="#29ABE2" stroke-width="1.8" />
+            <path d="M4 20C4 17.2386 7.58172 15 12 15C16.4183 15 20 17.2386 20 20" stroke="#29ABE2" stroke-width="1.8"
+              stroke-linecap="round" />
+          </svg>
+        </div>
+        <span class="section-title" style="font-family: 'Nunito', Arial, sans-serif;">Sobre mim</span>
+      </div>
+      <p class="section-text">{{ medico?.sobreMim }}</p>
+    </div>
+
+    <!-- Card: Formação Acadêmica -->
+    <div class="info-card section-block" *ngIf="medico?.formacaoAcademica">
+      <div class="section-header">
+        <div class="section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3L1 9L12 15L23 9L12 3Z" stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
+            <path d="M5 11.2V16.2C5 16.2 6.5 19 12 19C17.5 19 19 16.2 19 16.2V11.2" stroke="#29ABE2" stroke-width="1.6"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="section-title" style="font-family: 'Nunito', Arial, sans-serif;">Formação e experiência</span>
+      </div>
+      <p class="section-text formacao-text">{{ medico?.formacaoAcademica }}</p>
+    </div>
+
+    <!-- Card: Avaliações (placeholder — sistema ainda não implementado) -->
+    <div class="info-card section-block avaliacoes-block">
+      <div class="section-header">
+        <div class="section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L14.9 8.6L22 9.3L16.7 14.1L18.2 21.2L12 17.6L5.8 21.2L7.3 14.1L2 9.3L9.1 8.6L12 2Z"
+              stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="section-title" style="font-family: 'Nunito', Arial, sans-serif;">67 avaliações</span>
+      </div>
+
+      <div class="resumo-avaliacoes">
+        <div class="resumo-media">
+          <span class="numero-media">4.9</span>
+          <div class="estrelas-media">★★★★★</div>
+          <span class="label-qtd">67 avaliações</span>
+        </div>
+
+        <div class="resumo-barras">
+          <div class="barra-linha">
+            <span class="barra-label">5 <span class="star-mini">★</span></span>
+            <div class="barra-fundo">
+              <div class="barra-preenchida" style="width: 88%;"></div>
+            </div>
+          </div>
+          <div class="barra-linha">
+            <span class="barra-label">4 <span class="star-mini">★</span></span>
+            <div class="barra-fundo">
+              <div class="barra-preenchida" style="width: 20%;"></div>
+            </div>
+          </div>
+          <div class="barra-linha">
+            <span class="barra-label">3 <span class="star-mini">★</span></span>
+            <div class="barra-fundo">
+              <div class="barra-preenchida" style="width: 8%;"></div>
+            </div>
+          </div>
+          <div class="barra-linha">
+            <span class="barra-label">2 <span class="star-mini">★</span></span>
+            <div class="barra-fundo">
+              <div class="barra-preenchida" style="width: 3%;"></div>
+            </div>
+          </div>
+          <div class="barra-linha">
+            <span class="barra-label">1 <span class="star-mini">★</span></span>
+            <div class="barra-fundo">
+              <div class="barra-preenchida" style="width: 2%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ion-button [routerLink]="['/agendar-consulta', medico?.id]" expand="block" class="botao-agendar">
+      Agendar consulta
+    </ion-button>
   </div>
 
-  <div style="height: 110px"></div>
 
 </ion-content>
-
-<!-- Não encontrado -->
-<ion-content *ngIf="!medico" class="medico-content">
-  <div class="empty-state">
-    <ion-icon name="person-outline"></ion-icon>
-    <p>Médico não encontrado</p>
-    <ion-button fill="clear" (click)="goBack()">Voltar</ion-button>
-  </div>
-</ion-content>
-
-<!-- Botões flutuantes -->
-<div class="bottom-actions" *ngIf="medico">
-  <button class="btn-chat-float">
-    <ion-icon name="chatbubble-outline"></ion-icon>
-    Chat
-  </button>
-  @if (temHorarioDisponivel) {
-  <button class="btn-agendar" (click)="agendar()">
-    <ion-icon name="calendar-outline"></ion-icon>
-    Agendar Consulta
-  </button>
-} @else {
-  <button class="btn-agendar-disable" disabled>
-    <ion-icon name="calendar-outline"></ion-icon>
-    Agendar Consulta
-  </button>
-}
-
-</div>

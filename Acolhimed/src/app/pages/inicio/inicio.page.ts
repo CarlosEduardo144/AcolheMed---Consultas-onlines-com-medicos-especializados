@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
 import { IonIcon, IonButton, IonContent, IonHeader, IonTabBar, IonTabButton, IonTitle, IonToolbar, IonLabel, IonButtons, IonAvatar } from '@ionic/angular/standalone';
-import { UsuarioModel } from 'src/app/model/usuario.model';
+import { MedicoModel } from 'src/app/model/medico.model';
+import { PacienteModel } from 'src/app/model/paciente.model';
 import { EspecialidadeService } from 'src/app/services/especialidade.service';
 import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -18,19 +19,9 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 })
 export class InicioPage implements OnInit {
 
-  patientName = 'Sofia';
-  usuario: UsuarioModel;
   medicosDisponiveis: number;
   especialidadesDisponiveis: number;
-
-  consultasEmAndamento = [
-    {
-      id: 1,
-      doctor: "Dr. Pi'u piu",
-      time: '10:00 h',
-      avatar: null, // emoji/icon fallback
-    }
-  ];
+  usuario!: PacienteModel | MedicoModel;
 
   constructor(
     private navCtrl: NavController,
@@ -39,15 +30,18 @@ export class InicioPage implements OnInit {
     private loginService: LoginService,
     private toastController: ToastController
   ) {
-    this.usuario = this.loginService.getUsuarioBase() ?? new UsuarioModel();
+    this.carregarUsuario();
     this.medicosDisponiveis = 0;
     this.especialidadesDisponiveis = 0;
+  }
+
+  ngOnInit() {
     this.usuarioService.getMedicos().subscribe({
       next: (medicos) => {
         this.medicosDisponiveis = medicos.length;
       },
-      error: () => {
-        this.exibirMensagem('Erro ao exibir a quantidade de médicos');
+      error: (erro) => {
+        this.exibirMensagem(erro.error.message);
       }
     });
 
@@ -61,7 +55,26 @@ export class InicioPage implements OnInit {
     });
   }
 
-  ngOnInit() { }
+  ionViewWillEnter(){
+    this.carregarUsuario();
+  }
+
+  carregarUsuario(){
+    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+      next: (usuario) => {
+
+        if (!usuario) {
+          this.navCtrl.navigateBack('/login');
+        }
+
+        this.usuario = usuario;
+      },
+      error: (erro) => {
+        console.error(erro);
+        this.exibirMensagem(erro.error.message);
+      }
+    });
+  }
 
   navigate(path: string) {
     this.navCtrl.navigateForward(path);
@@ -75,7 +88,19 @@ export class InicioPage implements OnInit {
     toast.present()
   }
 
-  startCall() {
-    this.navCtrl.navigateForward('/chamada');
+  agendarConsulta() {
+    // navegação para o fluxo de agendamento
+  }
+
+  abrirNotificacoes() {
+    // navegação para a tela de notificações
+  }
+
+  abrirChat() {
+    // navegação para o chat da consulta em andamento
+  }
+
+  iniciarChamada() {
+    // navegação/ação para iniciar a chamada de vídeo
   }
 }
