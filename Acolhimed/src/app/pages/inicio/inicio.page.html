@@ -15,8 +15,8 @@
       <!-- Topo: avatar + boas-vindas + sino -->
       <div class="hero-topbar">
         <div class="usuario-info">
-          <div class="avatar-usuario">
-            <img [src]="usuario?.foto" [alt]="usuario?.nome" />
+          <div class="avatar-usuario" routerLink="/perfil">
+            <img [src]="usuario?.foto" [alt]="usuario?.nome"  />
           </div>
           <div class="saudacao">
             <span class="saudacao-label">Bem-vindo(a)</span>
@@ -73,7 +73,7 @@
           <span class="cta-titulo">Agendar consulta</span>
         </div>
         <svg class="cta-seta" width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M9 6L15 12L9 18" stroke="#9E9E9E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M9 6L15 12L9 18" stroke="#29ABE2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
       }

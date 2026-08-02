@@ -21,12 +21,12 @@ import { addIcons } from 'ionicons';
 export class ExplorarPage {
 
   medicos: MedicoModel[];
+  medicosFiltrados: MedicoModel[];
   especialidades: EspecialidadeModel[];
   textoBusca: string = '';
   especialidadesFiltradas: EspecialidadeModel[] = [];
-  sintomasDigitados: string = '';
-  carregandoTriagem: boolean = false;
-  resultadoTriagem: any = null;
+  especialidadeSelecionada?: EspecialidadeModel;
+  carregandoMedicos: boolean = false;
 
   dicasSaude = [
   {
@@ -52,12 +52,14 @@ export class ExplorarPage {
 
   constructor(private toastController: ToastController, private navCtrl: NavController, private usuarioService: UsuarioService, private especialidadeService: EspecialidadeService) {
     this.medicos = [];
+    this.medicosFiltrados = [];
     this.especialidades = [];
     addIcons({ hardwareChipOutline, medkitOutline, arrowForwardOutline });
 
     this.especialidadeService.listar().subscribe({
       next: (especialidades) => {
         this.especialidades = especialidades;
+        this.especialidadesFiltradas = especialidades;
       },
       error: (erro) => {
         this.exibirMensagem(erro.error.message);
@@ -75,45 +77,70 @@ export class ExplorarPage {
 
   ngOnInit() { }
 
+  get medicosComEspecialidade() {
+    return this.medicos.filter(medico => medico.especialidades.length > 0);
+  }
+
   filtrarEspecialidades() {
-    if (!this.textoBusca.trim()) {
+    const termo = this.textoBusca.trim().toLowerCase();
+
+    if (this.especialidadeSelecionada?.nome.toLowerCase() === termo) {
+      this.especialidadesFiltradas = [];
+      return;
+    }
+
+    if (this.especialidadeSelecionada) {
+      this.especialidadeSelecionada = undefined;
+      this.medicosFiltrados = [];
+    }
+
+    if (!termo) {
       this.especialidadesFiltradas = this.especialidades;
       return;
     }
+
     this.especialidadesFiltradas =
       this.especialidades.filter(especialidade =>
-
-        especialidade.nome
-          .toLowerCase()
-          .includes(this.textoBusca.toLowerCase())
-
+        especialidade.nome.toLowerCase().includes(termo)
       );
   }
 
+  selecionarEspecialidade(especialidade: EspecialidadeModel) {
+    this.especialidadeSelecionada = especialidade;
+    this.textoBusca = especialidade.nome;
+    this.especialidadesFiltradas = [];
+    this.carregandoMedicos = true;
+
+    this.usuarioService.getMedicosPorEspecialidade(especialidade.id).subscribe({
+      next: (medicos) => {
+        this.medicosFiltrados = medicos;
+        this.carregandoMedicos = false;
+      },
+      error: (erro) => {
+        this.carregandoMedicos = false;
+        this.exibirMensagem(erro.error?.message || 'Erro ao buscar médicos.');
+      }
+    });
+  }
+
+  limparEspecialidadeSelecionada() {
+    this.textoBusca = '';
+    this.especialidadeSelecionada = undefined;
+    this.medicosFiltrados = [];
+    this.especialidadesFiltradas = this.especialidades;
+  }
+
   openFiltros() {
-    this.navCtrl.navigateForward('/filtros');
   }
 
-  enviarTriagem() {
-    this.carregandoTriagem = true;
-    this.resultadoTriagem = null;
 
-    // Simula uma chamada de rede para dar o efeito visual na apresentação (Ex: 1.5 segundos)
-    setTimeout(() => {
-      // Aqui você trocará pelo método real do seu HTTP service:
-      // this.triagemService.analisar(this.sintomasDigitados).subscribe(...)
+   filtrarMedicos(especialidade: string) {
+    const especialidadeEncontrada = this.especialidades.find(item => item.nome === especialidade);
 
-      // MOCKUP DE RETORNO APENAS PARA DEMONSTRAR O CÓDIGO FUNCIONANDO
-      this.resultadoTriagem = {
-        especialidadeSugerida: 'Dermatologia',
-        justificativa: 'Alterações na pele, manchas acompanhadas de coceiras ou reações cutâneas repentinas necessitam de avaliação especializada de um Dermatologista.'
-      };
-
-      this.carregandoTriagem = false;
-    }, 1500);
+    if (especialidadeEncontrada) {
+      this.selecionarEspecialidade(especialidadeEncontrada);
+    }
   }
-
-   filtrarMedicos(especialidade: string) {}
 
   async exibirMensagem(texto: string) {
     const toast = await this.toastController.create({

@@ -1,3 +1,7 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
 <ion-content class="alterar-content" [fullscreen]="true">
 
   <!-- Hero Banner -->
@@ -7,14 +11,9 @@
       <div class="shape shape-2"></div>
       <div class="shape shape-3"></div>
     </div>
-    <div class="hero-icon">
-      <svg width="72" height="72" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3Z" fill="white" opacity="0.95" />
-        <path d="M17 13.99L12 17L7 13.99V11.82L12 15L17 11.82V13.99Z" fill="white" opacity="0.6" />
-      </svg>
-    </div>
+
     <div class="hero-text">
-      <h2>Perfil Profissional</h2>
+      <h2 style="font-family: 'Nunito', Arial, sans-serif;">Perfil Profissional</h2>
       <p>Destaque sua trajetória e conquistas</p>
     </div>
 
@@ -44,7 +43,7 @@
               <path d="M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" fill="#29ABE2" opacity="0.6" />
             </svg>
           </div>
-          <span class="section-title">Sobre mim</span>
+          <span class="section-title" style="font-family: 'Nunito', Arial, sans-serif;">Sobre mim</span>
         </div>
 
         <!-- Dica -->
@@ -70,12 +69,16 @@
               placeholder="Ex: Medicina pela USP (2010), Residência em Cardiologia pelo InCor (2013), Doutorado em Cardiologia Intervencionista (2016)..."
               rows="4"></textarea>
             <div class="char-count">
-              <span [class.warn]="alterarForm.get('formacaoAcademica')?.value?.length > 400">
-                {{ alterarForm.get('formacaoAcademica')?.value?.length || 0 }}/500
+              <span [class.warn]="alterarForm.get('formacaoAcademica')?.value?.length > 250">
+                {{ alterarForm.get('formacaoAcademica')?.value?.length || 0 }}/300
               </span>
             </div>
           </div>
+          <ion-text color="danger" *ngIf="alterarForm.get('formacaoAcademica')?.errors?.['maxlength']">
+            <small>Limite de caracteres excedido.</small>
+          </ion-text>
         </div>
+
 
         <!-- Sobre mim -->
         <div class="field-group">
@@ -92,11 +95,14 @@
               placeholder="Conte um pouco sobre sua experiência, áreas de interesse, abordagem com pacientes e diferenciais da sua prática médica..."
               rows="5"></textarea>
             <div class="char-count">
-              <span [class.warn]="alterarForm.get('sobreMim')?.value?.length > 450">
-                {{ alterarForm.get('sobreMim')?.value?.length || 0 }}/500
+              <span [class.warn]="alterarForm.get('sobreMim')?.value?.length > 250">
+                {{ alterarForm.get('sobreMim')?.value?.length || 0 }}/300
               </span>
             </div>
           </div>
+          <ion-text color="danger" *ngIf="alterarForm.get('sobreMim')?.errors?.['maxlength']">
+            <small>Limite de caracteres excedido</small>
+          </ion-text>
         </div>
 
       </div>

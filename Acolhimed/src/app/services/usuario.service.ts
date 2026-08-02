@@ -37,6 +37,14 @@ export class UsuarioService {
     return this.http.get<MedicoModel[]>(`${this.API_URL}/medicos`);
   }
 
+  getMedicosPorEspecialidade(especialidadeId: string): Observable<MedicoModel[]> {
+    return this.getMedicos().pipe(
+      map(medicos => medicos.filter(medico =>
+        medico.especialidades?.some(especialidade => especialidade.id === especialidadeId)
+      ))
+    );
+  }
+
   buscarPorId(id: string): Observable<PacienteModel | MedicoModel> {
     return this.http.get<PacienteModel | MedicoModel>(`${this.API_URL}/usuarios/${id}`);
   }

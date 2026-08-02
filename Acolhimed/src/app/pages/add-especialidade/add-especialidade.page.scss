@@ -17,16 +17,16 @@ $white:       #FFFFFF;
 
 // ---- Hero Banner ----
 .hero-banner {
-  position: relative;
-  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
-  min-height: 200px;
+  height: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+
+  position: relative;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+  border-radius: 0 0 28px 28px;
+  padding: 20px 20px 26px;
   overflow: hidden;
-  padding: 44px 24px 28px;
-  box-sizing: border-box;
 }
 
 .hero-shapes {
@@ -68,20 +68,6 @@ $white:       #FFFFFF;
   }
 }
 
-.hero-icon {
-  background: rgba(255,255,255,0.15);
-  border-radius: 22px;
-  width: 72px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 14px;
-  backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(255,255,255,0.25);
-  position: relative;
-  z-index: 2;
-}
 
 .hero-text {
   text-align: center;
@@ -102,7 +88,7 @@ $white:       #FFFFFF;
 .form-card {
   background: $white;
   border-radius: 28px 28px 0 0;
-  margin-top: -20px;
+  margin: 15px;
   padding: 24px 20px 32px;
   min-height: calc(100vh - 180px);
   position: relative;

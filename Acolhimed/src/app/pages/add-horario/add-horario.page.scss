@@ -15,11 +15,16 @@ $blue-light: #E8F6FD;
 
 // ---- Hero Banner ----
 .hero-banner {
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+
   position: relative;
   background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
   border-radius: 0 0 28px 28px;
-  height: 150px;
-  padding: 20px 20px 20px;
+  padding: 20px 20px 26px;
   overflow: hidden;
 }
 

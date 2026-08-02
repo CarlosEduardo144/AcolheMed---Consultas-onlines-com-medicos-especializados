@@ -1,11 +1,11 @@
-$blue:        #29ABE2;
-$blue-dark:   #1a6fa8;
-$black:       #141414;
-$gray:        #737373;
-$gray-light:  #F5F5F5;
-$border:      #E8E8E8;
-$white:       #FFFFFF;
-$star:        #FACC15;
+$blue: #29ABE2;
+$blue-dark: #1a6fa8;
+$black: #141414;
+$gray: #737373;
+$gray-light: #F5F5F5;
+$border: #E8E8E8;
+$white: #FFFFFF;
+$star: #FACC15;
 
 .explorar-content {
   --background: #{$white};
@@ -31,8 +31,20 @@ $star:        #FACC15;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
 
-  &-1 { width: 180px; height: 180px; top: -80px; right: -50px; }
-  &-2 { width: 90px; height: 90px; bottom: -20px; left: -20px; background: rgba(255, 255, 255, 0.06); }
+  &-1 {
+    width: 180px;
+    height: 180px;
+    top: -80px;
+    right: -50px;
+  }
+
+  &-2 {
+    width: 90px;
+    height: 90px;
+    bottom: -20px;
+    left: -20px;
+    background: rgba(255, 255, 255, 0.06);
+  }
 }
 
 .hero-topbar {
@@ -205,40 +217,54 @@ $star:        #FACC15;
   }
 }
 
-// ---- Especialidade card overlay ----
+.especialidades-scroll {
+  padding: 4px 20px 12px;
+}
+
 .especialidade-card-overlay {
   position: relative;
   flex-shrink: 0;
-  width: 130px;
-  height: 130px;
-  border-radius: 18px;
+  width: 150px;              // 👈 era 130px
+  height: 150px;             // 👈 era 130px
+  border-radius: 22px;       // 👈 era 18px, cantos mais suaves
   overflow: hidden;
   cursor: pointer;
-
-  &:active {
-    opacity: 0.85;
-  }
+  box-shadow: 0 6px 16px rgba(15, 40, 70, 0.12); // 👈 nova: profundidade
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
   }
 
   .overlay-gradient {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%);
+    // 👇 gradiente mais forte e com 2 estágios, garante legibilidade em qualquer foto
+    background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.35) 65%, rgba(0,0,0,0.75) 100%);
   }
 
   .esp-nome-overlay {
     position: absolute;
-    left: 12px;
-    bottom: 10px;
-    right: 12px;
-    color: $white;
-    font-size: 14px;
-    font-weight: 700;
+    left: 14px;
+    bottom: 12px;
+    right: 14px;
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3); // 👈 nova: legibilidade extra
+  }
+
+  &:active {
+    transform: scale(0.96);   // 👈 nova: feedback tátil ao tocar
+    box-shadow: 0 3px 10px rgba(15, 40, 70, 0.1);
+
+    img {
+      transform: scale(1.05); // 👈 leve zoom na foto ao tocar
+    }
   }
 }
 
@@ -257,6 +283,7 @@ $star:        #FACC15;
   background: $white;
   border: 1.5px solid $border;
   border-radius: 16px;
+  box-shadow: 0 -2px 12px rgba(48, 186, 232, 0.178);
   padding: 12px;
 }
 
@@ -344,5 +371,52 @@ $star:        #FACC15;
   &--active {
     color: $blue;
     font-weight: 700;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 32px 24px;
+  min-height: 340px;
+}
+
+.empty-illustration {
+  margin-bottom: 20px;
+}
+
+.empty-titulo {
+  font-size: 18px;
+  font-weight: 800;
+  color: $black;
+  margin: 0 0 8px;
+  letter-spacing: -0.2px;
+}
+
+.empty-texto {
+  font-size: 13.5px;
+  color: $gray;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 280px;
+}
+
+.empty-botao {
+  margin-top: 20px;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 22px;
+  border: none;
+  background: $blue;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:active {
+    background: $blue-dark;
   }
 }

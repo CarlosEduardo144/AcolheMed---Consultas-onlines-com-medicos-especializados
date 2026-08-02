@@ -10,10 +10,10 @@ INSERT INTO tb_especialidades (id, nome, descricao, imagem_url) VALUES ('e100000
 INSERT INTO tb_especialidades (id, nome, descricao, imagem_url) VALUES ('e1000000-0000-0000-0000-000000000010', 'Urologia', 'Especialidade que trata doenças do trato urinário e sistema reprodutor masculino.', 'https://feliciorocho.org.br/media/219/urologia.jpg');
 
 
-INSERT INTO tb_usuarios (id, nome, email, senha, tipo_usuario, foto) VALUES ('4d2e8b1c-9a3f-4e6c-b715-2d83fa096e21', 'Lionel Messi', 'c@1', '1234', 'paciente', 'https://conteudo.imguol.com.br/c/esporte/ea/2019/12/02/lionel-messi-ergue-o-trofeu-do-bola-de-ouro-1575322505045_v2_3x4.jpg');
+INSERT INTO tb_usuarios (id, nome, email, senha, tipo_usuario, foto) VALUES ('4d2e8b1c-9a3f-4e6c-b715-2d83fa096e21', 'Lionel Messi', 'c@1', '1234', 'paciente', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTthxRTShuP03QGk9Z0z3hnm6C2v9DgRpnYyBRpOAdXFfTo277jXCVVFXU&s=10');
 INSERT INTO tb_pacientes (usuario_id) VALUES ('4d2e8b1c-9a3f-4e6c-b715-2d83fa096e21');
 
-INSERT INTO tb_usuarios (id, nome, email, senha, tipo_usuario, foto) VALUES ('bdfc1043-b7bc-413b-8a11-80348a9936a4', 'Marcelo Balbino', 'm@g', '1234', 'medico', 'https://medicinasa.com.br/wp-content/uploads/2023/03/medico-hospital-esteto.jpg');
+INSERT INTO tb_usuarios (id, nome, email, senha, tipo_usuario, foto) VALUES ('bdfc1043-b7bc-413b-8a11-80348a9936a4', 'Marcelo Balbino', 'm@g', '1234', 'medico', 'https://medicinasa.com.br/wp-content/uploads/2023/03/medico-hospital-esteto-2-850x560.jpg');
 INSERT INTO tb_medicos (usuario_id, crm, uf_emissao, sobre_mim, formacao_academica) VALUES ('bdfc1043-b7bc-413b-8a11-80348a9936a4', '123456-SP', 'SP', 'Médico com ampla experiência em teleconsultas.', 'Graduação pela USP (2017) - Pós graduação pela UNICAMP (2020) - Mestrado pela UFMG (2025)');
 
 INSERT INTO tb_medicos_especialidades (id, medico_id, especialidade_id) VALUES ('a7b3c2e1-8f49-410a-bd62-59c8d17a3f5b', 'bdfc1043-b7bc-413b-8a11-80348a9936a4', 'e1000000-0000-0000-0000-000000000007');

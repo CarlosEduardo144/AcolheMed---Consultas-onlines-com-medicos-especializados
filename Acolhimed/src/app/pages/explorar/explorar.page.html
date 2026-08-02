@@ -26,24 +26,99 @@
           d="M10.5 2.25C6.00 2.25 2.25 6.00 2.25 10.5C2.25 14.9978 6.00 18.75 10.5 18.75C12.4628 18.75 14.261 18.0547 15.6655 16.8977L20.4697 21.7019C20.7626 21.9948 21.2374 21.9948 21.5303 21.7019C21.8232 21.409 21.8232 20.9342 21.5303 20.6413L16.726 15.8371C17.9558 14.4209 18.75 12.5481 18.75 10.5C18.75 6.00 14.9978 2.25 10.5 2.25Z"
           fill="#9E9E9E" />
       </svg>
-      <input type="text" placeholder="Pesquisar por especialidade" [(ngModel)]="textoBusca" />
+      <input type="text" placeholder="Pesquisar por especialidade" [(ngModel)]="textoBusca"
+        (input)="filtrarEspecialidades()" (focus)="filtrarEspecialidades()" />
+
+      <button type="button" class="btn-limpar-busca" *ngIf="textoBusca" (click)="limparEspecialidadeSelecionada()"
+        style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border: none; border-radius: 50%; background-color: #e53935; cursor: pointer; padding: 0;">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6L18 18" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </button>
     </div>
   </div>
 
   <!-- Corpo -->
   <div class="corpo-content">
 
+    <!-- Resultado da busca por especialidades -->
+    <div class="section" *ngIf="textoBusca && especialidadesFiltradas.length > 0">
+      <div class="section-header">
+        <h2 class="section-title">Especialidades encontradas</h2>
+      </div>
+
+      <div class="dicas-lista">
+        <div class="dica-card especialidade-item" *ngFor="let especialidade of especialidadesFiltradas"
+          (click)="selecionarEspecialidade(especialidade)">
+          <div class="dica-texto">
+            <p class="dica-titulo" style="font-family: 'Nunito', Arial, sans-serif;">{{ especialidade.nome }}</p>
+            <p class="dica-descricao texto-duas-linhas">{{ especialidade.descricao }}</p>
+          </div>
+          <svg class="dica-seta" width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M9 6L15 12L9 18" stroke="#29ABE2" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado vazio: especialidade não encontrada na busca -->
+    <div class="empty-state" *ngIf="textoBusca && especialidadesFiltradas.length === 0 && !especialidadeSelecionada">
+      <div class="empty-illustration">
+        <img style="border-radius: 50%; max-width: 170px;"
+          src="https://static.vecteezy.com/system/resources/previews/040/193/977/non_2x/puzzled-doctor-flat-style-vector.jpg">
+      </div>
+      <h3 class="empty-titulo">Oops, não encontramos nada...</h3>
+      <p class="empty-texto">Tente buscar por outra especialidade.</p>
+
+    </div>
+
+    <!-- Médicos filtrados por especialidade -->
+    <div class="section" *ngIf="especialidadeSelecionada">
+      <div class="section-header">
+        <h2 class="section-title">Médicos de {{ especialidadeSelecionada.nome }}</h2>
+      </div>
+
+      <div class="horizontal-scroll medicos-scroll" *ngIf="!carregandoMedicos && medicosFiltrados.length > 0">
+        <div class="medico-card-destaque" *ngFor="let medico of medicosFiltrados">
+          <div class="medico-img-wrap" [routerLink]="['/medico', medico.id]">
+            <img [src]="medico?.foto" [alt]="medico.nome" />
+          </div>
+          <div class="medico-info-wrap">
+            <p class="medico-nome">{{ medico.nome }}</p>
+            <p class="medico-especialidade">{{ especialidadeSelecionada.nome }}</p>
+            <div class="medico-rating">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                  fill="#FACC15" stroke="#FACC15" stroke-width="1.5" stroke-linejoin="round" />
+              </svg>
+              <span class="rating-numero">4.5</span>
+              <span class="rating-total">(129)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado vazio: nenhum médico para a especialidade selecionada -->
+      <div class="empty-state" *ngIf="especialidadeSelecionada && !carregandoMedicos && medicosFiltrados.length === 0">
+        <div class="empty-illustration">
+          <img style="border-radius: 50%; max-width: 170px;"
+            src="https://static.vecteezy.com/system/resources/previews/040/193/977/non_2x/puzzled-doctor-flat-style-vector.jpg">
+        </div>
+        <h3 class="empty-titulo">Oops, não encontramos nada...</h3>
+        <p class="empty-texto">Nenhum médico de {{ especialidadeSelecionada.nome }} disponível no momento.</p>
+      </div>
+    </div>
 
     <!-- Médicos em destaque -->
-    <div class="section" *ngFor="let medico of medicos">
-      @if(medico.especialidades.length > 0){
+    <div class="section" *ngIf="!textoBusca && !especialidadeSelecionada">
       <div class="section-header">
         <h2 class="section-title">Médicos em destaque</h2>
-        <a class="ver-todos">Ver todos</a>
       </div>
 
       <div class="horizontal-scroll medicos-scroll">
-        <div class="medico-card-destaque">
+        <div class="medico-card-destaque" *ngFor="let medico of medicosComEspecialidade">
           <div class="medico-img-wrap" [routerLink]="['/medico', medico.id]">
             <img [src]="medico?.foto" [alt]="medico.nome" />
           </div>
@@ -57,22 +132,24 @@
                   fill="#FACC15" stroke="#FACC15" stroke-width="1.5" stroke-linejoin="round" />
               </svg>
               <span class="rating-numero">4.5</span>
-              <span class="rating-total">129</span>
+              <span class="rating-total">(129)</span>
             </div>
           </div>
         </div>
       </div>
-      }
     </div>
 
+    @if(!textoBusca && !especialidadeSelecionada){
     <!-- Especialidades em alta -->
     <div class="section">
       <div class="section-header">
         <h2 class="section-title">Especialidades em alta</h2>
+        <a class="ver-todos">Ver todas</a>
       </div>
 
       <div class="horizontal-scroll especialidades-scroll">
-        <div class="especialidade-card-overlay" *ngFor="let especialidade of especialidades">
+        <div class="especialidade-card-overlay" *ngFor="let especialidade of especialidades"
+          (click)="selecionarEspecialidade(especialidade)">
           <img [src]="especialidade.imagemUrl" [alt]="especialidade.nome" />
           <div class="overlay-gradient"></div>
           <span class="esp-nome-overlay">{{ especialidade.nome }}</span>
@@ -119,6 +196,7 @@
         </div>
       </div>
     </div>
+    }
 
     <div class="bottom-spacer"></div>
   </div>

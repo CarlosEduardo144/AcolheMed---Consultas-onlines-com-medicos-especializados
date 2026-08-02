@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, ToastController, IonButton, IonButtons, IonLabel, IonInput } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonText, ToastController, IonButton, IonButtons, IonLabel, IonInput } from '@ionic/angular/standalone';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -13,11 +13,9 @@ import { PacienteModel } from 'src/app/model/paciente.model';
   templateUrl: './add-formacao-profissional.page.html',
   styleUrls: ['./add-formacao-profissional.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, ReactiveFormsModule, IonButton, IonButtons, IonLabel, IonInput]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, IonText, FormsModule, ReactiveFormsModule, IonButton, IonButtons, IonLabel, IonInput]
 })
 export class AddFormacaoProfissionalPage implements OnInit {
-
-
   usuario!: any;
   alterarForm: FormGroup;
 
@@ -31,7 +29,7 @@ export class AddFormacaoProfissionalPage implements OnInit {
 
         this.usuario = usuario;
 
-         this.alterarForm.patchValue({
+        this.alterarForm.patchValue({
           formacaoAcademica: this.usuario.formacaoAcademica,
           sobreMim: this.usuario.sobreMim,
         });
@@ -42,14 +40,16 @@ export class AddFormacaoProfissionalPage implements OnInit {
       }
     });
 
-    this.alterarForm = this.fb.group(
-      {
-        formacaoAcademica: [this.usuario?.formacaoAcademica ?? '', [Validators.required]],
-        sobreMim: [this.usuario?.sobreMim ?? '', [Validators.required]],
-      },
-
-      // { validators: passwordMatchValidator }
-    );
+    this.alterarForm = this.fb.group({
+      formacaoAcademica: [
+        this.usuario?.formacaoAcademica ?? '',
+        [Validators.required, Validators.maxLength(300)] 
+      ],
+      sobreMim: [
+        this.usuario?.sobreMim ?? '',
+        [Validators.required, Validators.maxLength(300)] 
+      ],
+    });
   }
 
   ngOnInit() {
