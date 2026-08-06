@@ -34,7 +34,7 @@ public class PacienteService {
             throw new BusinessException("Ja existe um usuario com esse email.");
         }
 
-        if(dto.getTipoUsuario() != "paciente"){
+        if(!"paciente".equalsIgnoreCase(dto.getTipoUsuario())){
             throw new BusinessException("Apenas pacientes podem ser cadastrados neste endpoint.");
         }
 

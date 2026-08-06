@@ -16,7 +16,8 @@
       <div class="hero-topbar">
         <div class="usuario-info">
           <div class="avatar-usuario" routerLink="/perfil">
-            <img [src]="usuario?.foto" [alt]="usuario?.nome"  />
+            <img *ngIf="usuario?.foto" [src]="usuario?.foto" [alt]="usuario?.nome" />
+            <span *ngIf="!usuario?.foto">{{ iniciais(usuario?.nome) }}</span>
           </div>
           <div class="saudacao">
             <span class="saudacao-label">Bem-vindo(a)</span>
@@ -96,7 +97,7 @@
           </div>
           @if(usuario?.tipoUsuario == "medico"){
           <span class="stat-label">Consultas para hoje</span>
-          <span class="stat-numero">67</span>
+          <span class="stat-numero">3</span>
           } @else{
           <span class="stat-label">Especialidades</span>
           <span class="stat-numero">{{ especialidadesDisponiveis }}</span>
@@ -114,7 +115,7 @@
           </div>
           @if(usuario?.tipoUsuario == "medico"){
           <span class="stat-label">Pacientes atendidos</span>
-          <span class="stat-numero">67</span>
+          <span class="stat-numero">238</span>
           } @else{
           <span class="stat-label">Médicos online</span>
           <span class="stat-numero">{{ medicosDisponiveis }}</span>
@@ -124,6 +125,7 @@
       </div>
 
       <!-- Consulta em andamento -->
+
       <ng-container>
         <h2 class="secao-titulo">Consulta em andamento</h2>
 
@@ -131,19 +133,34 @@
           <div class="consulta-topo">
             <div class="avatar-medico-wrap">
               <div class="avatar-medico">
+                @if(usuario?.tipoUsuario == "paciente"){
                 <img src="https://medicinasa.com.br/wp-content/uploads/2023/03/medico-hospital-esteto.jpg"
                   alt="FotoMedico" />
+                }@else{
+                <span>{{ iniciais("Odihon")}}</span>
+                }
               </div>
               <span class="status-dot"></span>
             </div>
+            @if(usuario?.tipoUsuario == "paciente"){
             <div class="consulta-info">
-              <span class="medico-nome">Dr. Pinto</span>
+              <span class="medico-nome">Dr. Odilon Odines</span>
               <span class="medico-especialidade">Cardiologia • CRM 12345-SP</span>
               <span class="consulta-horario-chip">
                 <span class="dot-chip"></span>
                 10h00
               </span>
             </div>
+            }@else{
+            <div class="consulta-info">
+              <span class="medico-nome">Odihon Takamura</span>
+              <span class="medico-especialidade">Cardiologia</span>
+              <span class="consulta-horario-chip">
+                <span class="dot-chip"></span>
+                15h00
+              </span>
+            </div>
+            }
           </div>
 
           <div class="consulta-acoes">
@@ -175,6 +192,7 @@
 </ion-content>
 
 <!-- Bottom Nav -->
+@if(usuario?.tipoUsuario == "paciente"){
 <div class="bottom-nav">
   <a routerLink="/inicio" class="nav-item nav-item--active">
     <div class="nav-icon-wrap nav-icon-wrap--active">
@@ -211,3 +229,33 @@
     <span class="nav-label">Perfil</span>
   </a>
 </div>
+}@else{
+  <div class="bottom-nav">
+  <a routerLink="/inicio" class="nav-item nav-item--active">
+    <div class="nav-icon-wrap nav-icon-wrap--active">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M20.5153 9.72844L13.0153 2.65219C13.0116 2.64899 13.0082 2.64554 13.005 2.64188C12.4328 2.1215 11.5588 2.1215 10.9866 2.64188L10.9762 2.65219L3.48469 9.72844C3.17573 10.0125 2.99994 10.4131 3 10.8328V19.5C3 20.3284 3.67157 21 4.5 21H9C9.82843 21 10.5 20.3284 10.5 19.5V15H13.5V19.5C13.5 20.3284 14.1716 21 15 21H19.5C20.3284 21 21 20.3284 21 19.5V10.8328C21.0001 10.4131 20.8243 10.0125 20.5153 9.72844Z"
+          fill="#29ABE2" />
+      </svg>
+    </div>
+    <span class="nav-label nav-label--active">Início</span>
+  </a>
+  <a class="nav-item">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M19.5 3H17.25V2.25C17.25 1.83579 16.9142 1.5 16.5 1.5C16.0858 1.5 15.75 1.83579 15.75 2.25V3H8.25V2.25C8.25 1.83579 7.91421 1.5 7.5 1.5C7.08579 1.5 6.75 1.83579 6.75 2.25V3H4.5C3.67157 3 3 3.67157 3 4.5V19.5C3 20.3284 3.67157 21 4.5 21H19.5C20.3284 21 21 20.3284 21 19.5V4.5C21 3.67157 20.3284 3 19.5 3ZM6.75 4.5V5.25C6.75 5.66421 7.08579 6 7.5 6C7.91421 6 8.25 5.66421 8.25 5.25V4.5H15.75V5.25C15.75 5.66421 16.0858 6 16.5 6C16.9142 6 17.25 5.66421 17.25 5.25V4.5H19.5V7.5H4.5V4.5H6.75ZM19.5 19.5H4.5V9H19.5V19.5Z"
+        fill="#737373" />
+    </svg>
+    <span class="nav-label">Agendamentos</span>
+  </a>
+  <a routerLink="/perfil" class="nav-item">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M12 12C14.4853 12 16.5 9.98528 16.5 7.5C16.5 5.01472 14.4853 3 12 3C9.51472 3 7.5 5.01472 7.5 7.5C7.5 9.98528 9.51472 12 12 12ZM12 13.5C8.13401 13.5 4.91017 15.9976 4.00391 19.5H19.9961C19.0898 15.9976 15.866 13.5 12 13.5ZM12 1.5C15.3137 1.5 18 4.18629 18 7.5C18 9.47392 17.0461 11.2251 15.5736 12.3193C18.4777 13.5308 20.617 16.1452 21 19.3125C21.0266 19.5327 20.9569 19.753 20.8087 19.9181C20.6605 20.0831 20.4492 20.1774 20.2273 20.1774H3.77273C3.55082 20.1774 3.33948 20.0831 3.1913 19.9181C3.04312 19.753 2.9734 19.5327 3 19.3125C3.38302 16.1452 5.52235 13.5308 8.42641 12.3193C6.9539 11.2251 6 9.47392 6 7.5C6 4.18629 8.68629 1.5 12 1.5Z"
+        fill="#737373" />
+    </svg>
+    <span class="nav-label">Perfil</span>
+  </a>
+</div>
+}

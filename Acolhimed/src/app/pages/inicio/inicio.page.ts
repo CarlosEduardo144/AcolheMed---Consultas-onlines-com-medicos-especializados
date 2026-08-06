@@ -7,6 +7,8 @@ import { PacienteModel } from 'src/app/model/paciente.model';
 import { EspecialidadeService } from 'src/app/services/especialidade.service';
 import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { CommonModule } from '@angular/common'; // 1. Importe o módulo
+
 
 @Component({
   selector: 'app-inicio',
@@ -14,7 +16,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
   styleUrls: ['./inicio.page.scss'],
   standalone: true,
   imports: [
-    IonIcon, RouterModule, IonHeader, IonHeader, IonTabBar, IonTabButton, IonToolbar, IonButtons, IonContent, IonAvatar, IonLabel, IonTitle, IonButton
+    IonIcon, RouterModule, CommonModule, IonHeader, IonHeader, IonTabBar, IonTabButton, IonToolbar, IonButtons, IonContent, IonAvatar, IonLabel, IonTitle, IonButton
   ],
 })
 export class InicioPage implements OnInit {
@@ -55,11 +57,11 @@ export class InicioPage implements OnInit {
     });
   }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this.carregarUsuario();
   }
 
-  carregarUsuario(){
+  carregarUsuario() {
     this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
       next: (usuario) => {
 
@@ -78,6 +80,11 @@ export class InicioPage implements OnInit {
 
   navigate(path: string) {
     this.navCtrl.navigateForward(path);
+  }
+
+  iniciais(nome?: string): string {
+    if (!nome) return '';
+    return nome.trim().slice(0, 2).toUpperCase();
   }
 
   async exibirMensagem(texto: string) {

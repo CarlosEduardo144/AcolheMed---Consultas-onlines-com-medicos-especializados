@@ -12,7 +12,7 @@ import { PacienteModel } from '../model/paciente.model';
 })
 export class UsuarioService {
 
-  private readonly API_URL = "http://localhost:8080";
+  private readonly API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 

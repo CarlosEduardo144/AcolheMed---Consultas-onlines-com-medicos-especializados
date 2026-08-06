@@ -81,8 +81,7 @@ export class LoginPage {
         this.navController.navigateRoot('/inicio');
       },
       error: (erro) => {
-        console.error(erro);
-        this.exibirMensagem(erro.error.message);
+        this.exibirMensagem(erro?.error?.message || 'Erro ao tentar logar');
       }
     });
   }

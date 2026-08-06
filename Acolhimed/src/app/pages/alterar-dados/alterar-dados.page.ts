@@ -57,7 +57,7 @@ export class AlterarDadosPage implements OnInit {
       },
       error: (erro) => {
         console.error(erro);
-        this.exibirMensagem(erro.error.message);
+            this.exibirMensagem(erro?.error?.message || 'Erro ao buscar usuário');
       }
     });
 
@@ -83,7 +83,7 @@ export class AlterarDadosPage implements OnInit {
       },
       error: (erro) => {
         console.error(erro);
-        this.exibirMensagem(erro.error.message);
+            this.exibirMensagem(erro?.error?.message || 'Erro ao buscar usuário');
       }
     });
   }
@@ -113,10 +113,15 @@ export class AlterarDadosPage implements OnInit {
         this.exibirMensagem('Usuário atualizado com sucesso!!!');
       },
       error: (erro) => {
-        this.exibirMensagem(erro.error.message);
+            this.exibirMensagem(erro?.error?.message || 'Erro ao atualizar informações do usuário');
       }
     });
 
+  }
+
+  iniciais(nome?: string): string {
+    if (!nome) return '';
+    return nome.trim().slice(0, 2).toUpperCase();
   }
 
   async exibirMensagem(texto: string) {

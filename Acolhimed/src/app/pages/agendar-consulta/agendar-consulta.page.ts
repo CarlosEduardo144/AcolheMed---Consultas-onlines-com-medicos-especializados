@@ -246,6 +246,11 @@ export class AgendarCosultaPage implements OnInit {
     */
   }
 
+  iniciais(nome?: string): string {
+    if (!nome) return '';
+    return nome.trim().slice(0, 2).toUpperCase();
+  }
+
   async exibirMensagem(texto: string) {
     const toast = await this.toastController.create({
       message: texto,

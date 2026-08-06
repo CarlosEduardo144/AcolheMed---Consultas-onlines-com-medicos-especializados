@@ -20,8 +20,22 @@ type UserType = 'paciente' | 'medico';
 // Custom validator: confirmarSenha must match senha
 function passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
   const senha = group.get('senha')?.value;
-  const confirmar = group.get('confirmarSenha')?.value;
-  return senha === confirmar ? null : { passwordMismatch: true };
+  const confirmarSenha = group.get('confirmarSenha');
+  const confirmar = confirmarSenha?.value;
+  const errors = confirmarSenha?.errors || {};
+
+  if (!confirmarSenha) {
+    return null;
+  }
+
+  if (!senha || !confirmar || senha === confirmar) {
+    delete errors['passwordMismatch'];
+    confirmarSenha.setErrors(Object.keys(errors).length ? errors : null);
+    return null;
+  }
+
+  confirmarSenha.setErrors({ ...errors, passwordMismatch: true });
+  return { passwordMismatch: true };
 }
 
 @Component({
@@ -112,7 +126,7 @@ export class CadastrarPage {
             this.navController.navigateBack('/login');
           },  
           error: (erro) => {
-            this.exibirMensagem(erro.error.message);
+            this.exibirMensagem(erro?.error?.message || 'Erro ao cadastrar usuário');
           }
         });
 
@@ -131,7 +145,7 @@ export class CadastrarPage {
 
           },
           error: (erro) => {
-            this.exibirMensagem(erro.error.message);
+            this.exibirMensagem(erro?.error?.message || 'Erro ao cadastrar usuário');
           }
         });
       }
