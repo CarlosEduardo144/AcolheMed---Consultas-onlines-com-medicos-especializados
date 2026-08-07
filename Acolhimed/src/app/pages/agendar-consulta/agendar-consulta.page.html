@@ -31,8 +31,8 @@
       <!-- Card do médico -->
       <div class="medico-card">
         <div class="medico-avatar">
-          <img *ngIf="medico?.foto" [src]="medico.foto" [alt]="medico?.nome" />
-          <span *ngIf="!medico?.foto" class="avatar-iniciais">{{ iniciais(medico?.nome) }}</span>
+          <img *ngIf="medico?.foto" [src]="medico?.foto" [alt]="medico?.nome" />
+          <span *ngIf="!medico?.foto">{{ iniciais(medico?.nome) }}</span>
         </div>
         <div class="medico-info">
           <span class="medico-nome" style="font-family: 'Nunito', Arial, sans-serif;">{{ medico?.nome }}</span>

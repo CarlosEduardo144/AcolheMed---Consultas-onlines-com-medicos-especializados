@@ -1,17 +1,17 @@
-$blue:        #29ABE2;
-$blue-dark:   #1a6fa8;
-$black:       #141414;
-$navy:        #10243E;
-$gray:        #737373;
-$gray-light:  #F5F5F5;
-$border:      #E8E8E8;
-$white:       #FFFFFF;
-$green:       #22C55E;
-$red:         #EF4444;
-$amber:       #F5A623;
+$blue: #29ABE2;
+$blue-dark: #1a6fa8;
+$black: #141414;
+$navy: #10243E;
+$gray: #737373;
+$gray-light: #F5F5F5;
+$border: #E8E8E8;
+$white: #FFFFFF;
+$green: #22C55E;
+$red: #EF4444;
+$amber: #F5A623;
 
 .consultas-content {
-  --background: #{$white};
+  --background: rgb(250, 250, 250);
 }
 
 // ---- Hero Banner ----
@@ -34,13 +34,26 @@ $amber:       #F5A623;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
 
-  &-1 { width: 180px; height: 180px; top: -80px; right: -50px; }
-  &-2 { width: 90px; height: 90px; bottom: -20px; left: -20px; background: rgba(255, 255, 255, 0.06); }
+  &-1 {
+    width: 180px;
+    height: 180px;
+    top: -80px;
+    right: -50px;
+  }
+
+  &-2 {
+    width: 90px;
+    height: 90px;
+    bottom: -20px;
+    left: -20px;
+    background: rgba(255, 255, 255, 0.06);
+  }
 }
 
 .hero-topbar {
   position: relative;
   z-index: 2;
+  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -64,6 +77,7 @@ $amber:       #F5A623;
 .btn-icon-header {
   position: relative;
   width: 40px;
+  margin-top: 3px;
   height: 40px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
@@ -74,7 +88,9 @@ $amber:       #F5A623;
   cursor: pointer;
   flex-shrink: 0;
 
-  &:active { background: rgba(255, 255, 255, 0.3); }
+  &:active {
+    background: rgba(255, 255, 255, 0.3);
+  }
 }
 
 .badge-notificacao {
@@ -84,7 +100,7 @@ $amber:       #F5A623;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #FACC15;
+  background: #fa1515;
   border: 1.5px solid $blue-dark;
 }
 
@@ -186,10 +202,21 @@ $amber:       #F5A623;
   justify-content: center;
   flex-shrink: 0;
 
-  &--realizada { background: $blue; }
-  &--cancelada { background: $red; }
-  &--andamento { background: $navy; }
-  &--agendada { background: $gray-light; }
+  &--realizada {
+    background: $blue;
+  }
+
+  &--cancelada {
+    background: $red;
+  }
+
+  &--andamento {
+    background: $navy;
+  }
+
+  &--agendada {
+    background: $gray-light;
+  }
 }
 
 // ---- Card da consulta ----
@@ -256,7 +283,8 @@ $amber:       #F5A623;
   display: flex;
   gap: 8px;
 
-  & + .consulta-acoes {
+
+  &+.consulta-acoes {
     margin-top: 8px;
   }
 }
@@ -369,39 +397,61 @@ $amber:       #F5A623;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 72px;
-  background: $white;
-  border-top: 1px solid $border;
+  z-index: 1000;
+
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  padding: 0 8px;
-  z-index: 100;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+
+  width: 100%;
+  height: 82px;
+
+  padding: 8px 10px;
+  background: #ffffff;
+
+  border-radius: 0 0 20px 20px;
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+
   gap: 4px;
+
+  flex: 1;
+  height: 100%;
+
   text-decoration: none;
-  padding: 6px 14px;
+}
+
+.nav-icon-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+
+  padding: 8px 18px;
+  border-radius: 24px;
 }
 
 .nav-icon-wrap--active {
   background: rgba(41, 171, 226, 0.12);
-  border-radius: 12px;
-  padding: 4px 14px;
 }
 
 .nav-label {
-  font-size: 10.5px;
+  font-size: 13px;
+  line-height: 16px;
   color: $gray;
   font-weight: 500;
+  white-space: nowrap;
 
   &--active {
     color: $blue;
-    font-weight: 700;
+    font-weight: 600;
   }
 }

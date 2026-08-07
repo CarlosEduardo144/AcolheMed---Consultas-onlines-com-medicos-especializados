@@ -192,18 +192,20 @@
 </ion-content>
 
 <!-- Bottom Nav -->
-@if(usuario?.tipoUsuario == "paciente"){
+@if(usuario && usuario?.tipoUsuario == "paciente"){
 <div class="bottom-nav">
-  <a routerLink="/inicio" class="nav-item nav-item--active">
+  <a routerLink="/inicio" class="nav-item">
     <div class="nav-icon-wrap nav-icon-wrap--active">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path fill-rule="evenodd" clip-rule="evenodd"
           d="M20.5153 9.72844L13.0153 2.65219C13.0116 2.64899 13.0082 2.64554 13.005 2.64188C12.4328 2.1215 11.5588 2.1215 10.9866 2.64188L10.9762 2.65219L3.48469 9.72844C3.17573 10.0125 2.99994 10.4131 3 10.8328V19.5C3 20.3284 3.67157 21 4.5 21H9C9.82843 21 10.5 20.3284 10.5 19.5V15H13.5V19.5C13.5 20.3284 14.1716 21 15 21H19.5C20.3284 21 21 20.3284 21 19.5V10.8328C21.0001 10.4131 20.8243 10.0125 20.5153 9.72844Z"
           fill="#29ABE2" />
       </svg>
+
+      <span class="nav-label nav-label--active">Início</span>
     </div>
-    <span class="nav-label nav-label--active">Início</span>
   </a>
+
   <a routerLink="/consultas" class="nav-item">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
       <path fill-rule="evenodd" clip-rule="evenodd"
@@ -230,16 +232,17 @@
   </a>
 </div>
 }@else{
-  <div class="bottom-nav">
-  <a routerLink="/inicio" class="nav-item nav-item--active">
+<div class="bottom-nav">
+  <a routerLink="/inicio" class="nav-item">
     <div class="nav-icon-wrap nav-icon-wrap--active">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path fill-rule="evenodd" clip-rule="evenodd"
           d="M20.5153 9.72844L13.0153 2.65219C13.0116 2.64899 13.0082 2.64554 13.005 2.64188C12.4328 2.1215 11.5588 2.1215 10.9866 2.64188L10.9762 2.65219L3.48469 9.72844C3.17573 10.0125 2.99994 10.4131 3 10.8328V19.5C3 20.3284 3.67157 21 4.5 21H9C9.82843 21 10.5 20.3284 10.5 19.5V15H13.5V19.5C13.5 20.3284 14.1716 21 15 21H19.5C20.3284 21 21 20.3284 21 19.5V10.8328C21.0001 10.4131 20.8243 10.0125 20.5153 9.72844Z"
           fill="#29ABE2" />
       </svg>
+
+      <span class="nav-label nav-label--active">Início</span>
     </div>
-    <span class="nav-label nav-label--active">Início</span>
   </a>
   <a class="nav-item">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">

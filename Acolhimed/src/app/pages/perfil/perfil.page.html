@@ -51,7 +51,7 @@
       </div>
       }
 
-        @if(!usuario?.dataNascimento || !usuario?.cpf){
+      @if(!usuario?.dataNascimento || !usuario?.cpf){
       <div class="tip-card">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="12" r="9" stroke="#b70101" stroke-width="1.8" />
@@ -222,7 +222,7 @@
 </ion-content>
 
 <!-- Bottom Nav -->
- @if(usuario?.tipoUsuario == "paciente"){
+@if(usuario && usuario?.tipoUsuario == "paciente"){
 <div class="bottom-nav">
   <a routerLink="/inicio" class="nav-item">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -248,19 +248,20 @@
     </svg>
     <span class="nav-label">Explorar</span>
   </a>
-  <a routerLink="/perfil" class="nav-item nav-item--active">
+  <a routerLink="/perfil" class="nav-item">
     <div class="nav-icon-wrap nav-icon-wrap--active">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path fill-rule="evenodd" clip-rule="evenodd"
           d="M12 2C8.69 2 6 4.69 6 8s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 14c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"
           fill="#29ABE2" />
       </svg>
+
+      <span class="nav-label nav-label--active">Perfil</span>
     </div>
-    <span class="nav-label nav-label--active">Perfil</span>
   </a>
 </div>
- }@else{
-  <div class="bottom-nav">
+}@else{
+<div class="bottom-nav">
   <a routerLink="/inicio" class="nav-item">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
       <path fill-rule="evenodd" clip-rule="evenodd"
@@ -277,15 +278,16 @@
     </svg>
     <span class="nav-label">Agendamentos</span>
   </a>
-  <a routerLink="/perfil" class="nav-item nav-item--active">
+  <a routerLink="/perfil" class="nav-item">
     <div class="nav-icon-wrap nav-icon-wrap--active">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path fill-rule="evenodd" clip-rule="evenodd"
           d="M12 2C8.69 2 6 4.69 6 8s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 14c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"
           fill="#29ABE2" />
       </svg>
+
+      <span class="nav-label nav-label--active">Perfil</span>
     </div>
-    <span class="nav-label nav-label--active">Perfil</span>
   </a>
 </div>
- }
+}

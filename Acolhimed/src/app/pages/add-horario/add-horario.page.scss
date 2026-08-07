@@ -7,7 +7,7 @@ $gray-light: #F5F5F5;
 $border: #E8E8E8;
 $white: #FFFFFF;
 $amber: #F5A623;
-$blue-light: #E8F6FD;
+$blue-light: #b1e0f8;
 
 .add-horario-content {
   --background: #{$white};
@@ -24,7 +24,7 @@ $blue-light: #E8F6FD;
   position: relative;
   background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
   border-radius: 0 0 28px 28px;
-  padding: 20px 20px 26px;
+  padding: 25px 26px;
   overflow: hidden;
 }
 
@@ -37,7 +37,7 @@ $blue-light: #E8F6FD;
 .shape {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.141);
 
   &-1 {
     width: 180px;
@@ -51,18 +51,15 @@ $blue-light: #E8F6FD;
     height: 90px;
     bottom: -20px;
     left: -20px;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.221);
   }
 }
 
-.hero-topbar {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  gap: 14px;
-}
 
 .header-back {
+  position: absolute;
+  top: 35px;
+  left: 16px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -80,6 +77,8 @@ $blue-light: #E8F6FD;
 }
 
 .hero-titulos {
+  margin-top: 10px;
+
   h1 {
     font-size: 21px;
     font-weight: 800;
@@ -99,7 +98,7 @@ $blue-light: #E8F6FD;
 .corpo-content {
   position: relative;
   z-index: 2;
-  margin-top: -50px;
+  margin-top: 10px;
   padding: 0 20px;
 }
 

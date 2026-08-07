@@ -8,7 +8,7 @@ $white: #FFFFFF;
 $star: #FACC15;
 
 .explorar-content {
-  --background: #{$white};
+  --background: rgb(250, 250, 250);
 }
 
 // ---- Hero Banner ----
@@ -50,6 +50,7 @@ $star: #FACC15;
 .hero-topbar {
   position: relative;
   z-index: 2;
+  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -67,6 +68,7 @@ $star: #FACC15;
 .btn-filtro {
   width: 40px;
   height: 40px;
+  margin-top: 3px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
   border: none;
@@ -167,6 +169,12 @@ $star: #FACC15;
     width: 100%;
     height: 150px;
     background: #B2E5E8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    background-color: #1a6fa8;
+
 
     img {
       width: 100%;
@@ -224,9 +232,9 @@ $star: #FACC15;
 .especialidade-card-overlay {
   position: relative;
   flex-shrink: 0;
-  width: 150px;              // 👈 era 130px
-  height: 150px;             // 👈 era 130px
-  border-radius: 22px;       // 👈 era 18px, cantos mais suaves
+  width: 130px; // 👈 era 130px
+  height: 130px; // 👈 era 130px
+  border-radius: 22px; // 👈 era 18px, cantos mais suaves
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 6px 16px rgba(15, 40, 70, 0.12); // 👈 nova: profundidade
@@ -243,7 +251,7 @@ $star: #FACC15;
     position: absolute;
     inset: 0;
     // 👇 gradiente mais forte e com 2 estágios, garante legibilidade em qualquer foto
-    background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.35) 65%, rgba(0,0,0,0.75) 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.35) 65%, rgba(0, 0, 0, 0.75) 100%);
   }
 
   .esp-nome-overlay {
@@ -255,11 +263,11 @@ $star: #FACC15;
     font-size: 15px;
     font-weight: 800;
     letter-spacing: -0.2px;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.3); // 👈 nova: legibilidade extra
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); // 👈 nova: legibilidade extra
   }
 
   &:active {
-    transform: scale(0.96);   // 👈 nova: feedback tátil ao tocar
+    transform: scale(0.96); // 👈 nova: feedback tátil ao tocar
     box-shadow: 0 3px 10px rgba(15, 40, 70, 0.1);
 
     img {
@@ -283,7 +291,7 @@ $star: #FACC15;
   background: $white;
   border: 1.5px solid $border;
   border-radius: 16px;
-  box-shadow: 0 -2px 12px rgba(48, 186, 232, 0.178);
+  box-shadow: 0 -2px 12px rgba(183, 222, 236, 0.178);
   padding: 12px;
 }
 
@@ -337,40 +345,62 @@ $star: #FACC15;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 72px;
-  background: $white;
-  border-top: 1px solid $border;
+  z-index: 1000;
+
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  padding: 0 8px;
-  z-index: 100;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+
+  width: 100%;
+  height: 82px;
+
+  padding: 8px 10px;
+  background: #ffffff;
+
+  border-radius: 0 0 20px 20px;
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+
   gap: 4px;
+
+  flex: 1;
+  height: 100%;
+
   text-decoration: none;
-  padding: 6px 14px;
+}
+
+.nav-icon-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+
+  padding: 8px 18px;
+  border-radius: 24px;
 }
 
 .nav-icon-wrap--active {
   background: rgba(41, 171, 226, 0.12);
-  border-radius: 12px;
-  padding: 4px 14px;
 }
 
 .nav-label {
-  font-size: 10.5px;
+  font-size: 13px;
+  line-height: 16px;
   color: $gray;
   font-weight: 500;
+  white-space: nowrap;
 
   &--active {
     color: $blue;
-    font-weight: 700;
+    font-weight: 600;
   }
 }
 

@@ -40,6 +40,11 @@ export class MedicoPage implements OnInit {
     this.fotoAmpliada = !this.fotoAmpliada;
   }
 
+  iniciais(nome?: string): string {
+    if (!nome) return '';
+    return nome.trim().slice(0, 2).toUpperCase();
+  }
+
   /*
   get totalAvaliacoes(): number {
     return this.medico?.avaliacoes?.length ?? 0;

@@ -82,7 +82,8 @@
       <div class="horizontal-scroll medicos-scroll" *ngIf="!carregandoMedicos && medicosFiltrados.length > 0">
         <div class="medico-card-destaque" *ngFor="let medico of medicosFiltrados">
           <div class="medico-img-wrap" [routerLink]="['/medico', medico.id]">
-            <img [src]="medico?.foto" [alt]="medico.nome" />
+            <img *ngIf="medico?.foto" [src]="medico.foto" [alt]="medico?.nome" />
+            <span *ngIf="!medico?.foto">{{ iniciais(medico?.nome) }}</span>
           </div>
           <div class="medico-info-wrap">
             <p class="medico-nome">{{ medico.nome }}</p>
@@ -120,7 +121,8 @@
       <div class="horizontal-scroll medicos-scroll">
         <div class="medico-card-destaque" *ngFor="let medico of medicosComEspecialidade">
           <div class="medico-img-wrap" [routerLink]="['/medico', medico.id]">
-            <img [src]="medico?.foto" [alt]="medico.nome" />
+            <img *ngIf="medico?.foto" [src]="medico.foto" [alt]="medico?.nome" />
+            <span *ngIf="!medico?.foto">{{ iniciais(medico?.nome) }}</span>
           </div>
           <div class="medico-info-wrap">
             <p class="medico-nome">{{ medico.nome }}</p>
@@ -144,7 +146,6 @@
     <div class="section">
       <div class="section-header">
         <h2 class="section-title">Especialidades em alta</h2>
-        <a class="ver-todos">Ver todas</a>
       </div>
 
       <div class="horizontal-scroll especialidades-scroll">
@@ -170,20 +171,7 @@
 
           <div class="dica-texto">
             <p class="dica-titulo">
-              <svg *ngIf="dica.icone === 'alimentacao'" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M12 3C12 3 7 6 7 12C7 16.4183 9.68629 20 12 20C14.3137 20 17 16.4183 17 12C17 6 12 3 12 3Z"
-                  stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
-              </svg>
-              <svg *ngIf="dica.icone === 'sono'" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M20 14.5C18.8 15.4 17.3 16 15.6 16C11.4 16 8 12.6 8 8.4C8 6.7 8.6 5.2 9.5 4C6 5 3.5 8.2 3.5 12C3.5 16.7 7.3 20.5 12 20.5C15.8 20.5 19 18 20 14.5Z"
-                  stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
-              </svg>
-              <svg *ngIf="dica.icone === 'coracao'" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 20.5C12 20.5 3.5 15.5 3.5 9.3C3.5 6.4 5.8 4 8.7 4C10.1 4 11.3 4.7 12 5.8C12.7 4.7 13.9 4 15.3 4C18.2 4 20.5 6.4 20.5 9.3C20.5 15.5 12 20.5 12 20.5Z"
-                  stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
-              </svg>
+             
               {{ dica.titulo }}
             </p>
             <p class="dica-descricao">{{ dica.descricao }}</p>
@@ -219,16 +207,19 @@
       </svg>
       <span class="nav-label">Consultas</span>
     </a>
-    <a routerLink="/explorar" class="nav-item nav-item--active">
+
+    <a routerLink="/explorar" class="nav-item">
       <div class="nav-icon-wrap nav-icon-wrap--active">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path fill-rule="evenodd" clip-rule="evenodd"
             d="M21.5306 20.4694L16.8366 15.7762C19.6629 12.383 19.3204 7.36693 16.0591 4.38935C12.7978 1.41176 7.77134 1.526 4.64867 4.64867C1.526 7.77134 1.41176 12.7978 4.38935 16.0591C7.36693 19.3204 12.383 19.6629 15.7762 16.8366L20.4694 21.5306C20.7624 21.8237 21.2376 21.8237 21.5306 21.5306C21.8237 21.2376 21.8237 20.7624 21.5306 20.4694ZM3.75 10.5C3.75 6.77208 6.77208 3.75 10.5 3.75C14.2279 3.75 17.25 6.77208 17.25 10.5C17.25 14.2279 14.2279 17.25 10.5 17.25C6.77379 17.2459 3.75413 14.2262 3.75 10.5Z"
             fill="#29ABE2" />
         </svg>
+
+        <span class="nav-label nav-label--active">Explorar</span>
       </div>
-      <span class="nav-label nav-label--active">Explorar</span>
     </a>
+
     <a routerLink="/perfil" class="nav-item">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path fill-rule="evenodd" clip-rule="evenodd"

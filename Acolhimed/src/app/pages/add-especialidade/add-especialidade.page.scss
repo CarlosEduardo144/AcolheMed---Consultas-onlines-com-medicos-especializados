@@ -2,14 +2,14 @@
 // Selecionar Especialidades — mesmo padrão visual do Perfil Profissional
 // ==============================
 
-$blue:        #29ABE2;
-$blue-dark:   #1a8fbf;
-$blue-light:  #E8F6FD;
-$black:       #111111;
-$gray:        #6B6B6B;
-$gray-light:  #F7F8FA;
-$border:      #E8E8E8;
-$white:       #FFFFFF;
+$blue: #29ABE2;
+$blue-dark: #1a8fbf;
+$blue-light: #E8F6FD;
+$black: #111111;
+$gray: #6B6B6B;
+$gray-light: #F7F8FA;
+$border: #E8E8E8;
+$white: #FFFFFF;
 
 .especialidades-content {
   --background: #F4F7FB;
@@ -25,7 +25,7 @@ $white:       #FFFFFF;
   position: relative;
   background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
   border-radius: 0 0 28px 28px;
-  padding: 20px 20px 26px;
+  padding: 25px 26px;
   overflow: hidden;
 }
 
@@ -38,19 +38,38 @@ $white:       #FFFFFF;
 .shape {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
 
-  &-1 { width: 180px; height: 180px; top: -60px; right: -40px; }
-  &-2 { width: 100px; height: 100px; bottom: -30px; left: -20px; background: rgba(255,255,255,0.06); }
-  &-3 { width: 60px; height: 60px; top: 30px; left: 30px; background: rgba(255,255,255,0.1); }
+  &-1 {
+    width: 180px;
+    height: 180px;
+    top: -60px;
+    right: -40px;
+  }
+
+  &-2 {
+    width: 100px;
+    height: 100px;
+    bottom: -30px;
+    left: -20px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  &-3 {
+    width: 60px;
+    height: 60px;
+    top: 30px;
+    left: 30px;
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 // Botão fechar (X)
 .header-close {
   position: absolute;
-  top: 16px;
+  top: 35px;
   left: 16px;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   border: none;
   border-radius: 50%;
   width: 38px;
@@ -64,14 +83,16 @@ $white:       #FFFFFF;
   z-index: 3;
 
   &:active {
-    background: rgba(255,255,255,0.35);
+    background: rgba(255, 255, 255, 0.35);
   }
 }
 
 
 .hero-text {
-  text-align: center;
+  text-align: start !important;
   position: relative;
+  margin-top: 10px;
+
   z-index: 2;
 
   h1 {
@@ -93,7 +114,7 @@ $white:       #FFFFFF;
   min-height: calc(100vh - 180px);
   position: relative;
   z-index: 2;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
 }
 
 // ---- Tip Card ----
@@ -181,11 +202,11 @@ $white:       #FFFFFF;
   transition: .2s;
 }
 
-.custom-checkbox input:checked + .checkmark {
+.custom-checkbox input:checked+.checkmark {
   background: #000;
 }
 
-.custom-checkbox input:checked + .checkmark::after {
+.custom-checkbox input:checked+.checkmark::after {
   content: "";
   position: absolute;
   left: 8px;
@@ -212,7 +233,7 @@ $white:       #FFFFFF;
   justify-content: center;
   cursor: pointer;
   letter-spacing: 0.4px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   transition: opacity 0.2s, transform 0.15s;
 
   &:active {
@@ -240,7 +261,7 @@ $white:       #FFFFFF;
 
   p {
     font-size: 13px;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255, 255, 255, 0.8);
     margin: 0;
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonTextarea, IonButton,IonCardHeader, IonCardTitle, IonItem, IonSpinner, IonCardSubtitle, IonButtons, IonCard, IonCardContent, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonTextarea, IonButton, IonCardHeader, IonCardTitle, IonItem, IonSpinner, IonCardSubtitle, IonButtons, IonCard, IonCardContent, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { EspecialidadeModel } from 'src/app/model/especialidade.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -29,25 +29,25 @@ export class ExplorarPage {
   carregandoMedicos: boolean = false;
 
   dicasSaude = [
-  {
-    icone: 'alimentacao',
-    imagemUrl: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200',
-    titulo: 'Alimentação balanceada',
-    descricao: 'Inclua frutas, legumes e água na rotina para mais energia.'
-  },
-  {
-    icone: 'sono',
-    imagemUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=200',
-    titulo: 'Durma bem',
-    descricao: '7 a 8 horas de sono fortalecem a imunidade e a mente.'
-  },
-  {
-    icone: 'coracao',
-    imagemUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200',
-    titulo: 'Cuide do coração',
-    descricao: 'Exercícios leves diários reduzem riscos cardiovasculares.'
-  }
-];
+    {
+      icone: 'alimentacao',
+      imagemUrl: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200',
+      titulo: 'Alimentação balanceada',
+      descricao: 'Inclua frutas, legumes e água na rotina para mais energia.'
+    },
+    {
+      icone: 'sono',
+      imagemUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=200',
+      titulo: 'Durma bem',
+      descricao: '7 a 8 horas de sono fortalecem a imunidade e a mente.'
+    },
+    {
+      icone: 'coracao',
+      imagemUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200',
+      titulo: 'Cuide do coração',
+      descricao: 'Exercícios leves diários reduzem riscos cardiovasculares.'
+    }
+  ];
 
 
   constructor(private toastController: ToastController, private navCtrl: NavController, private usuarioService: UsuarioService, private especialidadeService: EspecialidadeService) {
@@ -134,12 +134,17 @@ export class ExplorarPage {
   }
 
 
-   filtrarMedicos(especialidade: string) {
+  filtrarMedicos(especialidade: string) {
     const especialidadeEncontrada = this.especialidades.find(item => item.nome === especialidade);
 
     if (especialidadeEncontrada) {
       this.selecionarEspecialidade(especialidadeEncontrada);
     }
+  }
+
+  iniciais(nome?: string): string {
+    if (!nome) return '';
+    return nome.trim().slice(0, 2).toUpperCase();
   }
 
   async exibirMensagem(texto: string) {

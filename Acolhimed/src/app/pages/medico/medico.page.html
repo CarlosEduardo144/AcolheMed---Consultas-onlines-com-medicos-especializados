@@ -24,8 +24,10 @@
       <div class="hero-topbar-spacer"></div>
     </div>
 
-    <div class="foto-wrap" (click)="toggleFotoAmpliada()">
-      <img class="foto-medico" [src]="medico?.foto" [alt]="medico?.nome" />
+    <div class="foto-wrap">
+      <img *ngIf="medico?.foto" class="foto-medico" [src]="medico?.foto" (click)="toggleFotoAmpliada()"
+        [alt]="medico?.nome" />
+      <span *ngIf="!medico?.foto">{{ iniciais(medico?.nome) }}</span>
     </div>
   </div>
 
@@ -40,7 +42,11 @@
     <!-- Card: Dados principais -->
     <div class="info-card dados-principais">
       <h1 class="nome-medico" style="font-family: 'Nunito', Arial, sans-serif;">Dr. {{ medico?.nome }}</h1>
-      <p class="crm-medico">CRM {{ medico?.crm }}</p>
+      <div style="display: flex; flex-direction: row; gap: 5px;">
+        <p class="crm-medico">CRM -{{ medico?.crm }}</p>
+        <p class="crm-medico">{{ medico?.ufEmissao }}</p>
+      </div>
+
 
       <div class="chips-linha" *ngIf="medico?.especialidades?.length">
         <span class="chip chip-especialidade" *ngFor="let especialidade of medico?.especialidades">

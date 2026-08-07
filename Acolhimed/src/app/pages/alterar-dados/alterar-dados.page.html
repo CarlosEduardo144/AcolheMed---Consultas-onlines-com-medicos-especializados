@@ -127,7 +127,7 @@
         </div>
 
         <div class="input-wrap input-readonly">
-          <input class="field-input" type="text" formControlName="cpf" placeholder="000.000.000-00"
+          <input class="field-input" type="number" formControlName="cpf" placeholder="000.000.000-00"
             [readonly]="!!usuario?.cpf" />
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="lock-icon" *ngIf="usuario?.cpf">
             <rect x="5" y="11" width="14" height="10" rx="2" stroke="#AAAAAA" stroke-width="1.8" />

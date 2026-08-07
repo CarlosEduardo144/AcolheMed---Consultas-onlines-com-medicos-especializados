@@ -63,6 +63,34 @@ export class PerfilPage {
     private toastController: ToastController,
     private horarioService: HorarioService
   ) {
+    this.buscarUsuario();
+  }
+
+  ngOnInit() {
+  }
+
+  checarHorarios(){
+    this.horarioService.buscarPorMedico(this.loginService.getUsuario()).subscribe({
+        next: (horarios) => {
+          if (horarios) {
+            horarios.forEach(horario => {
+              if (horario.manha == true || horario.tarde == true || horario.noite == true) {
+                this.possuiHorarios = false;
+              }
+            });
+          }
+        }
+      });
+  }
+
+  ionViewWillEnter() {
+    this.buscarUsuario();
+    if(this.usuario?.tipoUsuario == "medico"){
+      this.checarHorarios();
+    }
+  }
+
+  buscarUsuario() {
     this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
       next: (usuario) => {
         this.usuario = usuario;
@@ -76,26 +104,6 @@ export class PerfilPage {
         this.exibirMensagem(erro.error.message);
       }
     });
-
-  }
-
-  ngOnInit() {
-  }
-
-  ionViewWillEnter(){
-    if (this.usuario?.tipoUsuario == "medico") {
-      this.horarioService.buscarPorMedico(this.loginService.getUsuario()).subscribe({
-        next: (horarios) => {
-          if (horarios) {
-            horarios.forEach(horario => {
-              if (horario.manha == true || horario.tarde == true || horario.noite == true) {
-                this.possuiHorarios = false;
-              }
-            });
-          }
-        }
-      });
-    }
   }
 
   iniciais(nome?: string): string {
