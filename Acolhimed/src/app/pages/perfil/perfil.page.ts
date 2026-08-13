@@ -69,23 +69,23 @@ export class PerfilPage {
   ngOnInit() {
   }
 
-  checarHorarios(){
+  checarHorarios() {
     this.horarioService.buscarPorMedico(this.loginService.getUsuario()).subscribe({
-        next: (horarios) => {
-          if (horarios) {
-            horarios.forEach(horario => {
-              if (horario.manha == true || horario.tarde == true || horario.noite == true) {
-                this.possuiHorarios = false;
-              }
-            });
-          }
+      next: (horarios) => {
+        if (horarios) {
+          horarios.forEach(horario => {
+            if (horario.manha == true || horario.tarde == true || horario.noite == true) {
+              this.possuiHorarios = false;
+            }
+          });
         }
-      });
+      }
+    });
   }
 
   ionViewWillEnter() {
     this.buscarUsuario();
-    if(this.usuario?.tipoUsuario == "medico"){
+    if (this.usuario?.tipoUsuario == "medico") {
       this.checarHorarios();
     }
   }

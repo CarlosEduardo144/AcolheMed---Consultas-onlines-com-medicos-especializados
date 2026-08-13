@@ -2,7 +2,7 @@ import { EspecialidadeModel } from "./especialidade.model";
 import { MedicoModel } from "./medico.model";
 import { UsuarioModel } from "./usuario.model";
 
-export type StatusConsulta = 'agendada' | 'em_andamento' | 'realizada' | 'cancelada';
+export type StatusConsulta = 'agendada' | 'em_andamento' | 'finalizada' | 'cancelada';
 
 export class ConsultaModel {
   id: string;
@@ -12,7 +12,6 @@ export class ConsultaModel {
   especialidade: EspecialidadeModel;
   status: StatusConsulta;
   observacoes: string;
-  motivoCancelamento: string;
 
   constructor() {
     this.id = '';
@@ -22,6 +21,5 @@ export class ConsultaModel {
     this.especialidade = new EspecialidadeModel();
     this.status = 'agendada';
     this.observacoes = '';
-    this.motivoCancelamento = "";
   }
 }

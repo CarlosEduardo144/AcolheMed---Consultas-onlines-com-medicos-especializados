@@ -73,25 +73,25 @@
 
             <!-- Indicador lateral de status -->
             <div class="status-indicador" [ngSwitch]="consulta.status">
-              <div class="status-icone status-icone--realizada" *ngSwitchCase="StatusConsulta.REALIZADA">
+              <div class="status-icone status-icone--realizada" *ngSwitchCase="StatusConsulta.finalizada">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M5 13L9 17L19 7" stroke="white" stroke-width="2.4" stroke-linecap="round"
                     stroke-linejoin="round" />
                 </svg>
               </div>
-              <div class="status-icone status-icone--cancelada" *ngSwitchCase="StatusConsulta.CANCELADA">
+              <div class="status-icone status-icone--cancelada" *ngSwitchCase="StatusConsulta.cancelada">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2.4" stroke-linecap="round" />
                 </svg>
               </div>
-              <div class="status-icone status-icone--andamento" *ngSwitchCase="StatusConsulta.EM_ANDAMENTO">
+              <div class="status-icone status-icone--andamento" *ngSwitchCase="StatusConsulta.em_andamento">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <circle cx="6" cy="12" r="1.6" fill="white" />
                   <circle cx="12" cy="12" r="1.6" fill="white" />
                   <circle cx="18" cy="12" r="1.6" fill="white" />
                 </svg>
               </div>
-              <div class="status-icone status-icone--agendada" *ngSwitchCase="StatusConsulta.AGENDADA">
+              <div class="status-icone status-icone--agendada" *ngSwitchCase="StatusConsulta.agendada">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="9" stroke="#737373" stroke-width="1.8" />
                   <path d="M12 7V12L15.5 14" stroke="#737373" stroke-width="1.8" stroke-linecap="round"
@@ -104,12 +104,12 @@
             <div class="consulta-card">
               <div class="consulta-topo">
                 <div class="medico-avatar">
-                  <img *ngIf="consulta.medicoFoto" [src]="consulta.medicoFoto" [alt]="consulta.medicoNome" />
-                  <span *ngIf="!consulta.medicoFoto">{{ consulta.medicoIniciais }}</span>
+                  <img *ngIf="consulta.medico.foto" [src]="consulta.medico.foto" [alt]="consulta.medicoNome" />
+                  <span *ngIf="!consulta.medico.foto">{{ iniciais(consulta.medicoNome) }}</span>
                 </div>
                 <div class="consulta-info">
                   <span class="medico-nome">{{ consulta.medicoNome }}</span>
-                  <span class="consulta-meta">{{ horarioFormatado(consulta) }} · {{ consulta.especialidade }}</span>
+                  <span class="consulta-meta">{{ horarioFormatado(consulta) }} · {{ consulta.especialidadeNome }}</span>
                 </div>
               </div>
 
@@ -153,7 +153,7 @@
                 </button>
 
                 <button type="button" class="btn-acao btn-acao--avaliar"
-                  *ngIf="consulta.status === StatusConsulta.REALIZADA" (click)="avaliarConsulta(consulta, $event)">
+                  *ngIf="consulta.status === StatusConsulta.finalizada" (click)="avaliarConsulta(consulta, $event)">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                     <path d="M12 2L14.9 8.6L22 9.3L16.7 14.1L18.2 21.2L12 17.6L5.8 21.2L7.3 14.1L2 9.3L9.1 8.6L12 2Z"
                       fill="white" stroke="white" stroke-width="1.5" stroke-linejoin="round" />
@@ -163,7 +163,7 @@
               </div>
 
               <p class="motivo-cancelamento"
-                *ngIf="consulta.status === StatusConsulta.CANCELADA && consulta.motivoCancelamento">
+                *ngIf="consulta.status === StatusConsulta.cancelada && consulta.motivoCancelamento">
                 {{ consulta.motivoCancelamento }}
               </p>
             </div>
