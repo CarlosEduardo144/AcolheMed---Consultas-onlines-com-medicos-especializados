@@ -138,3 +138,25 @@
 
   </div>
 </ion-content>
+
+<!--Tela de sucesso confirmando agendamento-->
+<!-- Overlay de sucesso -->
+<div class="sucesso-overlay" *ngIf="agendamentoConfirmado">
+  <div class="sucesso-conteudo">
+
+    <div class="check-wrap">
+      <svg class="check-circulo" width="130" height="130" viewBox="0 0 130 130">
+        <circle class="check-circulo-anel" cx="65" cy="65" r="56" fill="none" stroke="white" stroke-width="4" />
+        <path class="check-marca" d="M40 67 L57 84 L92 46" fill="none" stroke="white" stroke-width="6"
+          stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <p class="sucesso-texto">Consulta agendada com sucesso!</p>
+
+    <button type="button" class="btn-minhas-consultas" (click)="irParaMinhasConsultas()">
+      Ir para minhas consultas
+    </button>
+
+  </div>
+</div>

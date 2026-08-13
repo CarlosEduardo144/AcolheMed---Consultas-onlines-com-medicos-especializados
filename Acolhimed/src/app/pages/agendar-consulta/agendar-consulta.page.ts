@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
 import { HorarioModel } from 'src/app/model/horario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 import { HorarioService } from 'src/app/services/horario.service';
 import { ToastController } from '@ionic/angular';
+import { EspecialidadeService } from 'src/app/services/especialidade.service';
+import { EspecialidadeModel } from 'src/app/model/especialidade.model';
+import { ConsultaModel } from 'src/app/model/consulta.model';
+import { PacienteModel } from 'src/app/model/paciente.model';
 
 interface DiaCalendario {
   data: Date;
@@ -56,6 +60,8 @@ export class AgendarCosultaPage implements OnInit {
   horarioSelecionado: string | null = null;
   horariosDoDia: string[] = [];
   observacoes = '';
+  especialidadeSelecionada = new EspecialidadeModel();
+  agendamentoConfirmado = false;
 
   private hoje = new Date();
   private limiteMinimo!: Date;
@@ -63,25 +69,39 @@ export class AgendarCosultaPage implements OnInit {
 
   constructor(private usuarioService: UsuarioService,
     private route: ActivatedRoute,
-    private loginService: LoginService,
     private horarioService: HorarioService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private especialidadeService: EspecialidadeService,
+    private loginService: LoginService,
+    private navController: NavController
   ) {
   }
 
   ngOnInit() {
     this.carregarMedico();
+    this.carregarEspecialidade();
     this.hoje.setHours(0, 0, 0, 0);
     this.limiteMinimo = new Date(this.hoje.getFullYear(), this.hoje.getMonth(), 1);
     this.limiteMaximo = new Date(this.hoje.getFullYear(), this.hoje.getMonth() + JANELA_MAXIMA_MESES, 1);
     this.mesExibido = new Date(this.hoje.getFullYear(), this.hoje.getMonth(), 1);
   }
 
+  carregarEspecialidade() {
+    const especialidadeId = this.route.snapshot.queryParamMap.get('especialidadeId');
+    if (especialidadeId) {
+      this.especialidadeService.buscarPorId(especialidadeId).subscribe({
+        next: (especialidade) => {
+          this.especialidadeSelecionada = especialidade;
+        },
+        error: (err) => console.error('Erro ao carregar médico', err)
+      });
+    }
+  }
 
   carregarMedico() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.usuarioService.buscarPorId(id).subscribe({
+    const medicoId = this.route.snapshot.paramMap.get('id');
+    if (medicoId) {
+      this.usuarioService.buscarPorId(medicoId).subscribe({
         next: (medico) => {
           this.medico = medico;
           this.carregarHorarios(this.medico.id);
@@ -99,8 +119,7 @@ export class AgendarCosultaPage implements OnInit {
 
       },
       error: (erro) => {
-        console.error(erro);
-        this.exibirMensagem(erro.error.message);
+        this.exibirMensagem("Erro ao carregar médico. " + erro?.error?.message);
       }
     });
   }
@@ -232,23 +251,55 @@ export class AgendarCosultaPage implements OnInit {
   }*/
 
   confirmarAgendamento() {
-    /*
-    if (!this.podeConfirmar) return;
+    let consulta = new ConsultaModel;
 
-    const payload = {
-      medicoId: this.medico.id,
-      data: this.diaSelecionado!.data,
-      horario: this.horarioSelecionado,
-      observacoes: this.observacoes,
-    };
+    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+      next: (paciente) => {
+        consulta.paciente = paciente as PacienteModel;
 
-    //envio pro serviço/API já existente
-    */
+        consulta.dataHora = this.montarDataHoraCompleta();
+        consulta.especialidade = this.especialidadeSelecionada;
+        consulta.medico = this.medico;
+        consulta.observacoes = this.observacoes;
+
+        this.finalizarAgendamento(consulta);
+      },
+      error: (erro) => {
+        this.exibirMensagem('Erro ao buscar o paciente. ' + erro.error.message);
+      }
+    });
+  }
+
+  finalizarAgendamento(consulta: ConsultaModel) {
+    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+      next: () => {
+        this.agendamentoConfirmado = true;
+        //this.navController.navigateRoot('/inicio');
+
+      },
+      error: (erro) => {
+        this.exibirMensagem('Erro ao agendar consulta. ' + erro.error.message);
+      }
+    });
+  }
+
+  private montarDataHoraCompleta(): Date {
+    const dataBase = this.diaSelecionado!.data; // Date só com dia/mês/ano
+    const [horaStr, minutoStr] = this.horarioSelecionado!.split(':');
+
+    const dataHora = new Date(dataBase); // clona pra não mutar o objeto original
+    dataHora.setHours(Number(horaStr), Number(minutoStr), 0, 0);
+
+    return dataHora;
   }
 
   iniciais(nome?: string): string {
     if (!nome) return '';
     return nome.trim().slice(0, 2).toUpperCase();
+  }
+
+  irParaMinhasConsultas() {
+      this.navController.navigateRoot('/consultas');
   }
 
   async exibirMensagem(texto: string) {

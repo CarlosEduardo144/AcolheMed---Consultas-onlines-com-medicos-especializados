@@ -65,10 +65,25 @@
     <!-- Estado vazio: especialidade não encontrada na busca -->
     <div class="empty-state" *ngIf="textoBusca && especialidadesFiltradas.length === 0 && !especialidadeSelecionada">
       <div class="empty-illustration">
-        <img style="border-radius: 50%; max-width: 170px;"
-          src="https://static.vecteezy.com/system/resources/previews/040/193/977/non_2x/puzzled-doctor-flat-style-vector.jpg">
+        <svg width="120" height="120" viewBox="0 0 140 140" fill="none">
+          <circle cx="70" cy="70" r="70" fill="#E8F6FD" />
+          <rect x="40" y="45" width="60" height="55" rx="8" stroke="#29ABE2" stroke-width="5" fill="white" />
+          <path d="M52 45V38M88 45V38" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+
+          <!-- Chapéu de Universitário (Capelo) -->
+          <!-- Base da cabeça -->
+          <path d="M56 75V81C56 84 62 86 70 86C78 86 84 84 84 81V75" stroke="#29ABE2" stroke-width="4"
+            stroke-linejoin="round" />
+
+          <!-- Losango superior (Topo do capelo) -->
+          <path d="M70 60L92 70L70 80L48 70Z" fill="white" stroke="#29ABE2" stroke-width="4" stroke-linejoin="round" />
+
+          <!-- Cordão e Pingente (Franja) caindo para a esquerda -->
+          <path d="M70 70Q54 71 52 79" stroke="#29ABE2" stroke-width="3" stroke-linecap="round" />
+          <circle cx="52" cy="81" r="2.5" fill="#29ABE2" />
+        </svg>
       </div>
-      <h3 class="empty-titulo">Oops, não encontramos nada...</h3>
+      <h3 class="empty-titulo"  style="font-family: 'Nunito', Arial, sans-serif;">Oops, não encontramos nada...</h3>
       <p class="empty-texto">Tente buscar por outra especialidade.</p>
 
     </div>
@@ -79,35 +94,50 @@
         <h2 class="section-title">Médicos de {{ especialidadeSelecionada.nome }}</h2>
       </div>
 
-      <div class="horizontal-scroll medicos-scroll" *ngIf="!carregandoMedicos && medicosFiltrados.length > 0">
-        <div class="medico-card-destaque" *ngFor="let medico of medicosFiltrados">
-          <div class="medico-img-wrap" [routerLink]="['/medico', medico.id]">
-            <img *ngIf="medico?.foto" [src]="medico.foto" [alt]="medico?.nome" />
-            <span *ngIf="!medico?.foto">{{ iniciais(medico?.nome) }}</span>
-          </div>
-          <div class="medico-info-wrap">
-            <p class="medico-nome">{{ medico.nome }}</p>
-            <p class="medico-especialidade">{{ especialidadeSelecionada.nome }}</p>
-            <div class="medico-rating">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                  fill="#FACC15" stroke="#FACC15" stroke-width="1.5" stroke-linejoin="round" />
-              </svg>
-              <span class="rating-numero">4.5</span>
-              <span class="rating-total">(129)</span>
+      <div class="medicos-lista" *ngIf="!carregandoMedicos && medicosFiltrados.length > 0">
+        <div class="medico-card-horizontal" *ngFor="let medico of medicosFiltrados">
+
+          <div class="medico-linha-topo" [routerLink]="['/medico', medico.id]">
+            <div class="medico-img-wrap-h">
+              <img *ngIf="medico?.foto" [src]="medico.foto" [alt]="medico?.nome" />
+              <span *ngIf="!medico?.foto">{{ iniciais(medico?.nome) }}</span>
+            </div>
+
+            <div class="medico-info-wrap-h">
+              <p class="medico-nome" style="font-family: 'Nunito', Arial, sans-serif;">{{ medico.nome }}</p>
+              <p class="medico-especialidade">{{ especialidadeSelecionada.nome }}</p>
+              <div class="medico-rating">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                    fill="#FACC15" stroke="#FACC15" stroke-width="1.5" stroke-linejoin="round" />
+                </svg>
+                <span class="rating-numero">4.5</span>
+                <span class="rating-total">(129)</span>
+              </div>
             </div>
           </div>
+
+          <button type="button" class="btn-agendar-medico" [routerLink]="['/agendar-consulta', medico.id]"
+            [queryParams]="{ especialidadeId: especialidadeSelecionada.id }">
+            Agendar consulta
+          </button>
         </div>
       </div>
 
       <!-- Estado vazio: nenhum médico para a especialidade selecionada -->
       <div class="empty-state" *ngIf="especialidadeSelecionada && !carregandoMedicos && medicosFiltrados.length === 0">
         <div class="empty-illustration">
-          <img style="border-radius: 50%; max-width: 170px;"
-            src="https://static.vecteezy.com/system/resources/previews/040/193/977/non_2x/puzzled-doctor-flat-style-vector.jpg">
+          <svg width="120" height="120" viewBox="0 0 140 140" fill="none">
+            <circle cx="70" cy="70" r="70" fill="#E8F6FD" />
+            <rect x="40" y="45" width="60" height="55" rx="8" stroke="#29ABE2" stroke-width="5" fill="white" />
+            <path d="M52 45V38M88 45V38" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+
+            <line x1="58" y1="62" x2="82" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+            <line x1="82" y1="62" x2="58" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+          </svg>
         </div>
-        <h3 class="empty-titulo">Oops, não encontramos nada...</h3>
+        <h3 class="empty-titulo"  style="font-family: 'Nunito', Arial, sans-serif;">Oops, não encontramos nada...</h3>
         <p class="empty-texto">Nenhum médico de {{ especialidadeSelecionada.nome }} disponível no momento.</p>
       </div>
     </div>
@@ -171,7 +201,7 @@
 
           <div class="dica-texto">
             <p class="dica-titulo">
-             
+
               {{ dica.titulo }}
             </p>
             <p class="dica-descricao">{{ dica.descricao }}</p>

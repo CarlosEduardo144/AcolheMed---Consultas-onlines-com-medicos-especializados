@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonTextarea, IonButton, IonCardHeader, IonCardTitle, IonItem, IonSpinner, IonCardSubtitle, IonButtons, IonCard, IonCardContent, IonIcon, IonLabel } from '@ionic/angular/standalone';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { EspecialidadeModel } from 'src/app/model/especialidade.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { EspecialidadeService } from 'src/app/services/especialidade.service';
@@ -50,7 +50,11 @@ export class ExplorarPage {
   ];
 
 
-  constructor(private toastController: ToastController, private navCtrl: NavController, private usuarioService: UsuarioService, private especialidadeService: EspecialidadeService) {
+  constructor(private toastController: ToastController,
+    private navCtrl: NavController,
+    private usuarioService: UsuarioService,
+    private especialidadeService: EspecialidadeService,
+    private router: Router) {
     this.medicos = [];
     this.medicosFiltrados = [];
     this.especialidades = [];

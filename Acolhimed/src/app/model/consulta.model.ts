@@ -1,3 +1,4 @@
+import { EspecialidadeModel } from "./especialidade.model";
 import { MedicoModel } from "./medico.model";
 import { UsuarioModel } from "./usuario.model";
 
@@ -7,20 +8,20 @@ export class ConsultaModel {
   id: string;
   paciente: UsuarioModel;
   medico: MedicoModel;
-  data: string;        // ISO date string
-  horario: string;     // HH:mm
-  especialidade: string;
+  dataHora: Date;      
+  especialidade: EspecialidadeModel;
   status: StatusConsulta;
   observacoes: string;
+  motivoCancelamento: string;
 
   constructor() {
     this.id = '';
     this.paciente = new UsuarioModel();
     this.medico = new MedicoModel();
-    this.data = '';
-    this.horario = '';
-    this.especialidade = '';
+    this.dataHora = new Date();
+    this.especialidade = new EspecialidadeModel();
     this.status = 'agendada';
     this.observacoes = '';
+    this.motivoCancelamento = "";
   }
 }

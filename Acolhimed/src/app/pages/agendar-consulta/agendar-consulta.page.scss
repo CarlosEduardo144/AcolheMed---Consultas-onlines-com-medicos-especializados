@@ -364,3 +364,77 @@ $star: #FACC15;
 .bottom-spacer {
   height: 32px;
 }
+
+//Tela de sucesso
+.sucesso-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: linear-gradient(160deg, #34C766 0%, #22A854 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.25s ease;
+}
+
+.sucesso-conteudo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.check-wrap {
+  margin-bottom: 28px;
+}
+
+.check-circulo-anel {
+  stroke-dasharray: 352; // aproximadamente 2 * π * 56
+  stroke-dashoffset: 352;
+  animation: desenharAnel 0.5s ease-out forwards;
+}
+
+.check-marca {
+  stroke-dasharray: 70; // comprimento aproximado do path do check
+  stroke-dashoffset: 70;
+  animation: desenharCheck 0.35s ease-out 0.45s forwards; // começa depois do anel terminar
+}
+
+@keyframes desenharAnel {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes desenharCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sucesso-texto {
+  font-size: 17px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  margin: 0 0 40px;
+}
+
+.btn-minhas-consultas {
+  width: 100%;
+  height: 52px;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  background: transparent;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}

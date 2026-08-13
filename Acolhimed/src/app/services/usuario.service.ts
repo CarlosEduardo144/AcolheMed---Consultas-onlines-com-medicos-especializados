@@ -57,5 +57,4 @@ export class UsuarioService {
     return this.http.delete<void>(`${this.API_URL}/usuarios/${id}`);
   }
 
-
 }
