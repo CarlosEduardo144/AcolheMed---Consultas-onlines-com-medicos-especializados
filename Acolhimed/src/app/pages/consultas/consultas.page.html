@@ -2,6 +2,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Averia+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Nunito:ital,wght@0,700;1,700&display=swap"
+  rel="stylesheet">
+
 <ion-content class="consultas-content" [fullscreen]="true">
   <div class="page-wrapper">
 
@@ -61,135 +67,153 @@
     <!-- Corpo -->
     <div class="corpo-content">
 
-      <ng-container *ngIf="gruposPorDia.length > 0; else vazio">
-        <div class="grupo-dia" *ngFor="let grupo of gruposPorDia">
-          <h2 class="grupo-label"
-            [style.font-family]="grupo.label.startsWith('Hoje') ? 'Nunito, Arial, sans-serif' : null"
-            [style.color]="grupo.label.startsWith('Hoje') ? null : '#9E9E9E'">
-            {{ grupo.label }}
-          </h2>
-
-          <div class="consulta-linha" *ngFor="let consulta of grupo.consultas" (click)="abrirDetalhes(consulta)">
-
-            <!-- Indicador lateral de status -->
-            <div class="status-indicador" [ngSwitch]="consulta.status">
-              <div class="status-icone status-icone--realizada" *ngSwitchCase="StatusConsulta.finalizada">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M5 13L9 17L19 7" stroke="white" stroke-width="2.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg>
-              </div>
-              <div class="status-icone status-icone--cancelada" *ngSwitchCase="StatusConsulta.cancelada">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2.4" stroke-linecap="round" />
-                </svg>
-              </div>
-              <div class="status-icone status-icone--andamento" *ngSwitchCase="StatusConsulta.em_andamento">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <circle cx="6" cy="12" r="1.6" fill="white" />
-                  <circle cx="12" cy="12" r="1.6" fill="white" />
-                  <circle cx="18" cy="12" r="1.6" fill="white" />
-                </svg>
-              </div>
-              <div class="status-icone status-icone--agendada" *ngSwitchCase="StatusConsulta.agendada">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="9" stroke="#737373" stroke-width="1.8" />
-                  <path d="M12 7V12L15.5 14" stroke="#737373" stroke-width="1.8" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg>
-              </div>
-            </div>
-
-            <!-- Card da consulta -->
-            <div class="consulta-card">
-              <div class="consulta-topo">
-                <div class="medico-avatar">
-                  <img *ngIf="consulta.medico.foto" [src]="consulta.medico.foto" [alt]="consulta.medicoNome" />
-                  <span *ngIf="!consulta.medico.foto">{{ iniciais(consulta.medicoNome) }}</span>
-                </div>
-                <div class="consulta-info">
-                  <span class="medico-nome">{{ consulta.medicoNome }}</span>
-                  <span class="consulta-meta">{{ horarioFormatado(consulta) }} · {{ consulta.especialidadeNome }}</span>
-                </div>
-              </div>
-
-              <!-- Ações: Próximas -->
-              <div class="consulta-acoes" *ngIf="abaAtiva === 'proximas'">
-                <button type="button" class="btn-acao btn-acao--chat" (click)="abrirChat(consulta, $event)">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M21 11.5C21 16.194 16.9706 20 12 20C10.6866 20 9.44014 19.7392 8.31699 19.2664L3 20L4.39397 15.9505C3.5122 14.6969 3 13.153 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z"
-                      stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
-                  </svg>
-                  Chat
-                </button>
-
-                <button type="button" class="btn-acao btn-acao--chamada"
-                  [class.btn-acao--desabilitada]="!podeChamar(consulta)" [disabled]="!podeChamar(consulta)"
-                  (click)="iniciarChamada(consulta, $event)">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                    <path d="M15 10.5L21 7.5V16.5L15 13.5" stroke="currentColor" stroke-width="1.7"
-                      stroke-linejoin="round" />
-                    <rect x="3" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.7" />
-                  </svg>
-                  Chamada
-                </button>
-              </div>
-
-              <div class="consulta-acoes" *ngIf="abaAtiva === 'proximas' && podeCancelar(consulta)">
-                <button type="button" class="btn-cancelar" (click)="cancelarConsulta(consulta, $event)">
-                  Cancelar consulta
-                </button>
-              </div>
-
-              <!-- Ações: Histórico -->
-              <div class="consulta-acoes" *ngIf="abaAtiva === 'historico'">
-                <button type="button" class="btn-acao btn-acao--detalhes" (click)="abrirDetalhes(consulta)">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="9" stroke="#29ABE2" stroke-width="1.6" />
-                    <path d="M12 11V16M12 8H12.01" stroke="#29ABE2" stroke-width="2" stroke-linecap="round" />
-                  </svg>
-                  Detalhes
-                </button>
-
-                <button type="button" class="btn-acao btn-acao--avaliar"
-                  *ngIf="consulta.status === StatusConsulta.finalizada" (click)="avaliarConsulta(consulta, $event)">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L14.9 8.6L22 9.3L16.7 14.1L18.2 21.2L12 17.6L5.8 21.2L7.3 14.1L2 9.3L9.1 8.6L12 2Z"
-                      fill="white" stroke="white" stroke-width="1.5" stroke-linejoin="round" />
-                  </svg>
-                  Avaliar
-                </button>
-              </div>
-
-              <p class="motivo-cancelamento"
-                *ngIf="consulta.status === StatusConsulta.cancelada && consulta.motivoCancelamento">
-                {{ consulta.motivoCancelamento }}
-              </p>
-            </div>
-          </div>
+      <!-- Estado de carregamento: aparece enquanto consultasCarregadas === false -->
+      <ng-container *ngIf="!consultasCarregadas">
+        <div class="loading-state">
+          <svg class="loading-spinner" width="44" height="44" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="18" stroke="#E8F6FD" stroke-width="4" />
+            <path d="M22 4C31.9411 4 40 12.0589 40 22" stroke="#29ABE2" stroke-width="4" stroke-linecap="round" />
+          </svg>
+          <p class="loading-texto">Carregando suas consultas...</p>
         </div>
       </ng-container>
 
-      <ng-template #vazio>
-        <div class="empty-state">
-          <div class="empty-illustration">
-            <svg width="120" height="120" viewBox="0 0 140 140" fill="none">
-              <circle cx="70" cy="70" r="70" fill="#E8F6FD" />
-              <rect x="40" y="45" width="60" height="55" rx="8" stroke="#29ABE2" stroke-width="5" fill="white" />
-              <path d="M52 45V38M88 45V38" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+      <!-- Só decide entre "lista" e "vazio" depois que consultasCarregadas === true -->
+      <ng-container *ngIf="consultasCarregadas">
+        <ng-container *ngIf="gruposPorDia.length > 0; else vazio">
+          <div class="grupo-dia" *ngFor="let grupo of gruposPorDia">
+            <h2 class="grupo-label" [style.font-family]="'Nunito, Arial, sans-serif'"
+              [style.color]="grupo.label.startsWith('Hoje') ? null : '#303030'">
+              {{ grupo.label }}
+            </h2>
 
-              <line x1="58" y1="62" x2="82" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
-              <line x1="82" y1="62" x2="58" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
-            </svg>
+            <div class="consulta-linha" *ngFor="let consulta of grupo.consultas" (click)="abrirDetalhes(consulta)">
+
+              <!-- Indicador lateral de status -->
+              <div class="status-indicador" [ngSwitch]="consulta.status">
+                <div class="status-icone status-icone--realizada" *ngSwitchCase="StatusConsulta.finalizada">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 13L9 17L19 7" stroke="white" stroke-width="2.4" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+                <div class="status-icone status-icone--cancelada" *ngSwitchCase="StatusConsulta.cancelada">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2.4" stroke-linecap="round" />
+                  </svg>
+                </div>
+                <div class="status-icone status-icone--andamento" *ngSwitchCase="StatusConsulta.em_andamento">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="#737373" stroke-width="1.8" />
+                    <path d="M12 7V12L15.5 14" stroke="#737373" stroke-width="1.8" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+                <div class="status-icone status-icone--agendada" style="background-color: black;"
+                  *ngSwitchCase="StatusConsulta.agendada">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="6" cy="12" r="1.6" fill="white" />
+                    <circle cx="12" cy="12" r="1.6" fill="white" />
+                    <circle cx="18" cy="12" r="1.6" fill="white" />
+                  </svg>
+                </div>
+
+              </div>
+
+              <!-- Card da consulta -->
+              <div class="consulta-card">
+                <div class="consulta-topo">
+                  <div class="medico-avatar">
+                    <img *ngIf="consulta.medico.foto" [routerLink]="['/medico', consulta.medico.id]" [src]="consulta.medico.foto" [alt]="consulta.medicoNome" />
+                    <span *ngIf="!consulta.medico.foto">{{ iniciais(consulta.medicoNome) }}</span>
+                  </div>
+                  <div class="consulta-info">
+                    <span class="medico-nome" style="font-family: 'Nunito', Arial, sans-serif;">{{ consulta.medicoNome
+                      }}</span>
+                    <span class="consulta-meta">{{ horarioFormatado(consulta) }} · {{ consulta.especialidadeNome
+                      }}</span>
+                  </div>
+                </div>
+
+                <!-- Ações: Próximas -->
+                <div class="consulta-acoes" *ngIf="abaAtiva === 'proximas'">
+                  <button type="button" class="btn-acao btn-acao--chat" (click)="abrirChat(consulta, $event)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M21 11.5C21 16.194 16.9706 20 12 20C10.6866 20 9.44014 19.7392 8.31699 19.2664L3 20L4.39397 15.9505C3.5122 14.6969 3 13.153 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z"
+                        stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
+                    </svg>
+                    Chat
+                  </button>
+
+                  <button type="button" class="btn-acao btn-acao--chamada"
+                    [class.btn-acao--desabilitada]="!podeChamar(consulta)" [disabled]="!podeChamar(consulta)"
+                    (click)="iniciarChamada(consulta, $event)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                      <path d="M15 10.5L21 7.5V16.5L15 13.5" stroke="currentColor" stroke-width="1.7"
+                        stroke-linejoin="round" />
+                      <rect x="3" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.7" />
+                    </svg>
+                    Chamada
+                  </button>
+                </div>
+
+                <div class="consulta-acoes" *ngIf="abaAtiva === 'proximas' && podeCancelar(consulta)">
+                  <button type="button" class="btn-cancelar" (click)="cancelarConsulta(consulta, $event)">
+                    Cancelar consulta
+                  </button>
+                </div>
+
+                <!-- Ações: Histórico -->
+                <div class="consulta-acoes" *ngIf="abaAtiva === 'historico'">
+                  <button type="button" class="btn-acao btn-acao--detalhes" (click)="abrirDetalhes(consulta)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="9" stroke="#29ABE2" stroke-width="1.6" />
+                      <path d="M12 11V16M12 8H12.01" stroke="#29ABE2" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    Detalhes
+                  </button>
+
+                  <button type="button" class="btn-acao btn-acao--avaliar"
+                    *ngIf="consulta.status === StatusConsulta.finalizada" (click)="avaliarConsulta(consulta, $event)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2L14.9 8.6L22 9.3L16.7 14.1L18.2 21.2L12 17.6L5.8 21.2L7.3 14.1L2 9.3L9.1 8.6L12 2Z"
+                        fill="white" stroke="white" stroke-width="1.5" stroke-linejoin="round" />
+                    </svg>
+                    Avaliar
+                  </button>
+                </div>
+
+                <p class="motivo-cancelamento"
+                  *ngIf="consulta.status === StatusConsulta.cancelada && consulta.motivoCancelamento">
+                  {{ consulta.motivoCancelamento }}
+                </p>
+              </div>
+            </div>
           </div>
-          <h3 class="empty-titulo">Nenhuma consulta por aqui</h3>
-          <p class="empty-texto">
-            {{ abaAtiva === 'proximas' ? 'Você não tem consultas agendadas.' : 'Seu histórico de consultas está vazio.'
-            }}
-          </p>
-        </div>
-      </ng-template>
+        </ng-container>
+
+        <ng-template #vazio>
+          <div class="empty-state">
+            <div class="empty-illustration">
+              <svg width="120" height="120" viewBox="0 0 140 140" fill="none">
+                <circle cx="70" cy="70" r="70" fill="#E8F6FD" />
+                <rect x="40" y="45" width="60" height="55" rx="8" stroke="#29ABE2" stroke-width="5" fill="white" />
+                <path d="M52 45V38M88 45V38" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+
+                <line x1="58" y1="62" x2="82" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+                <line x1="82" y1="62" x2="58" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+              </svg>
+            </div>
+            <h3 class="empty-titulo">Nenhuma consulta por aqui</h3>
+            <p class="empty-texto">
+              {{ abaAtiva === 'proximas' ? 'Você não tem consultas agendadas.' : 'Seu histórico de consultas está
+              vazio.'
+              }}
+            </p>
+          </div>
+        </ng-template>
+      </ng-container>
 
       <div class="bottom-spacer"></div>
     </div>

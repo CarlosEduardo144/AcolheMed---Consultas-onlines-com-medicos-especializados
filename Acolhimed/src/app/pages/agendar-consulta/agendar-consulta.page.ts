@@ -12,6 +12,7 @@ import { EspecialidadeService } from 'src/app/services/especialidade.service';
 import { EspecialidadeModel } from 'src/app/model/especialidade.model';
 import { ConsultaModel } from 'src/app/model/consulta.model';
 import { PacienteModel } from 'src/app/model/paciente.model';
+import { ConsultaService } from 'src/app/services/consulta-service';
 
 interface DiaCalendario {
   data: Date;
@@ -60,7 +61,7 @@ export class AgendarCosultaPage implements OnInit {
   horarioSelecionado: string | null = null;
   horariosDoDia: string[] = [];
   observacoes = '';
-  especialidadeSelecionada = new EspecialidadeModel();
+  especialidadeSelecionada: EspecialidadeModel | null = null;
   agendamentoConfirmado = false;
 
   private hoje = new Date();
@@ -73,7 +74,8 @@ export class AgendarCosultaPage implements OnInit {
     private toastController: ToastController,
     private especialidadeService: EspecialidadeService,
     private loginService: LoginService,
-    private navController: NavController
+    private navController: NavController,
+    private consultaService: ConsultaService
   ) {
   }
 
@@ -256,9 +258,14 @@ export class AgendarCosultaPage implements OnInit {
     this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
       next: (paciente) => {
         consulta.paciente = paciente as PacienteModel;
-
         consulta.dataHora = this.montarDataHoraCompleta();
-        consulta.especialidade = this.especialidadeSelecionada;
+
+        if (this.especialidadeSelecionada == null) {
+          consulta.especialidade = this.medico?.especialidades[0]
+        } else {
+          consulta.especialidade = this.especialidadeSelecionada;
+
+        }
         consulta.medico = this.medico;
         consulta.observacoes = this.observacoes;
 
@@ -271,11 +278,9 @@ export class AgendarCosultaPage implements OnInit {
   }
 
   finalizarAgendamento(consulta: ConsultaModel) {
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+    this.consultaService.salvar(consulta).subscribe({
       next: () => {
         this.agendamentoConfirmado = true;
-        //this.navController.navigateRoot('/inicio');
-
       },
       error: (erro) => {
         this.exibirMensagem('Erro ao agendar consulta. ' + erro.error.message);
@@ -299,7 +304,7 @@ export class AgendarCosultaPage implements OnInit {
   }
 
   irParaMinhasConsultas() {
-      this.navController.navigateRoot('/consultas');
+    this.navController.navigateRoot('/consultas');
   }
 
   async exibirMensagem(texto: string) {

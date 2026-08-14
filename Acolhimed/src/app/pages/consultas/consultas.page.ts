@@ -9,6 +9,8 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { LoginService } from 'src/app/services/login.service';
 import { ToastController } from '@ionic/angular';
 import { ConsultaResponseModel } from 'src/app/model/consulta-response';
+import Swal from 'sweetalert2';
+
 
 export enum StatusConsulta {
   agendada = 'agendada',
@@ -176,7 +178,7 @@ export class ConsultasPage implements OnInit {
   }
 
   abrirDetalhes(consulta: ConsultaResponseModel) {
-    this.navCtrl.navigateForward(['/consulta', consulta.id]);
+    
   }
 
   abrirChat(consulta: ConsultaResponseModel, event: Event) {
@@ -191,8 +193,53 @@ export class ConsultasPage implements OnInit {
 
   cancelarConsulta(consulta: ConsultaResponseModel, event: Event) {
     event.stopPropagation();
-    // abrir modal/alert de confirmação de cancelamento já existente
+
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: `Deseja realmente cancelar a consulta?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3880ff',
+      cancelButtonColor: '#222428',
+      confirmButtonText: 'Sim, cancelar!',
+      cancelButtonText: 'Não, manter',
+      // ESTAS DUAS LINHAS ABAIXO CORRIGEM O PROBLEMA NO IONIC:
+      heightAuto: false,
+      target: 'body',
+
+      customClass: {
+        popup: 'custom-swal-card',
+        icon: 'custom-swal-icon'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.consultaService.cancelar(consulta).subscribe({
+          next: () => {
+            this.carregarConsultas();
+
+            Swal.fire({
+              title: 'Cancelada!',
+              text: 'A consulta foi cancelada com sucesso.',
+              icon: 'success',
+              heightAuto: false,
+
+              customClass: {
+                popup: 'custom-swal-card',
+                icon: 'custom-swal-icon'
+              }
+            });
+
+          },
+          error: (erro) => {
+            console.error(erro);
+            this.exibirMensagem("Erro ao cancelar consulta." + erro.error.message);
+          }
+        });
+      }
+    });
   }
+
+
 
   avaliarConsulta(consulta: ConsultaResponseModel, event: Event) {
     event.stopPropagation();

@@ -25,7 +25,7 @@ export class ConsultaService {
     return this.http.put<ConsultaResponseModel>(`${this.API_URL}/consultas/${consulta.id}/remarcar`, consulta);
   }
 
-  cancelar(consulta: ConsultaModel): Observable<ConsultaResponseModel> {
+  cancelar(consulta: ConsultaResponseModel): Observable<ConsultaResponseModel> {
     return this.http.put<ConsultaResponseModel>(`${this.API_URL}/consultas/${consulta.id}/cancelar`, consulta);
   }
 }
