@@ -62,4 +62,5 @@ public class UsuarioService {
 
         return new UsuarioResponseDTO(usuario);
     }
+
 }

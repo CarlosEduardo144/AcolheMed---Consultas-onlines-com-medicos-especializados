@@ -8,6 +8,7 @@ import { EspecialidadeService } from 'src/app/services/especialidade.service';
 import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CommonModule } from '@angular/common'; // 1. Importe o módulo
+import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class InicioPage implements OnInit {
   medicosDisponiveis: number;
   especialidadesDisponiveis: number;
   usuario!: PacienteModel | MedicoModel;
+  carregandoInicial = true;
 
   constructor(
     private navCtrl: NavController,
@@ -32,36 +34,51 @@ export class InicioPage implements OnInit {
     private loginService: LoginService,
     private toastController: ToastController
   ) {
-    this.carregarUsuario();
     this.medicosDisponiveis = 0;
     this.especialidadesDisponiveis = 0;
   }
 
   ngOnInit() {
-    this.usuarioService.getMedicos().subscribe({
-      next: (medicos) => {
-        this.medicosDisponiveis = medicos.length;
-      },
-      error: (erro) => {
-        this.exibirMensagem(erro.error.message);
-      }
-    });
-
-    this.especialidadeService.listar().subscribe({
-      next: (especialidades) => {
-        this.especialidadesDisponiveis = especialidades.length;
-      },
-      error: (erro) => {
-        this.exibirMensagem(erro.error.message);
-      }
-    });
+    this.carregarDadosIniciais();
   }
 
   ionViewWillEnter() {
-    this.carregarUsuario();
+    if (!this.carregandoInicial && this.loginService.getUsuario()) {
+      this.carregarUsuario(false);
+    }
   }
 
-  carregarUsuario() {
+  carregarDadosIniciais() {
+    this.carregandoInicial = true;
+
+    forkJoin({
+      usuario: this.usuarioService.buscarPorId(this.loginService.getUsuario()),
+      medicos: this.usuarioService.getMedicos(),
+      especialidades: this.especialidadeService.listar(),
+    }).subscribe({
+      next: ({ usuario, medicos, especialidades }) => {
+        if (!usuario) {
+          this.navCtrl.navigateBack('/login');
+          return;
+        }
+
+        this.usuario = usuario;
+        this.medicosDisponiveis = medicos.length;
+        this.especialidadesDisponiveis = especialidades.length;
+        this.carregandoInicial = false;
+      },
+      error: (erro) => {
+        this.carregandoInicial = false;
+        this.exibirMensagem(erro.error?.message || 'Erro ao carregar informações iniciais.');
+      }
+    });
+  }
+
+  carregarUsuario(exibirCarregamento = true) {
+    if (exibirCarregamento) {
+      this.carregandoInicial = true;
+    }
+
     this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
       next: (usuario) => {
 
@@ -70,9 +87,15 @@ export class InicioPage implements OnInit {
         }
 
         this.usuario = usuario;
+        if (exibirCarregamento) {
+          this.carregandoInicial = false;
+        }
       },
       error: (erro) => {
         console.error(erro);
+        if (exibirCarregamento) {
+          this.carregandoInicial = false;
+        }
         this.exibirMensagem(erro.error.message);
       }
     });

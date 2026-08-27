@@ -3,6 +3,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
 <ion-content class="alterar-content" [fullscreen]="true">
+  <div *ngIf="carregandoInicial; else conteudoFormacao" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <ng-template #conteudoFormacao>
 
   <!-- Hero Banner -->
   <div class="hero-banner">
@@ -120,5 +127,6 @@
 
     </form>
   </div>
+  </ng-template>
 
 </ion-content>

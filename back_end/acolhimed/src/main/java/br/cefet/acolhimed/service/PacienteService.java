@@ -64,7 +64,6 @@ public class PacienteService {
 
         paciente.setNome(dto.getNome());
         paciente.setEmail(dto.getEmail());
-        paciente.setFoto(dto.getFoto());
         paciente.setDataNascimento(dto.getDataNascimento());
         paciente.setCpf(dto.getCpf());
 

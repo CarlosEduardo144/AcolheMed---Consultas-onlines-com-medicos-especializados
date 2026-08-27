@@ -343,6 +343,7 @@ $amber: #F5A623;
   height: 38px;
   border-radius: 20px;
   border: 1.5px solid red;
+  margin-top: 10px;
   background: #ffdddd;
   color: $red;
   font-size: 13px;
@@ -467,19 +468,222 @@ $amber: #F5A623;
   padding: 64px 32px;
 }
 
-.loading-spinner {
-  animation: girar 0.8s linear infinite;
-  margin-bottom: 16px;
-}
-
-@keyframes girar {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 .loading-texto {
   font-size: 13.5px;
   color: $gray;
   margin: 0;
   font-weight: 500;
+}
+
+//pop up de consulta
+// ---- Backdrop ----
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 998;
+  animation: fadeIn 0.2s ease;
+}
+
+// ---- Bottom Sheet ----
+.bottom-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  background: $white;
+  border-radius: 24px 24px 0 0;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 10px 20px 28px;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.18);
+  animation: subirSheet 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes subirSheet {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 4px;
+  background: $border;
+  margin: 6px auto 14px;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.sheet-titulo {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 800;
+  color: $black;
+  margin: 0;
+}
+
+.sheet-close,
+.sheet-back {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: $gray-light;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+// ---- Detalhes ----
+.detalhe-medico {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.medico-avatar--grande {
+  width: 56px;
+  height: 56px;
+  font-size: 18px;
+}
+
+.detalhe-nome {
+  font-size: 16px;
+  font-weight: 800;
+  color: $black;
+  margin: 0 0 2px;
+}
+
+.detalhe-especialidade {
+  font-size: 13px;
+  color: $gray;
+  margin: 0;
+}
+
+.detalhe-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid $border;
+}
+
+.detalhes-extras{
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  gap: 10px;
+  border-bottom: 1px solid $border;
+}
+
+.detalhe-label {
+  font-size: 13px;
+  color: $gray;
+  font-weight: 500;
+}
+
+.detalhe-valor {
+  font-size: 13.5px;
+  color: $black;
+  font-weight: 700;
+}
+
+.sheet-acoes-linha {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-sheet {
+  flex: 1;
+  height: 46px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &--outline {
+    background: #F5F5F5;
+    color: $blue;
+  }
+
+  &--solido {
+    background: $navy;
+    color: $white;
+    border: none;
+  }
+}
+
+// ---- Cancelar ----
+.cancelar-aviso {
+  font-size: 13.5px;
+  color: $gray;
+  line-height: 1.5;
+  margin: 0 0 18px;
+}
+
+.cancelar-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: $black;
+  margin-bottom: 8px;
+}
+
+.cancelar-textarea {
+  width: 100%;
+  border: 1.5px solid $border;
+  background: $gray-light;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: $black;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+  margin-bottom: 18px;
+
+  &:focus {
+    border-color: $red;
+  }
+}
+
+.btn-confirmar-cancelamento {
+  width: 100%;
+  height: 50px;
+  border-radius: 26px;
+  border: 1.5px solid $red;
+  background: transparent;
+  color: $red;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &:active:not(:disabled) {
+    background: rgba(239, 68, 68, 0.08);
+  }
 }

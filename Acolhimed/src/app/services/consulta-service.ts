@@ -14,18 +14,44 @@ export class ConsultaService {
   constructor(private http: HttpClient) { }
 
   salvar(consulta: ConsultaModel): Observable<ConsultaResponseModel> {
-    return this.http.post<ConsultaResponseModel>(`${this.API_URL}/consultas`, consulta);
+    return this.http.post<ConsultaResponseModel>(`${this.API_URL}/consultas`, this.montarPayload(consulta));
   }
 
   getConsultas(usuarioId: string): Observable<ConsultaResponseModel[]> {
-    return this.http.get<ConsultaResponseModel[]>(`${this.API_URL}/consultas/${usuarioId}`);
+    return this.http.get<ConsultaResponseModel[]>(`${this.API_URL}/consultas/usuario/${usuarioId}`);
+  }
+
+  buscarPorId(consultaID: string): Observable<ConsultaResponseModel> {
+    return this.http.get<ConsultaResponseModel>(`${this.API_URL}/consultas/${consultaID}`);
   }
 
   remarcar(consulta: ConsultaModel): Observable<ConsultaResponseModel> {
-    return this.http.put<ConsultaResponseModel>(`${this.API_URL}/consultas/${consulta.id}/remarcar`, consulta);
+    return this.http.put<ConsultaResponseModel>(`${this.API_URL}/consultas/remarcar/${consulta.id}`, this.montarPayload(consulta));
   }
 
   cancelar(consulta: ConsultaResponseModel): Observable<ConsultaResponseModel> {
-    return this.http.put<ConsultaResponseModel>(`${this.API_URL}/consultas/${consulta.id}/cancelar`, consulta);
+    return this.http.patch<ConsultaResponseModel>(`${this.API_URL}/consultas/cancelar/${consulta.id}`, consulta);
+  }
+
+  private montarPayload(consulta: ConsultaModel) {
+    return {
+      ...consulta,
+      dataHora: this.formatarDataHoraLocal(consulta.dataHora),
+    };
+  }
+
+  private formatarDataHoraLocal(dataHora: Date): string {
+    const ano = dataHora.getFullYear();
+    const mes = this.formatarNumero(dataHora.getMonth() + 1);
+    const dia = this.formatarNumero(dataHora.getDate());
+    const hora = this.formatarNumero(dataHora.getHours());
+    const minuto = this.formatarNumero(dataHora.getMinutes());
+    const segundo = this.formatarNumero(dataHora.getSeconds());
+
+    return `${ano}-${mes}-${dia}T${hora}:${minuto}:${segundo}`;
+  }
+
+  private formatarNumero(valor: number): string {
+    return valor.toString().padStart(2, '0');
   }
 }

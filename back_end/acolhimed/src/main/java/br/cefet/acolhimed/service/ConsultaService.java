@@ -9,13 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.cefet.acolhimed.dto.ConsultaRequestDTO;
 import br.cefet.acolhimed.dto.ConsultaResponseDTO;
+import br.cefet.acolhimed.dto.MedicoResponseDTO;
+import br.cefet.acolhimed.dto.UsuarioResponseDTO;
 import br.cefet.acolhimed.entity.Consulta;
 import br.cefet.acolhimed.entity.Especialidade;
 import br.cefet.acolhimed.entity.Medico;
 import br.cefet.acolhimed.entity.Paciente;
+import br.cefet.acolhimed.entity.Usuario;
 import br.cefet.acolhimed.enums.StatusConsulta;
 import br.cefet.acolhimed.exception.BusinessException;
 import br.cefet.acolhimed.exception.ResourceNotFoundException;
+import br.cefet.acolhimed.exception.ValidationError;
 import br.cefet.acolhimed.repository.ConsultaRepository;
 import br.cefet.acolhimed.repository.EspecialidadeRepository;
 import br.cefet.acolhimed.repository.MedicoRepository;
@@ -35,6 +39,9 @@ public class ConsultaService {
 
     @Autowired
     private EspecialidadeRepository especialidadeRepository;
+
+    @Autowired
+    private GoogleMeetService googleMeetService;
 
     @Transactional(readOnly = true)
     public List<ConsultaResponseDTO> listar() {
@@ -56,16 +63,28 @@ public class ConsultaService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public ConsultaResponseDTO buscarPorId(String id) {
+        Consulta consulta = consultaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada. Id: " + id));
+    
+
+        return new ConsultaResponseDTO(consulta);
+    }
+
     @Transactional
     public ConsultaResponseDTO inserir(ConsultaRequestDTO dto) {
         Medico medico = medicoRepository.findById(dto.getMedico().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Medico nao encontrado. Id: " + dto.getMedico().getId()));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Medico nao encontrado. Id: " + dto.getMedico().getId()));
 
         Paciente paciente = pacienteRepository.findById(dto.getPaciente().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente nao encontrado. Id: " + dto.getPaciente().getId()));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Paciente nao encontrado. Id: " + dto.getPaciente().getId()));
 
         Especialidade especialidade = especialidadeRepository.findById(dto.getEspecialidade().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Especialidade nao encontrada. Id: " + dto.getEspecialidade().getId()));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Especialidade nao encontrada. Id: " + dto.getEspecialidade().getId()));
 
         validarHorarioDisponivel(medico, dto.getDataHora());
 
@@ -73,15 +92,25 @@ public class ConsultaService {
         consulta.setMedico(medico);
         consulta.setPaciente(paciente);
         consulta.setEspecialidade(especialidade);
+        consulta.setObservacoes(dto.getObservacoes());
         consulta.setMotivoCancelamento("");
         consulta.setDataHora(dto.getDataHora());
+
+        String link;
+        try {
+            link = googleMeetService.criarReuniao();
+        } catch (Exception e) {
+            throw new RuntimeException("Não foi possível criar a reunião do Google Meet.", e);
+        }
+
+        consulta.setLinkConsulta(link);
         consulta.setStatus(StatusConsulta.agendada);
 
         return new ConsultaResponseDTO(consultaRepository.save(consulta));
     }
 
     @Transactional
-    public ConsultaResponseDTO cancelarConsulta(String id, ConsultaRequestDTO dto) {
+    public ConsultaResponseDTO cancelarConsulta(String id, String motivoCancelamento) {
         Consulta consulta = buscarConsulta(id);
 
         if (consulta.getStatus() == StatusConsulta.cancelada || consulta.getStatus() == StatusConsulta.finalizada) {
@@ -93,7 +122,11 @@ public class ConsultaService {
         }
 
         consulta.setStatus(StatusConsulta.cancelada);
-        consulta.setMotivoCancelamento(dto == null ? null : dto.getMotivoCancelamento());
+        if(!motivoCancelamento.isBlank() && motivoCancelamento != null){
+            consulta.setMotivoCancelamento(motivoCancelamento);
+        }else{
+            throw new BusinessException("O motivo do cancelamento não existe ou está nulo");
+        }
 
         return new ConsultaResponseDTO(consultaRepository.save(consulta));
     }
@@ -150,4 +183,5 @@ public class ConsultaService {
             throw new BusinessException("Ja existe uma consulta para este medico neste horario.");
         }
     }
+
 }

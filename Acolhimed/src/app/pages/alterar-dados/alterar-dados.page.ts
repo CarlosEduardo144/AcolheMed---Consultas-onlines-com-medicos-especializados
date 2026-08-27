@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonButton, ToastController, IonText } from '@ionic/angular/standalone';
@@ -33,34 +33,16 @@ function cpfValidator(control: AbstractControl): ValidationErrors | null {
   providers: [provideNgxMask()]
 })
 
-export class AlterarDadosPage implements OnInit {
+export class AlterarDadosPage implements OnInit, OnDestroy {
 
   usuario!: UsuarioModel | MedicoModel;
   alterarForm: FormGroup;
   showSenha = false;
+  fotoSelecionada: File | null = null;
+  fotoPreviewUrl: string | null = null;
+  carregandoInicial = true;
 
   constructor(private navController: NavController, private toastController: ToastController, private usuarioService: UsuarioService, private loginService: LoginService, private fb: FormBuilder) {
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
-      next: (usuario) => {
-        this.usuario = usuario;
-
-        if (!this.usuario) {
-          this.navController.navigateBack('/login');
-        }
-
-        this.alterarForm.patchValue({
-          nome: this.usuario.nome,
-          email: this.usuario.email,
-          dataNascimento: this.usuario.dataNascimento,
-          cpf: this.usuario.cpf
-        });
-      },
-      error: (erro) => {
-        console.error(erro);
-            this.exibirMensagem(erro?.error?.message || 'Erro ao buscar usuário');
-      }
-    });
-
     this.alterarForm = this.fb.group(
       {
         nome: [this.usuario?.nome ?? '', [Validators.required]],
@@ -73,17 +55,37 @@ export class AlterarDadosPage implements OnInit {
   }
 
   ngOnInit() {
+    this.buscarUsuario();
+  }
+
+  ngOnDestroy() {
+    this.limparPreviewFoto();
+  }
+
+  buscarUsuario() {
+    this.carregandoInicial = true;
+
     this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
       next: (usuario) => {
         this.usuario = usuario;
 
         if (!this.usuario) {
           this.navController.navigateBack('/login');
+          return;
         }
+
+        this.alterarForm.patchValue({
+          nome: this.usuario.nome,
+          email: this.usuario.email,
+          dataNascimento: this.usuario.dataNascimento,
+          cpf: this.usuario.cpf
+        });
+        this.carregandoInicial = false;
       },
       error: (erro) => {
         console.error(erro);
-            this.exibirMensagem(erro?.error?.message || 'Erro ao buscar usuário');
+        this.carregandoInicial = false;
+        this.exibirMensagem(erro?.error?.message || 'Erro ao buscar usuário');
       }
     });
   }
@@ -110,6 +112,11 @@ export class AlterarDadosPage implements OnInit {
 
     this.usuarioService.salvar(usuarioAtualizado).subscribe({
       next: () => {
+        if (this.fotoSelecionada) {
+          this.salvarFoto(usuarioAtualizado.id);
+          return;
+        }
+
         this.exibirMensagem('Usuário atualizado com sucesso!!!');
       },
       error: (erro) => {
@@ -119,9 +126,47 @@ export class AlterarDadosPage implements OnInit {
 
   }
 
+  selecionarFoto(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.fotoSelecionada = input.files?.[0] ?? null;
+
+    this.limparPreviewFoto();
+
+    if (this.fotoSelecionada) {
+      this.fotoPreviewUrl = URL.createObjectURL(this.fotoSelecionada);
+    }
+  }
+
+  private salvarFoto(idUsuario: string) {
+    if (!this.fotoSelecionada) return;
+
+    this.usuarioService.uploadFoto(idUsuario, this.fotoSelecionada).subscribe({
+      next: (foto) => {
+        this.usuario.foto = foto.imagemUrl;
+        this.fotoSelecionada = null;
+        this.limparPreviewFoto();
+        this.exibirMensagem('Usuário atualizado com sucesso!!!');
+      },
+      error: (erro) => {
+        this.exibirMensagem(erro?.error?.message || 'Dados salvos, mas houve erro ao atualizar a foto');
+      }
+    });
+  }
+
   iniciais(nome?: string): string {
     if (!nome) return '';
     return nome.trim().slice(0, 2).toUpperCase();
+  }
+
+  fotoAvatar(): string {
+    return this.fotoPreviewUrl || this.usuario?.foto || '';
+  }
+
+  private limparPreviewFoto() {
+    if (this.fotoPreviewUrl) {
+      URL.revokeObjectURL(this.fotoPreviewUrl);
+      this.fotoPreviewUrl = null;
+    }
   }
 
   async exibirMensagem(texto: string) {

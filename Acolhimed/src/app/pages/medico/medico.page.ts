@@ -19,6 +19,7 @@ export class MedicoPage implements OnInit {
   totalAvaliacoes: number;
   percentualPorNota: number;
   fotoAmpliada = false;
+  carregandoInicial = true;
 
   constructor(private route: ActivatedRoute,
     private medicoService: UsuarioService) {
@@ -29,10 +30,19 @@ export class MedicoPage implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+      this.carregandoInicial = true;
       this.medicoService.buscarPorId(id).subscribe({
-        next: (medico) => this.medico = medico,
-        error: (err) => console.error('Erro ao carregar médico', err)
+        next: (medico) => {
+          this.medico = medico;
+          this.carregandoInicial = false;
+        },
+        error: (err) => {
+          this.carregandoInicial = false;
+          console.error('Erro ao carregar médico', err);
+        }
       });
+    } else {
+      this.carregandoInicial = false;
     }
   }
 

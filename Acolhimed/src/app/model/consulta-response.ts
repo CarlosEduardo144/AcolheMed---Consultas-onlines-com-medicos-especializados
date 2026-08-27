@@ -16,6 +16,7 @@ export class ConsultaResponseModel {
     motivoCancelamento: string;
     pacienteNome: string;
     medicoNome: string
+    linkConsulta: string;
 
     constructor() {
         this.id = '';
@@ -29,5 +30,6 @@ export class ConsultaResponseModel {
         this.motivoCancelamento = "";
         this.medicoNome = "";
         this.pacienteNome = "";
+        this.linkConsulta = "";
     }
 }

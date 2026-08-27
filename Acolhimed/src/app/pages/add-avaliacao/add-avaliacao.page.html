@@ -1,0 +1,100 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+<ion-content class="avaliar-content" [fullscreen]="true">
+  <div *ngIf="carregando == true; else conteudoConsulta" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <ng-template #conteudoConsulta>
+  <div class="page-wrapper">
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+      <div class="hero-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+      </div>
+
+      <button class="header-back" (click)="voltar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M21 12C21 12.4142 20.6642 12.75 20.25 12.75H5.56031L11.0306 18.2194C11.3237 18.5124 11.3237 18.9876 11.0306 19.2806C10.7376 19.5737 10.2624 19.5737 9.96937 19.2806L3.21937 12.5306C3.07854 12.3899 2.99941 12.1991 2.99941 12C2.99941 11.8009 3.07854 11.6101 3.21937 11.4694L9.96937 4.71938C10.2624 4.42632 10.7376 4.42632 11.0306 4.71938C11.3237 5.01243 11.3237 5.48757 11.0306 5.78062L5.56031 11.25H20.25C20.6642 11.25 21 11.5858 21 12Z"
+            fill="white" />
+        </svg>
+      </button>
+
+      <span class="hero-titulo-topo" style="font-family: 'Nunito', Arial, sans-serif;">Avaliar</span>
+
+      <ng-container *ngIf="consulta">
+        <div class="avatar-wrap">
+          <div class="avatar-medico">
+            <img *ngIf="consulta.medico?.foto" [src]="consulta.medico.foto" [alt]="consulta.medicoNome" />
+            <span *ngIf="!consulta.medico?.foto">{{ iniciais(consulta.medicoNome) }}</span>
+          </div>
+          <span class="status-dot"></span>
+        </div>
+
+        <h1 class="medico-nome-hero"  style="font-family: 'Nunito', Arial, sans-serif;">Dr. {{ consulta.medicoNome }}</h1>
+        <p class="medico-especialidade-hero">{{ consulta.especialidadeNome }}</p>
+
+        <span class="badge-status">Consulta finalizada</span>
+      </ng-container>
+    </div>
+
+    <!-- Corpo branco -->
+    <div class="corpo-content">
+
+      <!-- ===== Estado: formulário de avaliação ===== -->
+      <ng-container *ngIf="!avaliacaoEnviada">
+        <h2 class="pergunta-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Como foi sua experiência?</h2>
+        <p class="pergunta-subtitulo">Toque nas estrelas para avaliar o atendimento</p>
+
+        <div class="estrelas-wrap">
+          <button type="button" class="estrela-btn" *ngFor="let posicao of arrayEstrelas()"
+            (click)="selecionarNota(posicao)" (mouseenter)="definirHover(posicao)" (mouseleave)="limparHover()">
+            <svg width="34" height="34" viewBox="0 0 24 24"
+              [attr.fill]="estrelaPreenchida(posicao) ? '#F5A623' : 'none'">
+              <path d="M12 2L14.9 8.6L22 9.3L16.7 14.1L18.2 21.2L12 17.6L5.8 21.2L7.3 14.1L2 9.3L9.1 8.6L12 2Z"
+                [attr.stroke]="estrelaPreenchida(posicao) ? '#F5A623' : '#D6D6D6'" stroke-width="1.6"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <label class="comentario-label">Seu comentário</label>
+        <textarea class="comentario-textarea" rows="4" [maxlength]="limiteComentario"
+          placeholder="Conte como foi sua experiência..." [(ngModel)]="comentario"></textarea>
+        <span class="contador-caracteres">{{ comentario.length }}/{{ limiteComentario }}</span>
+
+        <button type="button" class="btn-avaliar" [disabled]="!podeEnviar" (click)="enviarAvaliacao()">
+          {{ enviando ? 'Enviando...' : 'Avaliar' }}
+        </button>
+      </ng-container>
+
+      <!-- ===== Estado: sucesso ===== -->
+      <ng-container *ngIf="avaliacaoEnviada">
+        <div class="sucesso-wrap">
+          <div class="sucesso-icone">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L14.9 8.6L22 9.3L16.7 14.1L18.2 21.2L12 17.6L5.8 21.2L7.3 14.1L2 9.3L9.1 8.6L12 2Z"
+                fill="#22C55E" stroke="#22C55E" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <h2 class="sucesso-titulo">Obrigado pela avaliação!</h2>
+          <p class="sucesso-texto">Sua opinião ajuda a melhorar nosso atendimento.</p>
+
+          <button type="button" class="btn-voltar-consultas" (click)="voltar()">
+            Voltar para consultas
+          </button>
+        </div>
+      </ng-container>
+
+    </div>
+
+  </div>
+  </ng-template>
+</ion-content>

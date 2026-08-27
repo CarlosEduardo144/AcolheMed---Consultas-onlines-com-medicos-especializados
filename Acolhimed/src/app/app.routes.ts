@@ -66,5 +66,13 @@ export const routes: Routes = [
     path: 'agendar-consulta/:id',
     loadComponent: () => import('./pages/agendar-consulta/agendar-consulta.page').then( m => m.AgendarCosultaPage)
   },
+  {
+    path: 'add-avaliacao',
+    loadComponent: () => import('./pages/add-avaliacao/add-avaliacao.page').then( m => m.AddAvaliacaoPage)
+  },
+  {
+    path: 'add-avaliacao/:id',
+    loadComponent: () => import('./pages/add-avaliacao/add-avaliacao.page').then( m => m.AddAvaliacaoPage)
+  },
 ];
 

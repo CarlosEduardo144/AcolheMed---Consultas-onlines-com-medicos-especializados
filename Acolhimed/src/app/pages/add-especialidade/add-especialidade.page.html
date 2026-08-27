@@ -3,6 +3,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
 <ion-content class="especialidades-content" [fullscreen]="true">
+  <div *ngIf="carregando; else conteudoEspecialidades" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <ng-template #conteudoEspecialidades>
 
   <!-- Hero Banner -->
   <div class="hero-banner">
@@ -57,7 +64,9 @@
     </ion-list>
 
     <div class="ion-text-center ion-padding" *ngIf="carregando">
-      <ion-spinner name="crescent"></ion-spinner>
+      <div class="page-loading-dots" aria-label="Carregando">
+        <span></span><span></span><span></span>
+      </div>
     </div>
 
     <!-- Botão Salvar -->
@@ -72,5 +81,6 @@
     </button>
 
   </div>
+  </ng-template>
 
 </ion-content>

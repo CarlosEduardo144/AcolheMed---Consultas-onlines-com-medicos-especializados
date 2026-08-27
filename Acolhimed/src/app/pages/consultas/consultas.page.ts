@@ -41,6 +41,11 @@ export class ConsultasPage implements OnInit {
   consultasCarregadas = false;
   usuario: any;
 
+  consultaSelecionada: ConsultaResponseModel | null = null;
+  modoPopup: 'detalhes' | 'cancelar' = 'detalhes';
+  motivoCancelamento = '';
+  cancelando = false;
+
   abaAtiva: 'proximas' | 'historico' = 'proximas';
   textoBusca = '';
 
@@ -59,6 +64,8 @@ export class ConsultasPage implements OnInit {
   }
 
   carregarConsultas() {
+    this.consultasCarregadas = false;
+
     this.consultaService.getConsultas(this.usuario?.id).subscribe({
       next: (consultas) => {
         // dataHora vem como string (ISO) da API — converte pra Date de verdade
@@ -70,7 +77,8 @@ export class ConsultasPage implements OnInit {
       },
       error: (erro) => {
         console.error('Erro ao carregar médico', erro)
-        this.exibirMensagem("Erro ao carregar consultas" + erro.error.message);
+        this.consultasCarregadas = true;
+        this.exibirMensagem("Erro ao carregar consultas: " + erro.error.message);
       }
     });
   }
@@ -89,6 +97,7 @@ export class ConsultasPage implements OnInit {
       },
       error: (erro) => {
         console.error(erro);
+        this.consultasCarregadas = true;
         this.exibirMensagem("Erro ao carregar usuário" + erro.error.message);
       }
     });
@@ -158,6 +167,7 @@ export class ConsultasPage implements OnInit {
 
   podeChamar(consulta: ConsultaResponseModel): boolean {
     if (consulta.status === StatusConsulta.em_andamento) return true;
+    if (!consulta.linkConsulta) return false;
     if (consulta.status !== StatusConsulta.agendada) return false;
     const diffMinutos = Math.abs(consulta.dataHora.getTime() - Date.now()) / (1000 * 60);
     return diffMinutos <= JANELA_CHAMADA_MINUTOS;
@@ -178,17 +188,12 @@ export class ConsultasPage implements OnInit {
   }
 
   abrirDetalhes(consulta: ConsultaResponseModel) {
-    
+
   }
 
-  abrirChat(consulta: ConsultaResponseModel, event: Event) {
+  iniciarChamada(linkConsulta: string, event: Event) {
     event.stopPropagation();
-    this.navCtrl.navigateForward(['/chat', consulta.id]);
-  }
-
-  iniciarChamada(consulta: ConsultaResponseModel, event: Event) {
-    event.stopPropagation();
-    // navegação/ação de chamada de vídeo
+    window.open(linkConsulta, '_system');
   }
 
   cancelarConsulta(consulta: ConsultaResponseModel, event: Event) {
@@ -232,14 +237,67 @@ export class ConsultasPage implements OnInit {
           },
           error: (erro) => {
             console.error(erro);
-            this.exibirMensagem("Erro ao cancelar consulta." + erro.error.message);
+            this.exibirMensagem("Erro ao cancelar consulta. " + erro.error.message);
           }
         });
       }
     });
   }
 
+  abrirDetalhesPopup(consulta: ConsultaResponseModel) {
+    this.consultaSelecionada = consulta;
+    this.modoPopup = 'detalhes';
+  }
 
+  fecharPopup() {
+    this.consultaSelecionada = null;
+    this.modoPopup = 'detalhes';
+    this.motivoCancelamento = '';
+  }
+
+  irParaCancelamento() {
+    this.modoPopup = 'cancelar';
+  }
+
+  voltarParaDetalhes() {
+    this.modoPopup = 'detalhes';
+    this.motivoCancelamento = '';
+  }
+
+  abrirChatPopup() {
+    const consulta = this.consultaSelecionada!;
+    this.fecharPopup();
+    //Chat
+  }
+
+  remarcarConsulta() {
+    const consulta = this.consultaSelecionada!;
+    this.fecharPopup();
+    //Agendar
+  }
+
+  confirmarCancelamento() {
+    if (!this.motivoCancelamento.trim()) {
+      this.exibirMensagem('Descreva o motivo do cancelamento.');
+      return;
+    }
+
+    this.cancelando = true;
+    if (this.consultaSelecionada != null) {
+      this.consultaService.cancelar(this.consultaSelecionada).subscribe({
+        next: () => {
+          this.cancelando = false;
+          this.exibirMensagem('Consulta cancelada.');
+          this.fecharPopup();
+          this.carregarConsultas();
+        },
+        error: (erro) => {
+          this.cancelando = false;
+          this.exibirMensagem(erro?.error?.message ?? 'Erro ao cancelar consulta.');
+        }
+      });
+    }
+  }
 
   avaliarConsulta(consulta: ConsultaResponseModel, event: Event) {
     event.stopPropagation();

@@ -13,6 +13,7 @@ import { EspecialidadeModel } from 'src/app/model/especialidade.model';
 import { ConsultaModel } from 'src/app/model/consulta.model';
 import { PacienteModel } from 'src/app/model/paciente.model';
 import { ConsultaService } from 'src/app/services/consulta-service';
+import { forkJoin, switchMap } from 'rxjs';
 
 interface DiaCalendario {
   data: Date;
@@ -63,6 +64,8 @@ export class AgendarCosultaPage implements OnInit {
   observacoes = '';
   especialidadeSelecionada: EspecialidadeModel | null = null;
   agendamentoConfirmado = false;
+  agendandoConsulta = false;
+  carregandoInicial = true;
 
   private hoje = new Date();
   private limiteMinimo!: Date;
@@ -80,12 +83,53 @@ export class AgendarCosultaPage implements OnInit {
   }
 
   ngOnInit() {
-    this.carregarMedico();
-    this.carregarEspecialidade();
     this.hoje.setHours(0, 0, 0, 0);
     this.limiteMinimo = new Date(this.hoje.getFullYear(), this.hoje.getMonth(), 1);
     this.limiteMaximo = new Date(this.hoje.getFullYear(), this.hoje.getMonth() + JANELA_MAXIMA_MESES, 1);
     this.mesExibido = new Date(this.hoje.getFullYear(), this.hoje.getMonth(), 1);
+    this.carregarDadosIniciais();
+  }
+
+  carregarDadosIniciais() {
+    const medicoId = this.route.snapshot.paramMap.get('id');
+    const especialidadeId = this.route.snapshot.queryParamMap.get('especialidadeId');
+
+    if (!medicoId) {
+      this.carregandoInicial = false;
+      return;
+    }
+
+    this.carregandoInicial = true;
+
+    this.usuarioService.buscarPorId(medicoId).pipe(
+      switchMap((medico) => {
+        this.medico = medico;
+
+        const requisicoes: {
+          horarios: ReturnType<HorarioService['buscarPorMedico']>;
+          especialidade?: ReturnType<EspecialidadeService['buscarPorId']>;
+        } = {
+          horarios: this.horarioService.buscarPorMedico(this.medico.id),
+        };
+
+        if (especialidadeId) {
+          requisicoes.especialidade = this.especialidadeService.buscarPorId(especialidadeId);
+        }
+
+        return forkJoin(requisicoes);
+      })
+    ).subscribe({
+      next: ({ horarios, especialidade }) => {
+        this.horariosSemana = horarios;
+        this.especialidadeSelecionada = especialidade ?? null;
+        this.gerarCalendario();
+        this.carregandoInicial = false;
+      },
+      error: (erro) => {
+        this.carregandoInicial = false;
+        this.exibirMensagem("Erro ao carregar agendamento. " + (erro?.error?.message || ''));
+      }
+    });
   }
 
   carregarEspecialidade() {
@@ -253,6 +297,7 @@ export class AgendarCosultaPage implements OnInit {
   }*/
 
   confirmarAgendamento() {
+    this.agendandoConsulta = true;
     let consulta = new ConsultaModel;
 
     this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
@@ -272,6 +317,7 @@ export class AgendarCosultaPage implements OnInit {
         this.finalizarAgendamento(consulta);
       },
       error: (erro) => {
+        this.agendandoConsulta = false;
         this.exibirMensagem('Erro ao buscar o paciente. ' + erro.error.message);
       }
     });
@@ -280,9 +326,11 @@ export class AgendarCosultaPage implements OnInit {
   finalizarAgendamento(consulta: ConsultaModel) {
     this.consultaService.salvar(consulta).subscribe({
       next: () => {
+        this.agendandoConsulta = false;
         this.agendamentoConfirmado = true;
       },
       error: (erro) => {
+        this.agendandoConsulta = false;
         this.exibirMensagem('Erro ao agendar consulta. ' + erro.error.message);
       }
     });

@@ -3,6 +3,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
 <ion-content class="perfil-content" [fullscreen]="true">
+  <div *ngIf="carregandoInicial; else conteudoMedico" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <ng-template #conteudoMedico>
 
   <!-- Hero Banner -->
   <div class="hero-banner">
@@ -172,5 +179,6 @@
     </ion-button>
   </div>
 
+  </ng-template>
 
 </ion-content>

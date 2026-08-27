@@ -3,6 +3,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
 <ion-content class="add-horario-content" [fullscreen]="true">
+  <div *ngIf="carregandoInicial; else conteudoHorario" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <ng-template #conteudoHorario>
   <div class="page-wrapper">
 
     <!-- Hero Banner -->
@@ -235,4 +242,5 @@
   </div>
 
   </div>
+  </ng-template>
 </ion-content>

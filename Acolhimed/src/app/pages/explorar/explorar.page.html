@@ -3,6 +3,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
 <ion-content class="explorar-content" [fullscreen]="true">
+  <div *ngIf="carregandoInicial; else conteudoExplorar" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <ng-template #conteudoExplorar>
 
   <!-- Hero Banner -->
   <div class="hero-banner">
@@ -220,7 +227,7 @@
   </div>
 
   <!-- Bottom Nav -->
-  <div class="bottom-nav">
+  <div class="bottom-nav" *ngIf="usuario">
     <a routerLink="/inicio" class="nav-item">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -259,5 +266,6 @@
       <span class="nav-label">Perfil</span>
     </a>
   </div>
+  </ng-template>
 
 </ion-content>

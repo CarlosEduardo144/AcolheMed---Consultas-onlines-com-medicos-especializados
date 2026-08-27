@@ -49,6 +49,16 @@ export class UsuarioService {
     return this.http.get<PacienteModel | MedicoModel>(`${this.API_URL}/usuarios/${id}`);
   }
 
+  uploadFoto(idUsuario: string, arquivo: File): Observable<{ imagemUrl: string; publicId: string; idUsuario: string }> {
+    const formData = new FormData();
+    formData.append('arquivo', arquivo);
+
+    return this.http.post<{ imagemUrl: string; publicId: string; idUsuario: string }>(
+      `${this.API_URL}/fotos/${idUsuario}`,
+      formData
+    );
+  }
+
   login(credenciais: { email: string, senha: string }): Observable<PacienteModel | MedicoModel> {
     return this.http.post<PacienteModel | MedicoModel>(`${this.API_URL}/usuarios/login`, credenciais);
   }

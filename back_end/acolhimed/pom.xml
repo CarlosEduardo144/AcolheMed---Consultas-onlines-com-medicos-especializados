@@ -38,6 +38,34 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
+		<!--API Google Meeet-->
+		<dependency>
+   			<groupId>com.google.cloud</groupId>
+   		 	<artifactId>google-cloud-meet</artifactId>
+   		 	<version>0.3.0</version>
+		</dependency>
+
+		<!-- Autenticação OAuth do Google -->
+		<dependency>
+    		<groupId>com.google.auth</groupId>
+    		<artifactId>google-auth-library-oauth2-http</artifactId>
+    		<version>1.19.0</version>
+		</dependency>
+		<dependency>
+    		<groupId>com.google.oauth-client</groupId>
+    		<artifactId>google-oauth-client-jetty</artifactId>
+   			<version>1.34.1</version>
+		</dependency>
+
+		<!--API CloudNary-->
+		<dependency>
+    		<groupId>com.cloudinary</groupId>
+    		<artifactId>cloudinary-http5</artifactId>
+    		<version>2.0.0</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

@@ -1,0 +1,319 @@
+$blue: #29ABE2;
+$blue-dark: #1a6fa8;
+$black: #141414;
+$navy: #10243E;
+$gray: #737373;
+$gray-light: #F5F5F5;
+$border: #E8E8E8;
+$white: #FFFFFF;
+$amber: #F5A623;
+$green: #22C55E;
+$green-light: #E8FBF0;
+
+.avaliar-content {
+    --background: #{$border};
+}
+
+// ---- Hero Banner ----
+.hero-banner {
+    position: relative;
+    background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+    padding: 20px 20px 64px;
+    display: flex;
+    border-radius: 0 0 28px 28px;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero-shapes {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+
+    &-1 {
+        width: 200px;
+        height: 200px;
+        top: -90px;
+        right: -60px;
+    }
+
+    &-2 {
+        width: 100px;
+        height: 100px;
+        bottom: -10px;
+        left: -30px;
+        background: rgba(255, 255, 255, 0.06);
+    }
+}
+
+.header-back {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+
+    &:active {
+        background: rgba(255, 255, 255, 0.35);
+    }
+}
+
+.hero-titulo-topo {
+    position: relative;
+    z-index: 2;
+    align-self: flex-start;
+    margin-left: 60px;
+    margin-top: 8px;
+    font-size: 19px;
+    font-weight: 800;
+    color: $white;
+}
+
+.avatar-wrap {
+    position: relative;
+    z-index: 2;
+    width: 100px;
+    height: 100px;
+    margin-top: 4px;
+    margin-bottom: 14px;
+}
+
+.avatar-medico {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $white;
+    font-weight: 800;
+    font-size: 30px;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.status-dot {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: $green;
+    border: 3px solid $blue-dark;
+}
+
+.medico-nome-hero {
+    position: relative;
+    z-index: 2;
+    font-size: 20px;
+    font-weight: 800;
+    color: $white;
+    margin: 0 0 3px;
+    letter-spacing: -0.2px;
+}
+
+.medico-especialidade-hero {
+    position: relative;
+    z-index: 2;
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 14px;
+}
+
+.badge-status {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(135deg, $black 0%, #333333 100%);
+    border: 1px solid rgb(0, 0, 0);
+    color: $white;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+// ---- Corpo ----
+.corpo-content {
+    margin: 10px;
+    position: relative;
+    z-index: 2;
+    margin-top: -40px;
+    background: $white;
+    border-radius: 28px 28px 28px 28px;
+    padding: 28px 24px 32px;
+    min-height: calc(100vh - 260px);
+}
+
+// ---- Formulário ----
+.pergunta-titulo {
+    font-size: 18px;
+    font-weight: 800;
+    color: $black;
+    text-align: center;
+    margin: 0 0 4px;
+}
+
+.pergunta-subtitulo {
+    font-size: 13px;
+    color: $gray;
+    text-align: center;
+    margin: 0 0 22px;
+}
+
+.estrelas-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+
+.estrela-btn {
+    background: transparent;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+
+    &:active {
+        transform: scale(0.88);
+    }
+}
+
+.comentario-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: $gray;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 10px;
+}
+
+.comentario-textarea {
+    width: 100%;
+    min-height: 120px;
+    border: 1.5px solid $border;
+    background: $gray-light;
+    border-radius: 16px;
+    padding: 14px;
+    font-size: 14px;
+    color: $black;
+    resize: none;
+    outline: none;
+    font-family: inherit;
+
+    &::placeholder {
+        color: #AAAAAA;
+    }
+
+    &:focus {
+        border-color: $blue;
+        box-shadow: 0 0 0 3px rgba(41, 171, 226, 0.12);
+    }
+}
+
+.contador-caracteres {
+    display: block;
+    text-align: right;
+    font-size: 11.5px;
+    color: $gray;
+    margin: 6px 2px 24px;
+}
+
+.btn-avaliar {
+    width: 100%;
+    height: 54px;
+    border: none;
+    background: linear-gradient(135deg, $black 0%, #333333 100%);
+    border-radius: 16px;
+    color: $white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(16, 36, 62, 0.25);
+
+    &:disabled {
+        background: #C7C7C7;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    &:active:not(:disabled) {
+        opacity: 0.9;
+    }
+}
+
+// ---- Sucesso ----
+.sucesso-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px 8px 8px;
+}
+
+.sucesso-icone {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: $green-light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.sucesso-titulo {
+    font-size: 18px;
+    font-weight: 800;
+    color: $black;
+    margin: 0 0 8px;
+}
+
+.sucesso-texto {
+    font-size: 13.5px;
+    color: $gray;
+    line-height: 1.5;
+    margin: 0 0 28px;
+    max-width: 280px;
+}
+
+.btn-voltar-consultas {
+    width: 100%;
+    height: 54px;
+    border: none;
+    border-radius: 30px;
+    background: $navy;
+    color: $white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(16, 36, 62, 0.25);
+
+    &:active {
+        opacity: 0.9;
+    }
+}

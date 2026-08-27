@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonTextarea, IonButton, IonCardHeader, IonCardTitle, IonItem, IonSpinner, IonCardSubtitle, IonButtons, IonCard, IonCardContent, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonTextarea, IonButton, IonCardHeader, IonCardTitle, IonItem, IonCardSubtitle, IonButtons, IonCard, IonCardContent, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
 import { EspecialidadeModel } from 'src/app/model/especialidade.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -10,13 +10,15 @@ import { MedicoModel } from 'src/app/model/medico.model';
 import { ToastController } from '@ionic/angular';
 import { arrowForwardOutline, hardwareChipOutline, medkitOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { LoginService } from 'src/app/services/login.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-explorar',
   templateUrl: './explorar.page.html',
   styleUrls: ['./explorar.page.scss'],
   standalone: true,
-  imports: [IonContent, RouterModule, IonHeader, IonTitle, IonToolbar, IonTextarea, CommonModule, FormsModule, IonCardTitle, IonItem, IonSpinner, IonCardSubtitle, IonCardHeader, IonButton, IonButtons, IonCard, IonCardContent, IonIcon, IonLabel]
+  imports: [IonContent, RouterModule, IonHeader, IonTitle, IonToolbar, IonTextarea, CommonModule, FormsModule, IonCardTitle, IonItem, IonCardSubtitle, IonCardHeader, IonButton, IonButtons, IonCard, IonCardContent, IonIcon, IonLabel]
 })
 export class ExplorarPage {
 
@@ -27,6 +29,8 @@ export class ExplorarPage {
   especialidadesFiltradas: EspecialidadeModel[] = [];
   especialidadeSelecionada?: EspecialidadeModel;
   carregandoMedicos: boolean = false;
+  carregandoInicial: boolean = true;
+  usuario: any;
 
   dicasSaude = [
     {
@@ -54,27 +58,28 @@ export class ExplorarPage {
     private navCtrl: NavController,
     private usuarioService: UsuarioService,
     private especialidadeService: EspecialidadeService,
+    private loginService: LoginService,
     private router: Router) {
     this.medicos = [];
     this.medicosFiltrados = [];
     this.especialidades = [];
     addIcons({ hardwareChipOutline, medkitOutline, arrowForwardOutline });
 
-    this.especialidadeService.listar().subscribe({
-      next: (especialidades) => {
+    forkJoin({
+      usuario: this.usuarioService.buscarPorId(this.loginService.getUsuario()),
+      especialidades: this.especialidadeService.listar(),
+      medicos: this.usuarioService.getMedicos(),
+    }).subscribe({
+      next: ({ usuario, especialidades, medicos }) => {
+        this.usuario = usuario;
         this.especialidades = especialidades;
         this.especialidadesFiltradas = especialidades;
-      },
-      error: (erro) => {
-        this.exibirMensagem(erro.error.message);
-      }
-    });
-    this.usuarioService.getMedicos().subscribe({
-      next: (medicos) => {
         this.medicos = medicos;
+        this.carregandoInicial = false;
       },
       error: (erro) => {
-        this.exibirMensagem(erro.error.message);
+        this.carregandoInicial = false;
+        this.exibirMensagem(erro.error?.message || 'Erro ao carregar informações iniciais.');
       }
     });
   }

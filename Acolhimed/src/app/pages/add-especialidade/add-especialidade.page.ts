@@ -2,19 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonLabel, IonBackButton, IonList, IonCheckbox, IonSpinner, IonIcon, IonButtons, IonAvatar, IonItem, IonFooter, ToastController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonLabel, IonBackButton, IonList, IonCheckbox, IonIcon, IonButtons, IonAvatar, IonItem, IonFooter, ToastController } from '@ionic/angular/standalone';
 import { EspecialidadeService } from 'src/app/services/especialidade.service';
 import { EspecialidadeModel } from 'src/app/model/especialidade.model';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 import { LoginService } from 'src/app/services/login.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-especialidade',
   templateUrl: './add-especialidade.page.html',
   styleUrls: ['./add-especialidade.page.scss'],
   standalone: true,
-  imports: [RouterModule, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonLabel, IonButton, IonBackButton, IonList, IonSpinner, IonIcon, IonCheckbox, IonButtons, IonAvatar, IonItem, IonFooter]
+  imports: [RouterModule, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonLabel, IonButton, IonBackButton, IonList, IonIcon, IonCheckbox, IonButtons, IonAvatar, IonItem, IonFooter]
 })
 export class AddEspecialidadePage implements OnInit {
 
@@ -32,8 +33,25 @@ export class AddEspecialidadePage implements OnInit {
   }
 
   ngOnInit() {
-    this.carregarEspecialidades();
-    this.getMedicoEspecialidades(this.loginService.getUsuario());
+    this.carregarDadosIniciais();
+  }
+
+  carregarDadosIniciais() {
+    this.carregando = true;
+
+    forkJoin({
+      especialidades: this.especialidadeService.listar(),
+      medicoEspecialidades: this.especialidadeService.getMedicoEspecialidades(this.loginService.getUsuario()),
+    }).subscribe({
+      next: ({ especialidades, medicoEspecialidades }) => {
+        this.especialidades = especialidades;
+        this.selecionadas = new Set(medicoEspecialidades.map(e => e.id));
+        this.carregando = false;
+      },
+      error: () => {
+        this.carregando = false;
+      }
+    });
   }
 
   carregarEspecialidades() {

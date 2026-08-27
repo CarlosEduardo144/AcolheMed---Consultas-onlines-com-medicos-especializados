@@ -75,7 +75,6 @@ public class MedicoService {
 
         medico.setNome(dto.getNome());
         medico.setEmail(dto.getEmail());
-        medico.setFoto(dto.getFoto());
         medico.setDataNascimento(dto.getDataNascimento());
 
         medico.setCpf(dto.getCpf());

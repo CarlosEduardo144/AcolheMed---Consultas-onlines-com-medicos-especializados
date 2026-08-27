@@ -18,28 +18,10 @@ import { PacienteModel } from 'src/app/model/paciente.model';
 export class AddFormacaoProfissionalPage implements OnInit {
   usuario!: any;
   alterarForm: FormGroup;
+  carregandoInicial = true;
 
   constructor(private navController: NavController, private toastController: ToastController, private usuarioService: UsuarioService, private loginService: LoginService, private fb: FormBuilder) {
     this.usuario = new MedicoModel();
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
-      next: (usuario) => {
-        if (!this.usuario) {
-          this.navController.navigateBack('/login');
-        }
-
-        this.usuario = usuario;
-
-        this.alterarForm.patchValue({
-          formacaoAcademica: this.usuario.formacaoAcademica,
-          sobreMim: this.usuario.sobreMim,
-        });
-      },
-      error: (erro) => {
-        console.error(erro);
-        this.exibirMensagem(erro.error.message);
-      }
-    });
-
     this.alterarForm = this.fb.group({
       formacaoAcademica: [
         this.usuario?.formacaoAcademica ?? '',
@@ -53,6 +35,32 @@ export class AddFormacaoProfissionalPage implements OnInit {
   }
 
   ngOnInit() {
+    this.carregarUsuario();
+  }
+
+  carregarUsuario() {
+    this.carregandoInicial = true;
+
+    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+      next: (usuario) => {
+        if (!this.usuario) {
+          this.navController.navigateBack('/login');
+        }
+
+        this.usuario = usuario;
+
+        this.alterarForm.patchValue({
+          formacaoAcademica: this.usuario.formacaoAcademica,
+          sobreMim: this.usuario.sobreMim,
+        });
+        this.carregandoInicial = false;
+      },
+      error: (erro) => {
+        console.error(erro);
+        this.carregandoInicial = false;
+        this.exibirMensagem(erro.error.message);
+      }
+    });
   }
 
   salvar() {

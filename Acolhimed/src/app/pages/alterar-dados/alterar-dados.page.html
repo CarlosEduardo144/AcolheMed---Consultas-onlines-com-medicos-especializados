@@ -1,4 +1,11 @@
 <ion-content class="alterar-content" [fullscreen]="true">
+  <div *ngIf="carregandoInicial; else conteudoAlterarDados" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <ng-template #conteudoAlterarDados>
 
   <!-- Hero Banner -->
   <div class="hero-banner">
@@ -19,8 +26,10 @@
     <!-- Avatar no banner -->
     <div class="avatar-wrap">
       <div class="avatar-circle">
-        <img *ngIf="usuario?.foto" [src]="usuario.foto" [alt]="usuario?.nome" />
-        <span *ngIf="!usuario?.foto">{{ iniciais(usuario?.nome) }}</span>
+        <img *ngIf="fotoAvatar(); else avatarIniciais" [src]="fotoAvatar()" [alt]="usuario?.nome" />
+        <ng-template #avatarIniciais>
+          <span>{{ iniciais(usuario?.nome) }}</span>
+        </ng-template>
       </div>
       <label class="avatar-edit-btn" for="foto-perfil" title="Alterar foto">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -30,7 +39,7 @@
           <circle cx="12" cy="12" r="3" fill="white" />
         </svg>
       </label>
-      <input type="file" id="foto-perfil" accept="image/*" style="display:none">
+      <input type="file" id="foto-perfil" accept="image/*" style="display:none" (change)="selecionarFoto($event)">
     </div>
 
     <p class="avatar-name">{{ usuario?.nome || 'Seu nome' }}</p>
@@ -190,4 +199,5 @@
     </form>
   </div>
 
+  </ng-template>
 </ion-content>

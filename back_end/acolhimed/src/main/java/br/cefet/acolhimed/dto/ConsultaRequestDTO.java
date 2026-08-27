@@ -30,4 +30,6 @@ public class ConsultaRequestDTO {
     private LocalDateTime dataHora;
 
     private String motivoCancelamento;
+
+    private String observacoes;
 }

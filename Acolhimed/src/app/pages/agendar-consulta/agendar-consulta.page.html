@@ -3,140 +3,155 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
 <ion-content class="agendar-content" [fullscreen]="true">
-  <div class="page-wrapper">
-
-    <!-- Hero Banner -->
-    <div class="hero-banner">
-      <div class="hero-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-      </div>
-
-      <div class="hero-topbar">
-        <button class="header-back" onclick="history.back()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M21 12C21 12.4142 20.6642 12.75 20.25 12.75H5.56031L11.0306 18.2194C11.3237 18.5124 11.3237 18.9876 11.0306 19.2806C10.7376 19.5737 10.2624 19.5737 9.96937 19.2806L3.21937 12.5306C3.07854 12.3899 2.99941 12.1991 2.99941 12C2.99941 11.8009 3.07854 11.6101 3.21937 11.4694L9.96937 4.71938C10.2624 4.42632 10.7376 4.42632 11.0306 4.71938C11.3237 5.01243 11.3237 5.48757 11.0306 5.78062L5.56031 11.25H20.25C20.6642 11.25 21 11.5858 21 12Z"
-              fill="white" />
-          </svg>
-        </button>
-
-        <h1 class="hero-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Agendar consulta</h1>
-      </div>
+  <div *ngIf="carregandoInicial; else conteudoAgendamento" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
     </div>
 
-    <!-- Corpo branco -->
-    <div class="corpo-content">
+    <div *ngIf="agendandoConsulta == true" class="page-loading-shell">
+      <div class="page-loading-dots" aria-label="Agendando consulta">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
 
-      <!-- Card do médico -->
-      <div class="medico-card">
-        <div class="medico-avatar">
-          <img *ngIf="medico?.foto" [src]="medico?.foto" [alt]="medico?.nome" />
-          <span *ngIf="!medico?.foto">{{ iniciais(medico?.nome) }}</span>
+  <ng-template #conteudoAgendamento>
+    <div class="page-wrapper">
+
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <div class="hero-shapes">
+          <div class="shape shape-1"></div>
+          <div class="shape shape-2"></div>
         </div>
-        <div class="medico-info">
-          <span class="medico-nome" style="font-family: 'Nunito', Arial, sans-serif;">{{ medico?.nome }}</span>
-          <span class="medico-especialidade">{{ medico?.especialidades?.[0]?.nome }} · CRM {{ medico?.crm }}</span>
-          <div class="medico-rating">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                fill="#FACC15" stroke="#FACC15" stroke-width="1.5" stroke-linejoin="round" />
+
+        <div class="hero-topbar">
+          <button class="header-back" onclick="history.back()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M21 12C21 12.4142 20.6642 12.75 20.25 12.75H5.56031L11.0306 18.2194C11.3237 18.5124 11.3237 18.9876 11.0306 19.2806C10.7376 19.5737 10.2624 19.5737 9.96937 19.2806L3.21937 12.5306C3.07854 12.3899 2.99941 12.1991 2.99941 12C2.99941 11.8009 3.07854 11.6101 3.21937 11.4694L9.96937 4.71938C10.2624 4.42632 10.7376 4.42632 11.0306 4.71938C11.3237 5.01243 11.3237 5.48757 11.0306 5.78062L5.56031 11.25H20.25C20.6642 11.25 21 11.5858 21 12Z"
+                fill="white" />
             </svg>
-            <!-- <span>{{ mediaFormatada() }} ({{ totalAvaliacoes() }} avaliações)</span> -->
-            <span>4.5 (231 avaliações)</span>
+          </button>
+
+          <h1 class="hero-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Agendar consulta</h1>
+        </div>
+      </div>
+
+      <!-- Corpo branco -->
+      <div class="corpo-content">
+
+        <!-- Card do médico -->
+        <div class="medico-card">
+          <div class="medico-avatar">
+            <img *ngIf="medico?.foto" [src]="medico?.foto" [alt]="medico?.nome" />
+            <span *ngIf="!medico?.foto">{{ iniciais(medico?.nome) }}</span>
+          </div>
+          <div class="medico-info">
+            <span class="medico-nome" style="font-family: 'Nunito', Arial, sans-serif;">{{ medico?.nome }}</span>
+            <span class="medico-especialidade">{{ medico?.especialidades?.[0]?.nome }} · CRM {{ medico?.crm }}</span>
+            <div class="medico-rating">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                  fill="#FACC15" stroke="#FACC15" stroke-width="1.5" stroke-linejoin="round" />
+              </svg>
+              <!-- <span>{{ mediaFormatada() }} ({{ totalAvaliacoes() }} avaliações)</span> -->
+              <span>4.5 (231 avaliações)</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Card do calendário -->
-      <div class="secao-card">
-        <h2 class="secao-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Escolha a data e hora</h2>
+        <!-- Card do calendário -->
+        <div class="secao-card">
+          <h2 class="secao-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Escolha a data e hora</h2>
 
-        <div class="calendario-header">
-          <button type="button" class="mes-nav" [disabled]="!podeVoltarMes" (click)="mesAnterior()">
+          <div class="calendario-header">
+            <button type="button" class="mes-nav" [disabled]="!podeVoltarMes" (click)="mesAnterior()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+
+            <span class="mes-nome">{{ nomeMesAno }}</span>
+
+            <button type="button" class="mes-nav" [disabled]="!podeAvancarMes" (click)="proximoMes()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="calendario-dias-semana">
+            <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+          </div>
+
+          <div class="calendario-grid">
+            <button *ngFor="let dia of diasCalendario" type="button" class="dia-btn"
+              [class.dia-btn--vazio]="!dia.mesAtual" [class.dia-btn--desabilitado]="dia.desabilitado && dia.mesAtual"
+              [class.dia-btn--selecionado]="diaSelecionado?.data?.getTime() === dia.data.getTime()"
+              [disabled]="dia.desabilitado || !dia.mesAtual" (click)="selecionarDia(dia)">
+              {{ dia.mesAtual ? dia.numero : '' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Card de horários -->
+        <div class="secao-card" *ngIf="diaSelecionado && horariosDoDia.length > 0">
+          <div class="secao-header-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              <circle cx="12" cy="12" r="9" stroke="#29ABE2" stroke-width="1.6" />
+              <path d="M12 7V12L15.5 14" stroke="#29ABE2" stroke-width="1.6" stroke-linecap="round"
                 stroke-linejoin="round" />
             </svg>
-          </button>
+            <h2 class="secao-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Horários disponíveis</h2>
+          </div>
 
-          <span class="mes-nome">{{ nomeMesAno }}</span>
+          <div class="horarios-grid">
+            <button *ngFor="let horario of horariosDoDia" type="button" class="horario-chip"
+              [class.horario-chip--selecionado]="horarioSelecionado === horario" (click)="selecionarHorario(horario)">
+              {{ horario }}
+            </button>
+          </div>
+        </div>
 
-          <button type="button" class="mes-nav" [disabled]="!podeAvancarMes" (click)="proximoMes()">
+        <!-- Aviso: dia sem horários (só aparece se o dia foi selecionado mas está vazio) -->
+        <div class="aviso-vazio" *ngIf="diaSelecionado && horariosDoDia.length === 0">
+          <p>Nenhum horário disponível para esta data.</p>
+        </div>
+
+        <!-- Card de observações -->
+        <div class="secao-card">
+          <div class="secao-header-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
+              <rect x="4" y="3" width="16" height="18" rx="2" stroke="#3295bfc4" stroke-width="1.6" />
+              <path d="M8 8H16M8 12H16M8 16H12" stroke="#3295bfc4" stroke-width="1.6" stroke-linecap="round" />
             </svg>
-          </button>
+            <h2 class="secao-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Descreva o que está sentindo</h2>
+          </div>
+
+          <textarea class="observacoes-textarea" rows="3"
+            placeholder="Sintomas, dúvidas ou observações para o médico..." [(ngModel)]="observacoes"></textarea>
         </div>
 
-        <div class="calendario-dias-semana">
-          <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
-        </div>
-
-        <div class="calendario-grid">
-          <button *ngFor="let dia of diasCalendario" type="button" class="dia-btn"
-            [class.dia-btn--vazio]="!dia.mesAtual" [class.dia-btn--desabilitado]="dia.desabilitado && dia.mesAtual"
-            [class.dia-btn--selecionado]="diaSelecionado?.data?.getTime() === dia.data.getTime()"
-            [disabled]="dia.desabilitado || !dia.mesAtual" (click)="selecionarDia(dia)">
-            {{ dia.mesAtual ? dia.numero : '' }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Card de horários -->
-      <div class="secao-card" *ngIf="diaSelecionado && horariosDoDia.length > 0">
-        <div class="secao-header-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="9" stroke="#29ABE2" stroke-width="1.6" />
-            <path d="M12 7V12L15.5 14" stroke="#29ABE2" stroke-width="1.6" stroke-linecap="round"
-              stroke-linejoin="round" />
+        <!-- Botão Confirmar -->
+        <button type="button" class="confirmar-btn" [disabled]="!podeConfirmar" (click)="confirmarAgendamento()">
+          <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="#ffffff"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9 12l2 2 4-4" />
           </svg>
-          <h2 class="secao-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Horários disponíveis</h2>
-        </div>
 
-        <div class="horarios-grid">
-          <button *ngFor="let horario of horariosDoDia" type="button" class="horario-chip"
-            [class.horario-chip--selecionado]="horarioSelecionado === horario" (click)="selecionarHorario(horario)">
-            {{ horario }}
-          </button>
-        </div>
+          Confirmar agendamento
+        </button>
+
+        <div class="bottom-spacer"></div>
       </div>
 
-      <!-- Aviso: dia sem horários (só aparece se o dia foi selecionado mas está vazio) -->
-      <div class="aviso-vazio" *ngIf="diaSelecionado && horariosDoDia.length === 0">
-        <p>Nenhum horário disponível para esta data.</p>
-      </div>
-
-      <!-- Card de observações -->
-      <div class="secao-card">
-        <div class="secao-header-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <rect x="4" y="3" width="16" height="18" rx="2" stroke="#3295bfc4" stroke-width="1.6" />
-            <path d="M8 8H16M8 12H16M8 16H12" stroke="#3295bfc4" stroke-width="1.6" stroke-linecap="round" />
-          </svg>
-          <h2 class="secao-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Descreva o que está sentindo</h2>
-        </div>
-
-        <textarea class="observacoes-textarea" rows="3" placeholder="Sintomas, dúvidas ou observações para o médico..."
-          [(ngModel)]="observacoes"></textarea>
-      </div>
-
-      <!-- Botão Confirmar -->
-      <button type="button" class="confirmar-btn" [disabled]="!podeConfirmar" (click)="confirmarAgendamento()">
-        <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="#ffffff"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9 12l2 2 4-4" />
-        </svg>
-
-        Confirmar agendamento
-      </button>
-
-      <div class="bottom-spacer"></div>
     </div>
-
-  </div>
+  </ng-template>
 </ion-content>
 
 <!--Tela de sucesso confirmando agendamento-->

@@ -2,7 +2,6 @@ package br.cefet.acolhimed.dto;
 
 import java.sql.Date;
 
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

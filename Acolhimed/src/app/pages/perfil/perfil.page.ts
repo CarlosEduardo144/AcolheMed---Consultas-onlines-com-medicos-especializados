@@ -17,7 +17,6 @@ import {
   IonRadioGroup,
   IonRadio,
   IonLabel,
-  IonSpinner,
 } from '@ionic/angular/standalone';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { MedicoModel } from 'src/app/model/medico.model';
@@ -47,7 +46,6 @@ import { HorarioService } from 'src/app/services/horario.service';
     IonRadioGroup,
     IonRadio,
     IonLabel,
-    IonSpinner,
   ],
 })
 export class PerfilPage {
@@ -55,6 +53,7 @@ export class PerfilPage {
 
   usuario!: UsuarioModel | MedicoModel;
   possuiHorarios = true;
+  carregandoInicial = true;
 
   constructor(
     private navController: NavController,
@@ -79,28 +78,41 @@ export class PerfilPage {
             }
           });
         }
+        this.carregandoInicial = false;
+      },
+      error: () => {
+        this.carregandoInicial = false;
       }
     });
   }
 
   ionViewWillEnter() {
     this.buscarUsuario();
-    if (this.usuario?.tipoUsuario == "medico") {
-      this.checarHorarios();
-    }
   }
 
   buscarUsuario() {
+    this.carregandoInicial = true;
+    this.possuiHorarios = true;
+
     this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
       next: (usuario) => {
         this.usuario = usuario;
 
         if (!this.usuario) {
           this.navController.navigateBack('/login');
+          return;
         }
+
+        if (this.usuario.tipoUsuario == "medico") {
+          this.checarHorarios();
+          return;
+        }
+
+        this.carregandoInicial = false;
       },
       error: (erro) => {
         console.error(erro);
+        this.carregandoInicial = false;
         this.exibirMensagem(erro.error.message);
       }
     });

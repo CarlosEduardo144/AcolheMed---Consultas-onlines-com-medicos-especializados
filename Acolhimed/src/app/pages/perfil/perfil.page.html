@@ -3,6 +3,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
 <ion-content class="perfil-content" [fullscreen]="true">
+  <div *ngIf="carregandoInicial; else conteudoPerfil" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <ng-template #conteudoPerfil>
   <div class="perfil-wrapper">
     <!-- Hero Banner -->
     <div class="hero-banner">
@@ -219,10 +226,10 @@
 
   </div>
 
-</ion-content>
+</ng-template>
 
 <!-- Bottom Nav -->
-@if(usuario && usuario?.tipoUsuario == "paciente"){
+@if(!carregandoInicial && usuario && usuario?.tipoUsuario == "paciente"){
 <div class="bottom-nav">
   <a routerLink="/inicio" class="nav-item">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -260,7 +267,7 @@
     </div>
   </a>
 </div>
-}@else{
+}@else if (!carregandoInicial && usuario) {
 <div class="bottom-nav">
   <a routerLink="/inicio" class="nav-item">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -291,3 +298,4 @@
   </a>
 </div>
 }
+</ion-content>

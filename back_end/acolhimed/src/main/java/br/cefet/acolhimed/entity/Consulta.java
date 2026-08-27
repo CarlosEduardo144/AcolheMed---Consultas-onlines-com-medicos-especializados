@@ -40,6 +40,12 @@ public class Consulta {
     @Column(nullable = true, length = 200)
     private String motivoCancelamento;
 
+    @Column(nullable = true, length = 200)
+    private String observacoes;
+
+    @Column(nullable = true, length = 500)
+    private String linkConsulta;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusConsulta status;

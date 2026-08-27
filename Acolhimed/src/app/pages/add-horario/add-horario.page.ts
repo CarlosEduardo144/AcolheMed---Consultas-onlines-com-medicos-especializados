@@ -20,6 +20,7 @@ export type Periodo = 'manha' | 'tarde' | 'noite';
 export class AddHorarioPage implements OnInit {
 
   infoExpandido = false;
+  carregandoInicial = true;
 
   constructor(private horarioService: HorarioService,
     private loginService: LoginService,
@@ -41,6 +42,8 @@ export class AddHorarioPage implements OnInit {
   }
 
   carregarHorarios() {
+    this.carregandoInicial = true;
+
     this.horarioService.buscarPorMedico(this.loginService.getUsuario()).subscribe({
       next: (horarios) => {
         horarios.forEach(horario => {
@@ -51,9 +54,11 @@ export class AddHorarioPage implements OnInit {
             dia.noite = horario.noite;
           }
         });
+        this.carregandoInicial = false;
       },
       error: (erro) => {
         console.error(erro);
+        this.carregandoInicial = false;
         this.exibirMensagem(erro.error.message);
       }
     });
