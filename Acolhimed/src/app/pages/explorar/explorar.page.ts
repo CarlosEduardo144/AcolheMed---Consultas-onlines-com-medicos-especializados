@@ -6,12 +6,14 @@ import { Router, RouterModule } from '@angular/router';
 import { EspecialidadeModel } from 'src/app/model/especialidade.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { EspecialidadeService } from 'src/app/services/especialidade.service';
+import { AvaliacaoService } from 'src/app/services/avaliacao-service';
 import { MedicoModel } from 'src/app/model/medico.model';
 import { ToastController } from '@ionic/angular';
 import { arrowForwardOutline, hardwareChipOutline, medkitOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { LoginService } from 'src/app/services/login.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-explorar',
@@ -31,6 +33,8 @@ export class ExplorarPage {
   carregandoMedicos: boolean = false;
   carregandoInicial: boolean = true;
   usuario: any;
+
+  avaliacoesPorMedico: { [medicoId: string]: { media: number; total: number } } = {};
 
   dicasSaude = [
     {
@@ -58,6 +62,7 @@ export class ExplorarPage {
     private navCtrl: NavController,
     private usuarioService: UsuarioService,
     private especialidadeService: EspecialidadeService,
+    private avaliacaoService: AvaliacaoService,
     private loginService: LoginService,
     private router: Router) {
     this.medicos = [];
@@ -76,6 +81,7 @@ export class ExplorarPage {
         this.especialidadesFiltradas = especialidades;
         this.medicos = medicos;
         this.carregandoInicial = false;
+        this.carregarAvaliacoes(medicos);
       },
       error: (erro) => {
         this.carregandoInicial = false;
@@ -124,6 +130,7 @@ export class ExplorarPage {
       next: (medicos) => {
         this.medicosFiltrados = medicos;
         this.carregandoMedicos = false;
+        this.carregarAvaliacoes(medicos);
       },
       error: (erro) => {
         this.carregandoMedicos = false;
@@ -154,6 +161,35 @@ export class ExplorarPage {
   iniciais(nome?: string): string {
     if (!nome) return '';
     return nome.trim().slice(0, 2).toUpperCase();
+  }
+
+  private carregarAvaliacoes(medicos: MedicoModel[]) {
+    const idsNovos = medicos
+      .map(m => m.id)
+      .filter(id => id && !this.avaliacoesPorMedico[id]);
+
+    if (idsNovos.length === 0) return;
+
+    const chamadas = idsNovos.reduce((acc, id) => {
+      acc[id] = this.avaliacaoService.getAvaliacoesMedicos(id).pipe(catchError(() => of([])));
+      return acc;
+    }, {} as { [id: string]: any });
+
+    forkJoin(chamadas).subscribe(resultado => {
+      Object.entries(resultado).forEach(([id, avaliacoes]: [string, any]) => {
+        const total = avaliacoes.length;
+        const media = total ? avaliacoes.reduce((soma: number, av: any) => soma + av.nota, 0) / total : 0;
+        this.avaliacoesPorMedico[id] = { media, total };
+      });
+    });
+  }
+
+  mediaFormatada(medicoId: string): string {
+    return (this.avaliacoesPorMedico[medicoId]?.media ?? 0).toFixed(1);
+  }
+
+  totalAvaliacoesMedico(medicoId: string): number {
+    return this.avaliacoesPorMedico[medicoId]?.total ?? 0;
   }
 
   async exibirMensagem(texto: string) {

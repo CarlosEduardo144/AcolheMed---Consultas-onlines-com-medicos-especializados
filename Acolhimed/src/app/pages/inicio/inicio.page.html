@@ -133,45 +133,48 @@
 
       <!-- Consulta em andamento -->
 
-      <ng-container>
+      <ng-container *ngIf="consultaAtual; else semConsulta">
         <h2 class="secao-titulo">Consulta em andamento</h2>
 
         <div class="consulta-card">
           <div class="consulta-topo">
             <div class="avatar-medico-wrap">
               <div class="avatar-medico">
-                @if(usuario?.tipoUsuario == "paciente"){
-                <img src="https://medicinasa.com.br/wp-content/uploads/2023/03/medico-hospital-esteto.jpg"
-                  alt="FotoMedico" />
+                @if(usuario?.tipoUsuario == "paciente" && consultaAtual?.medico?.foto){
+                <img [src]="consultaAtual?.medico?.foto" [alt]="consultaAtual?.medicoNome" />
                 }@else{
-                <span>{{ iniciais("Odihon")}}</span>
+                <span>{{ iniciais(usuario?.tipoUsuario === 'paciente' ? consultaAtual?.medicoNome : consultaAtual?.pacienteNome) }}</span>
                 }
               </div>
-              <span class="status-dot"></span>
+              <span class="status-dot" [class.status-dot--bloqueado]="!consultaLiberada"></span>
             </div>
             @if(usuario?.tipoUsuario == "paciente"){
             <div class="consulta-info">
-              <span class="medico-nome">Dr. Odilon Odines</span>
-              <span class="medico-especialidade">Cardiologia • CRM 12345-SP</span>
+              <span class="medico-nome">{{ consultaAtual?.medicoNome }}</span>
+              <span class="medico-especialidade">{{ consultaAtual?.especialidadeNome }}</span>
               <span class="consulta-horario-chip">
                 <span class="dot-chip"></span>
-                10h00
+                {{ consultaAtual?.dataHora | date:"dd/MM 'às' HH:mm" }}
               </span>
             </div>
             }@else{
             <div class="consulta-info">
-              <span class="medico-nome">Odihon Takamura</span>
-              <span class="medico-especialidade">Cardiologia</span>
+              <span class="medico-nome">{{ consultaAtual?.pacienteNome }}</span>
+              <span class="medico-especialidade">{{ consultaAtual?.especialidadeNome }}</span>
               <span class="consulta-horario-chip">
                 <span class="dot-chip"></span>
-                15h00
+                {{ consultaAtual?.dataHora | date:"dd/MM 'às' HH:mm" }}
               </span>
             </div>
             }
           </div>
 
+          <p class="consulta-aviso-bloqueio" *ngIf="!consultaLiberada">
+            Chat e chamada liberam às {{ horarioLiberacaoFormatado | date:'HH:mm' }} (30 min antes da consulta).
+          </p>
+
           <div class="consulta-acoes">
-            <button class="btn-chat" (click)="abrirChat()">
+            <button class="btn-chat" [disabled]="!consultaLiberada" (click)="abrirChat()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M21 11.5C21 16.194 16.9706 20 12 20C10.6866 20 9.44014 19.7392 8.31699 19.2664L3 20L4.39397 15.9505C3.5122 14.6969 3 13.153 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z"
@@ -180,7 +183,7 @@
               Chat
             </button>
 
-            <button class="btn-chamada" (click)="iniciarChamada()">
+            <button class="btn-chamada" [disabled]="!consultaLiberada" (click)="iniciarChamada()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M15 10.5L21 7.5V16.5L15 13.5" stroke="white" stroke-width="1.7" stroke-linejoin="round" />
                 <rect x="3" y="6" width="12" height="12" rx="2" stroke="white" stroke-width="1.7" />
@@ -190,6 +193,13 @@
           </div>
         </div>
       </ng-container>
+
+      <ng-template #semConsulta>
+        <h2 class="secao-titulo">Consulta em andamento</h2>
+        <div class="consulta-card consulta-card--vazio">
+          <p>Nenhuma consulta agendada no momento.</p>
+        </div>
+      </ng-template>
 
       <div class="bottom-spacer"></div>
     </div>

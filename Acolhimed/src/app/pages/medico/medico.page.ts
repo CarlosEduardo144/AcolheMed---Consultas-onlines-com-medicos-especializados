@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonFooter, IonButton } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { RouterLink } from '@angular/router'; 
+import { AvaliacaoService } from 'src/app/services/avaliacao-service';
+import { AvaliacaoModel } from 'src/app/model/avaliacao-model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-medico',
@@ -16,16 +18,13 @@ import { RouterLink } from '@angular/router';
 export class MedicoPage implements OnInit {
 
   medico: any;
-  totalAvaliacoes: number;
-  percentualPorNota: number;
+  avaliacoes: AvaliacaoModel[] = [];
   fotoAmpliada = false;
   carregandoInicial = true;
 
   constructor(private route: ActivatedRoute,
-    private medicoService: UsuarioService) {
-    this.totalAvaliacoes = 10;
-    this.percentualPorNota = 4;
-  }
+    private medicoService: UsuarioService,
+    private avaliacaoService: AvaliacaoService) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -35,6 +34,7 @@ export class MedicoPage implements OnInit {
         next: (medico) => {
           this.medico = medico;
           this.carregandoInicial = false;
+          this.carregarAvaliacoes(id);
         },
         error: (err) => {
           this.carregandoInicial = false;
@@ -46,6 +46,13 @@ export class MedicoPage implements OnInit {
     }
   }
 
+  private carregarAvaliacoes(medicoId: string) {
+    this.avaliacaoService.getAvaliacoesMedicos(medicoId).subscribe({
+      next: (avaliacoes) => this.avaliacoes = avaliacoes ?? [],
+      error: (err) => console.error('Erro ao carregar avaliações', err)
+    });
+  }
+
   toggleFotoAmpliada() {
     this.fotoAmpliada = !this.fotoAmpliada;
   }
@@ -55,14 +62,13 @@ export class MedicoPage implements OnInit {
     return nome.trim().slice(0, 2).toUpperCase();
   }
 
-  /*
   get totalAvaliacoes(): number {
-    return this.medico?.avaliacoes?.length ?? 0;
+    return this.avaliacoes.length;
   }
 
   get mediaAvaliacoes(): number {
     if (!this.totalAvaliacoes) return 0;
-    const soma = this.medico.avaliacoes.reduce((acc, av) => acc + av.nota, 0);
+    const soma = this.avaliacoes.reduce((acc, av) => acc + av.nota, 0);
     return soma / this.totalAvaliacoes;
   }
 
@@ -70,35 +76,17 @@ export class MedicoPage implements OnInit {
     return this.mediaAvaliacoes.toFixed(1).replace('.', ',');
   }
 
-  get qualidadeLabel(): string {
-    const m = this.mediaAvaliacoes;
-    if (m >= 4.5) return 'Excelente';
-    if (m >= 3.5) return 'Muito bom';
-    if (m >= 2.5) return 'Bom';
-    if (m >= 1.5) return 'Regular';
-    return 'Ruim';
+  get estrelasPreenchidas(): boolean[] {
+    const arredondado = Math.round(this.mediaAvaliacoes);
+    return [1, 2, 3, 4, 5].map(i => i <= arredondado);
   }
 
-  // Percentual de preenchimento da estrela grande (média), usado no overlay
-  get percentualEstrelaMedia(): number {
-    return (this.mediaAvaliacoes / 5) * 100;
-  }
-
-  // Quantidade de avaliações para uma nota específica (5,4,3,2,1)
   quantidadePorNota(nota: number): number {
-    return this.medico?.avaliacoes?.filter(av => av.nota === nota).length ?? 0;
+    return this.avaliacoes.filter(av => av.nota === nota).length;
   }
 
-  // Percentual da barra de distribuição para uma nota específica
   percentualPorNota(nota: number): number {
     if (!this.totalAvaliacoes) return 0;
     return (this.quantidadePorNota(nota) / this.totalAvaliacoes) * 100;
   }
-
-  // Array [1..5] usado no *ngFor para desenhar estrelas de cada avaliação individual
-  estrelasArray(nota: number): boolean[] {
-    return [1, 2, 3, 4, 5].map(i => i <= nota);
-  }
-  */
-
 }

@@ -113,15 +113,18 @@
             <div class="medico-info-wrap-h">
               <p class="medico-nome" style="font-family: 'Nunito', Arial, sans-serif;">{{ medico.nome }}</p>
               <p class="medico-especialidade">{{ especialidadeSelecionada.nome }}</p>
-              <div class="medico-rating">
+              <div class="medico-rating" *ngIf="totalAvaliacoesMedico(medico.id) > 0; else semAvaliacaoH">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
                     fill="#FACC15" stroke="#FACC15" stroke-width="1.5" stroke-linejoin="round" />
                 </svg>
-                <span class="rating-numero">4.5</span>
-                <span class="rating-total">(129)</span>
+                <span class="rating-numero">{{ mediaFormatada(medico.id) }}</span>
+                <span class="rating-total">({{ totalAvaliacoesMedico(medico.id) }})</span>
               </div>
+              <ng-template #semAvaliacaoH>
+                <span class="rating-total">Sem avaliações</span>
+              </ng-template>
             </div>
           </div>
 
@@ -164,15 +167,18 @@
           <div class="medico-info-wrap">
             <p class="medico-nome">{{ medico.nome }}</p>
             <p class="medico-especialidade">{{ medico.especialidades[0].nome }}</p>
-            <div class="medico-rating">
+            <div class="medico-rating" *ngIf="totalAvaliacoesMedico(medico.id) > 0; else semAvaliacaoD">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
                   fill="#FACC15" stroke="#FACC15" stroke-width="1.5" stroke-linejoin="round" />
               </svg>
-              <span class="rating-numero">4.5</span>
-              <span class="rating-total">(129)</span>
+              <span class="rating-numero">{{ mediaFormatada(medico.id) }}</span>
+              <span class="rating-total">({{ totalAvaliacoesMedico(medico.id) }})</span>
             </div>
+            <ng-template #semAvaliacaoD>
+              <span class="rating-total">Sem avaliações</span>
+            </ng-template>
           </div>
         </div>
       </div>
