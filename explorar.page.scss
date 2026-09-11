@@ -1,0 +1,575 @@
+$blue: #29ABE2;
+$blue-dark: #1a6fa8;
+$black: #141414;
+$gray: #737373;
+$gray-light: #F5F5F5;
+$border: #E8E8E8;
+$white: #FFFFFF;
+$star: #FACC15;
+
+.explorar-content {
+  --background: rgb(250, 250, 250);
+}
+
+// ---- Hero Banner ----
+.hero-banner {
+  position: relative;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+  border-radius: 0 0 28px 28px;
+  padding: 20px 20px 26px;
+  overflow: hidden;
+}
+
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+
+  &-1 {
+    width: 180px;
+    height: 180px;
+    top: -80px;
+    right: -50px;
+  }
+
+  &-2 {
+    width: 90px;
+    height: 90px;
+    bottom: -20px;
+    left: -20px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.hero-topbar {
+  position: relative;
+  z-index: 2;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+
+.hero-titulo {
+  font-size: 24px;
+  font-weight: 800;
+  color: $white;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.btn-filtro {
+  width: 40px;
+  height: 40px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.search-box {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: $white;
+  border-radius: 30px;
+  padding: 14px 18px;
+  box-shadow: 0 6px 18px rgba(15, 40, 70, 0.15);
+
+  input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+    color: $black;
+
+    &::placeholder {
+      color: #AAAAAA;
+    }
+  }
+}
+
+// ---- Corpo ----
+.corpo-content {
+  padding: 5px 0 0;
+}
+
+.section {
+  padding: 0 0 8px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: $black;
+  font-family: 'Nunito', Courier, monospace;
+}
+
+.ver-todos {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: $blue;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+// ---- Horizontal scroll ----
+.horizontal-scroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 4px 20px 8px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.medicos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 20px 8px;
+}
+
+.medico-card-horizontal {
+  background: $white;
+  border: 1.5px solid $border;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 6px 18px rgba(15, 40, 70, 0.385);
+
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.medico-linha-topo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.medico-img-wrap-h {
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #1a6fa8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: $white;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+}
+
+.medico-info-wrap-h {
+  flex: 1;
+  min-width: 0;
+}
+
+.medico-nome {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: $black;
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.medico-especialidade {
+  font-size: 13px;
+  color: $gray;
+  margin: 0 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.medico-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rating-numero {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: $black;
+}
+
+.rating-total {
+  font-size: 11.5px;
+  color: $gray;
+}
+
+.btn-agendar-medico {
+  width: 100%;
+  height: 54px;
+  background: linear-gradient(135deg, $black 0%, #333333 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s, transform 0.15s;
+
+  &:active {
+    opacity: 0.88;
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background: #CCCCCC;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+// ---- Médico card destaque ----
+.medico-card-destaque {
+  flex-shrink: 0;
+  width: 165px;
+  background: $white;
+  border: 1.5px solid $border;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:active {
+    opacity: 0.85;
+  }
+
+  .medico-img-wrap {
+    width: 100%;
+    height: 150px;
+    background: #B2E5E8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    background-color: #1a6fa8;
+
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+  }
+
+  .medico-info-wrap {
+    padding: 12px;
+  }
+
+  .medico-nome {
+    font-size: 14px;
+    font-weight: 700;
+    color: $black;
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .medico-especialidade {
+    font-size: 12px;
+    color: $gray;
+    margin: 0 0 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .medico-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .rating-numero {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: $black;
+  }
+
+  .rating-total {
+    font-size: 11.5px;
+    color: $gray;
+  }
+}
+
+.especialidades-scroll {
+  padding: 4px 20px 12px;
+}
+
+.especialidade-card-overlay {
+  position: relative;
+  flex-shrink: 0;
+  width: 130px; // 👈 era 130px
+  height: 130px; // 👈 era 130px
+  border-radius: 22px; // 👈 era 18px, cantos mais suaves
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(15, 40, 70, 0.12); // 👈 nova: profundidade
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .overlay-gradient {
+    position: absolute;
+    inset: 0;
+    // 👇 gradiente mais forte e com 2 estágios, garante legibilidade em qualquer foto
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.35) 65%, rgba(0, 0, 0, 0.75) 100%);
+  }
+
+  .esp-nome-overlay {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+    right: 14px;
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); // 👈 nova: legibilidade extra
+  }
+
+  &:active {
+    transform: scale(0.96); // 👈 nova: feedback tátil ao tocar
+    box-shadow: 0 3px 10px rgba(15, 40, 70, 0.1);
+
+    img {
+      transform: scale(1.05); // 👈 leve zoom na foto ao tocar
+    }
+  }
+}
+
+// ---- Dicas de saúde ----
+.dicas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 20px;
+}
+
+.dica-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: $white;
+  border: 1.5px solid $border;
+  border-radius: 16px;
+  box-shadow: 0 -2px 12px rgba(183, 222, 236, 0.178);
+  padding: 12px;
+}
+
+.dica-img-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.dica-texto {
+  flex: 1;
+  min-width: 0;
+}
+
+.dica-titulo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: $black;
+  margin: 0 0 3px;
+}
+
+.dica-descricao {
+  font-size: 12.5px;
+  color: $gray;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.dica-seta {
+  flex-shrink: 0;
+}
+
+.bottom-spacer {
+  height: 96px;
+}
+
+// ---- Bottom Nav ----
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+
+  width: 100%;
+  height: 82px;
+
+  padding: 8px 10px;
+  background: #ffffff;
+
+  border-radius: 0 0 20px 20px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+
+  flex: 1;
+  height: 100%;
+
+  text-decoration: none;
+}
+
+.nav-icon-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+
+  padding: 8px 18px;
+  border-radius: 24px;
+}
+
+.nav-icon-wrap--active {
+  background: rgba(41, 171, 226, 0.12);
+}
+
+.nav-label {
+  font-size: 13px;
+  line-height: 16px;
+  color: $gray;
+  font-weight: 500;
+  white-space: nowrap;
+
+  &--active {
+    color: $blue;
+    font-weight: 600;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 32px 24px;
+  min-height: 340px;
+}
+
+.empty-illustration {
+  margin-bottom: 20px;
+}
+
+.empty-titulo {
+  font-size: 18px;
+  font-weight: 800;
+  color: $black;
+  margin: 0 0 8px;
+  letter-spacing: -0.2px;
+}
+
+.empty-texto {
+  font-size: 13.5px;
+  color: $gray;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 280px;
+}
+
+.empty-botao {
+  margin-top: 20px;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 22px;
+  border: none;
+  background: $blue;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:active {
+    background: $blue-dark;
+  }
+}
