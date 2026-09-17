@@ -13,14 +13,18 @@ export class AvaliacaoService {
   constructor(private http: HttpClient) { }
 
   salvar(avaliacao: AvaliacaoModel): Observable<AvaliacaoModel> {
-    return this.http.post<AvaliacaoModel>(`${this.API_URL}/avaliacoes`, avaliacao);
+    return this.http.post<AvaliacaoModel>(`${this.API_URL}/avaliacoes`, {
+      consultaId: avaliacao.consultaId,
+      comentario: avaliacao.comentario,
+      nota: avaliacao.nota,
+    });
   }
 
   excluir(avaliacaoID: String): Observable<AvaliacaoModel> {
     return this.http.delete<AvaliacaoModel>(`${this.API_URL}/avaliacoes/${avaliacaoID}`);
   }
 
-  getAvaliacoesMedicos(medicoId: String): Observable<AvaliacaoModel[]> {
+  getAvaliacoesMedico(medicoId: String): Observable<AvaliacaoModel[]> {
     return this.http.get<AvaliacaoModel[]>(`${this.API_URL}/avaliacoes/${medicoId}`);
   }
 }

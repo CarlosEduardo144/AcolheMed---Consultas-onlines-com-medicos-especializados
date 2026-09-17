@@ -9,6 +9,7 @@ export class MedicoModel extends UsuarioModel{
   crm: string;
   ufEmissao: string;
   horariosConfigurados: boolean;
+  mediaAvaliacao: number;
 
   constructor() {
     super();
@@ -18,5 +19,6 @@ export class MedicoModel extends UsuarioModel{
     this.ufEmissao = "";
     this.sobreMim = "";
     this.horariosConfigurados = false;
+    this.mediaAvaliacao = 0;
   }
 }   

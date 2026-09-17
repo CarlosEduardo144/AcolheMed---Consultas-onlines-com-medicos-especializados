@@ -74,5 +74,21 @@ export const routes: Routes = [
     path: 'add-avaliacao/:id',
     loadComponent: () => import('./pages/add-avaliacao/add-avaliacao.page').then( m => m.AddAvaliacaoPage)
   },
+  {
+    path: 'notificacoes',
+    loadComponent: () => import('./pages/notificacoes/notificacoes.page').then( m => m.NotificacoesPage)
+  },
+  {
+    path: 'avaliacoes',
+    loadComponent: () => import('./pages/avaliacoes/avaliacoes.page').then( m => m.AvaliacoesPage)
+  },
+  {
+    path: 'avaliacoes/:id',
+    loadComponent: () => import('./pages/avaliacoes/avaliacoes.page').then( m => m.AvaliacoesPage)
+  },
+  {
+    path: 'agendamentos',
+    loadComponent: () => import('./pages/agendamentos/agendamentos.page').then( m => m.AgendamentosPage)
+  },
 ];
 

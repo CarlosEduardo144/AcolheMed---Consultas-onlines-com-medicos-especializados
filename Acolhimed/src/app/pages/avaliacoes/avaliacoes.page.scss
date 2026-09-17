@@ -1,0 +1,323 @@
+$blue: #29ABE2;
+$blue-dark: #1a6fa8;
+$black: #141414;
+$gray: #737373;
+$gray-light: #F5F5F5;
+$border: #E8E8E8;
+$white: #FFFFFF;
+$amber: #F5A623;
+
+.avaliacoes-content {
+  --background: #F4F7FB;
+}
+
+// ---- Header ----
+.header-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-radius: 0px 0px 20px 20px;
+  height: 90px;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+}
+
+.header-titulo {
+  font-size: 19px;
+  padding-top: 10px;
+  font-weight: 800;
+  color: $white;
+  margin: 0;
+}
+
+// Back button
+.header-back {
+  position: relative;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.35);
+  }
+}
+
+.btn-icon-header {
+  position: relative;
+  width: 40px;
+  margin-top: 3px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+// ---- Corpo ----
+.corpo-content {
+  padding: 16px 20px 0;
+}
+
+// ---- Resumo ----
+.resumo-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  background: $white;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 10px rgba(15, 40, 70, 0.203);
+}
+
+.resumo-nota {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.resumo-numero {
+  font-size: 25px;
+  font-weight: 800;
+  margin-right: 10px;
+  margin-top: 5px;
+  color: $black;
+  line-height: 1;
+}
+
+.resumo-estrelas {
+  display: flex;
+  gap: 1px;
+  margin: 6px 0 4px;
+}
+
+.resumo-total {
+  font-size: 11.5px;
+  color: $gray;
+  white-space: nowrap;
+}
+
+.resumo-filtro-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.filtro-label {
+  font-size: 14px;
+  font-weight: 800;
+  color: $black;
+}
+
+.filtro-valor {
+  font-size: 12.5px;
+  color: $gray;
+}
+
+// ---- Painel de filtro ----
+.filtro-painel {
+  background: $white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(15, 40, 70, 0.203);
+  animation: expandir 0.2s ease;
+}
+
+@keyframes expandir {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filtro-secao-titulo {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: $gray;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+
+  &:not(:first-child) {
+    margin-top: 18px;
+  }
+}
+
+.filtro-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filtro-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 9px 14px;
+  border-radius: 20px;
+  background: $gray-light;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+
+  &--ativo {
+    background: $blue;
+    color: $white;
+    font-weight: 700;
+  }
+}
+
+// ---- Lista de avaliações ----
+.avaliacao-item {
+  background: $white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(15, 40, 70, 0.203);
+}
+
+.avaliacao-topo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.paciente-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: $blue;
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 30px;
+}
+
+.medico-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: black;
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.avaliacao-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.paciente-nome {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: $black;
+}
+
+.avaliacao-data {
+  font-size: 12px;
+  color: $gray;
+}
+
+.avaliacao-estrelas {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.avaliacao-comentario {
+  font-size: 13.5px;
+  color: #444;
+  line-height: 1.55;
+  margin: 0;
+}
+
+// ---- Loading / Empty ----
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.loading-spinner {
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px;
+}
+
+.empty-texto {
+  font-size: 13.5px;
+  color: $gray;
+  text-align: center;
+  margin: 16px 0 0;
+}
+
+.bottom-spacer {
+  height: 32px;
+}

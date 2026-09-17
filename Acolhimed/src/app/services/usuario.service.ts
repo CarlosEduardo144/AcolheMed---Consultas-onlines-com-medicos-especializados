@@ -45,6 +45,10 @@ export class UsuarioService {
     );
   }
 
+  getMedicosMaisBemAvaliados(){
+    return this.http.get<MedicoModel[]>(`${this.API_URL}/medicos/destaques`);
+  }
+
   buscarPorId(id: string): Observable<PacienteModel | MedicoModel> {
     return this.http.get<PacienteModel | MedicoModel>(`${this.API_URL}/usuarios/${id}`);
   }

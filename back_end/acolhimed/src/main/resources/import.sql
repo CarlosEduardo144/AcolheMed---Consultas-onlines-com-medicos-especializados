@@ -10,11 +10,11 @@ INSERT INTO tb_especialidades (id, nome, descricao, imagem_url) VALUES ('e100000
 INSERT INTO tb_especialidades (id, nome, descricao, imagem_url) VALUES ('e1000000-0000-0000-0000-000000000010', 'Urologia', 'Especialidade que trata doenças do trato urinário e sistema reprodutor masculino.', 'https://feliciorocho.org.br/media/219/urologia.jpg');
 
 
-INSERT INTO tb_usuarios (id, nome, email, senha, tipo_usuario) VALUES ('4d2e8b1c-9a3f-4e6c-b715-2d83fa096e21', 'Lionel Messi', 'c@1', '1234', 'paciente');
+INSERT INTO tb_usuarios (id, nome, email, foto, senha, tipo_usuario) VALUES ('4d2e8b1c-9a3f-4e6c-b715-2d83fa096e21', 'Lionel Messi', 'c@1', 'https://res.cloudinary.com/mgw0uzkh/image/upload/v1789669849/fotos_minha_API/om07exhniubcmyx3e1rm.png', '1234', 'paciente');
 INSERT INTO tb_pacientes (usuario_id) VALUES ('4d2e8b1c-9a3f-4e6c-b715-2d83fa096e21');
 
 INSERT INTO tb_usuarios (id, nome, email, senha, tipo_usuario) VALUES ('bdfc1043-b7bc-413b-8a11-80348a9936a4', 'Marcelo Balbino', 'm@g', '1234', 'medico');
-INSERT INTO tb_medicos (usuario_id, crm, uf_emissao, sobre_mim, formacao_academica) VALUES ('bdfc1043-b7bc-413b-8a11-80348a9936a4', '123456-SP', 'SP', 'Médico com ampla experiência em teleconsultas.', 'Graduação pela USP (2017) - Pós graduação pela UNICAMP (2020) - Mestrado pela UFMG (2025)');
+INSERT INTO tb_medicos (usuario_id, crm, uf_emissao, sobre_mim, formacao_academica) VALUES ('bdfc1043-b7bc-413b-8a11-80348a9936a4', '123456', 'SP', 'Médico com ampla experiência em teleconsultas.', 'Graduação pela USP (2017) - Pós graduação pela UNICAMP (2020) - Mestrado pela UFMG (2025)');
 
 INSERT INTO tb_medicos_especialidades (id, medico_id, especialidade_id) VALUES ('a7b3c2e1-8f49-410a-bd62-59c8d17a3f5b', 'bdfc1043-b7bc-413b-8a11-80348a9936a4', 'e1000000-0000-0000-0000-000000000007');
 

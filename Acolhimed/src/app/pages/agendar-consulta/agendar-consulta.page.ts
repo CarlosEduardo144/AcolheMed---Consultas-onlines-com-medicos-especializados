@@ -14,6 +14,7 @@ import { ConsultaModel } from 'src/app/model/consulta.model';
 import { PacienteModel } from 'src/app/model/paciente.model';
 import { ConsultaService } from 'src/app/services/consulta-service';
 import { forkJoin, switchMap } from 'rxjs';
+import { ConsultaResponseModel } from 'src/app/model/consulta-response';
 
 interface DiaCalendario {
   data: Date;
@@ -66,6 +67,8 @@ export class AgendarCosultaPage implements OnInit {
   agendamentoConfirmado = false;
   agendandoConsulta = false;
   carregandoInicial = true;
+  consultasDoMedico: ConsultaResponseModel[] = [];
+
 
   private hoje = new Date();
   private limiteMinimo!: Date;
@@ -108,8 +111,10 @@ export class AgendarCosultaPage implements OnInit {
         const requisicoes: {
           horarios: ReturnType<HorarioService['buscarPorMedico']>;
           especialidade?: ReturnType<EspecialidadeService['buscarPorId']>;
+          consultasDoMedico: ReturnType<ConsultaService['getConsultas']>;
         } = {
           horarios: this.horarioService.buscarPorMedico(this.medico.id),
+          consultasDoMedico: this.consultaService.getConsultas(this.medico.id)
         };
 
         if (especialidadeId) {
@@ -119,8 +124,14 @@ export class AgendarCosultaPage implements OnInit {
         return forkJoin(requisicoes);
       })
     ).subscribe({
-      next: ({ horarios, especialidade }) => {
-        this.horariosSemana = horarios;
+      next: ({ horarios, especialidade, consultasDoMedico }) => {
+        this.horariosSemana = horarios ?? [];
+
+        // converte dataHora (string ISO da API) pra Date e mantém só as que ocupam slot
+        this.consultasDoMedico = (consultasDoMedico ?? [])
+          .map(c => ({ ...c, dataHora: new Date(c.dataHora) }))
+          .filter(c => c.status === 'agendada' || c.status === 'em_andamento');
+
         this.especialidadeSelecionada = especialidade ?? null;
         this.gerarCalendario();
         this.carregandoInicial = false;
@@ -232,7 +243,10 @@ export class AgendarCosultaPage implements OnInit {
     const chaveDia = MAPA_DIA_SEMANA[data.getDay()];
     const config = this.horariosSemana.find(h => h.dia === chaveDia);
     if (!config) return false;
-    return !!(config.manha || config.tarde || config.noite);
+    if (!(config.manha || config.tarde || config.noite)) return false;
+
+    // se depois de remover ocupados/passados não sobrar nenhum slot, o dia fica indisponível
+    return this.gerarHorariosDoDia(data).length > 0;
   }
 
   selecionarDia(dia: DiaCalendario) {
@@ -246,6 +260,8 @@ export class AgendarCosultaPage implements OnInit {
     const chaveDia = MAPA_DIA_SEMANA[data.getDay()];
     const config = this.horariosSemana.find(h => h.dia === chaveDia);
     if (!config) return [];
+
+    const ocupados = this.horariosOcupadosNoDia(data);
 
     const horarios: string[] = [];
     const ehHoje = data.getTime() === this.hoje.getTime();
@@ -261,16 +277,33 @@ export class AgendarCosultaPage implements OnInit {
       horaLimite.setHours(fim, 0, 0, 0);
 
       while (horaAtual < horaLimite) {
-        if (!ehHoje || horaAtual > agora) {
-          const hh = horaAtual.getHours().toString().padStart(2, '0');
-          const mm = horaAtual.getMinutes().toString().padStart(2, '0');
-          horarios.push(`${hh}:${mm}`);
+        const hh = horaAtual.getHours().toString().padStart(2, '0');
+        const mm = horaAtual.getMinutes().toString().padStart(2, '0');
+        const horarioStr = `${hh}:${mm}`;
+
+        const jaPassou = ehHoje && horaAtual <= agora;
+
+        if (!jaPassou && !ocupados.has(horarioStr)) {
+          horarios.push(horarioStr);
         }
+
         horaAtual = new Date(horaAtual.getTime() + DURACAO_CONSULTA_MINUTOS * 60000);
       }
     });
 
     return horarios;
+  }
+
+  private horariosOcupadosNoDia(data: Date): Set<string> {
+    return new Set(
+      this.consultasDoMedico
+        .filter(c => c.dataHora.toDateString() === data.toDateString())
+        .map(c => {
+          const hh = c.dataHora.getHours().toString().padStart(2, '0');
+          const mm = c.dataHora.getMinutes().toString().padStart(2, '0');
+          return `${hh}:${mm}`;
+        })
+    );
   }
 
   selecionarHorario(horario: string) {
@@ -318,7 +351,7 @@ export class AgendarCosultaPage implements OnInit {
       },
       error: (erro) => {
         this.agendandoConsulta = false;
-        this.exibirMensagem('Erro ao buscar o paciente. ' + erro.error.message);
+        this.exibirMensagem('Erro ao buscar o paciente. ' + erro.message);
       }
     });
   }
@@ -331,7 +364,8 @@ export class AgendarCosultaPage implements OnInit {
       },
       error: (erro) => {
         this.agendandoConsulta = false;
-        this.exibirMensagem('Erro ao agendar consulta. ' + erro.error.message);
+        console.log(erro)
+        this.exibirMensagem('Erro ao agendar consulta. ' + erro.message);
       }
     });
   }

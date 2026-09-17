@@ -12,17 +12,28 @@ import br.cefet.acolhimed.entity.Paciente;
 import br.cefet.acolhimed.enums.StatusConsulta;
 
 public interface ConsultaRepository extends JpaRepository<Consulta, String> {
-    Optional<Consulta> findByPaciente(Paciente paciente);
+        Optional<Consulta> findByPaciente(Paciente paciente);
 
-    Optional<Consulta> findByMedico(Medico medico);
+        Optional<Consulta> findByMedico(Medico medico);
 
-    List<Consulta> findByMedicoOrPaciente(Medico medico, Paciente paciente);
+        List<Consulta> findByMedicoOrPaciente(Medico medico, Paciente paciente);
 
-    boolean existsByMedicoAndDataHoraAndStatusNot(Medico medico, LocalDateTime dataHora, StatusConsulta status);
+        List<Consulta> findByMedicoAndDataHoraBetweenOrderByDataHoraAsc(
+                        Medico medico,
+                        LocalDateTime inicio,
+                        LocalDateTime fim);
 
-    boolean existsByMedicoAndDataHoraAndStatusNotAndIdNot(
-            Medico medico,
-            LocalDateTime dataHora,
-            StatusConsulta status,
-            String id);
+        Optional<Consulta> findFirstByPacienteIdAndDataHoraBetweenAndStatus(
+                        String pacienteId,
+                        LocalDateTime inicio,
+                        LocalDateTime fim,
+                        StatusConsulta status);
+
+        boolean existsByMedicoAndDataHoraAndStatusNot(Medico medico, LocalDateTime dataHora, StatusConsulta status);
+
+        boolean existsByMedicoAndDataHoraAndStatusNotAndIdNot(
+                        Medico medico,
+                        LocalDateTime dataHora,
+                        StatusConsulta status,
+                        String id);
 }

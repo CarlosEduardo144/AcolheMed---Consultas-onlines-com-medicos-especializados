@@ -1,5 +1,6 @@
 package br.cefet.acolhimed.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class AvaliacaoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada. Id: " + dto.getConsultaId()));
 
         if (!medicoRepository.existsById(consulta.getMedico().getId())) {
-            throw new BusinessException("Paciente não encontrado. Id: " + consulta.getMedico().getId());
+            throw new BusinessException("Médico não encontrado. Id: " + consulta.getMedico().getId());
         }
 
         if (!pacienteRepository.existsById(consulta.getPaciente().getId())) {
@@ -54,7 +55,7 @@ public class AvaliacaoService {
 
         Avaliacao avaliacao = new Avaliacao();
         avaliacao.setComentario(dto.getComentario());
-        avaliacao.setData(dto.getData());
+        avaliacao.setData(LocalDateTime.now());
         avaliacao.setNota(dto.getNota());
         avaliacao.setConsulta(consulta);
 

@@ -7,12 +7,6 @@
     <div class="page-loading-dots" aria-label="Carregando">
       <span></span><span></span><span></span>
     </div>
-
-    <div *ngIf="agendandoConsulta == true" class="page-loading-shell">
-      <div class="page-loading-dots" aria-label="Agendando consulta">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
   </div>
 
   <ng-template #conteudoAgendamento>
@@ -173,5 +167,12 @@
       Ir para minhas consultas
     </button>
 
+  </div>
+</div>
+
+<!--Overlay tela carregando-->
+<div *ngIf="agendandoConsulta == true" class="agendandoConsulta">
+  <div class="page-loading-dots" aria-label="Agendando consulta">
+    <span></span><span></span><span></span>
   </div>
 </div>

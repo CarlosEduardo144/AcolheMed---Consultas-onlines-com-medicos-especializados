@@ -36,6 +36,13 @@ public class MedicoController {
         return ResponseEntity.ok(Medicos);
     }
 
+    @GetMapping("/destaques")
+    @Operation(summary = "Listar Medicos Mais Bem Avaliados")
+    public ResponseEntity<List<MedicoResponseDTO>> listarMedicosBemAvaliados() {
+        List<MedicoResponseDTO> Medicos = MedicoService.listarMedicosBemAvaliados();
+        return ResponseEntity.ok(Medicos);
+    }
+
     @PostMapping
     @Operation(summary = "Cadastrar Medico")
     public ResponseEntity<MedicoResponseDTO> inserir(@Valid @RequestBody MedicoRequestDTO MedicoRequestDTO) {

@@ -1,0 +1,122 @@
+<ion-content class="notificacoes-content" [fullscreen]="true">
+  <div *ngIf="carregando; else conteudoNotificacoes" class="page-loading-shell">
+    <div class="page-loading-dots" aria-label="Carregando">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <ng-template #conteudoNotificacoes>
+    <div class="page-wrapper">
+
+      <!-- Header -->
+      <div class="header-topo">
+        <button class="header-back" onclick="history.back()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M21 12C21 12.4142 20.6642 12.75 20.25 12.75H5.56031L11.0306 18.2194C11.3237 18.5124 11.3237 18.9876 11.0306 19.2806C10.7376 19.5737 10.2624 19.5737 9.96937 19.2806L3.21937 12.5306C3.07854 12.3899 2.99941 12.1991 2.99941 12C2.99941 11.8009 3.07854 11.6101 3.21937 11.4694L9.96937 4.71938C10.2624 4.42632 10.7376 4.42632 11.0306 4.71938C11.3237 5.01243 11.3237 5.48757 11.0306 5.78062L5.56031 11.25H20.25C20.6642 11.25 21 11.5858 21 12Z"
+              fill="black" />
+          </svg>
+        </button>
+        <h1 class="header-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Notificações</h1>
+
+        <button class="header-back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Corpo -->
+      <div class="corpo-content">
+        <!-- Lista agrupada por dia -->
+        <ng-container *ngIf="!carregando">
+          <ng-container *ngIf="gruposPorDia; else vazio">
+            <div class="grupo-dia" *ngFor="let grupo of gruposPorDia">
+              <h2 class="grupo-label" style="font-family: 'Nunito', Arial, sans-serif;">{{ grupo.label }}</h2>
+
+              <div class="notificacao-card" *ngFor="let notificacao of grupo.notificacoes"
+                [ngSwitch]="notificacao.tipo">
+
+                <!-- Lembrete -->
+                <div class="notificacao-icone notificacao-icone--lembrete" *ngSwitchCase="'lembrete'">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="#29ABE2" stroke-width="1.8" />
+                    <path d="M12 7V12L15.5 14" stroke="#29ABE2" stroke-width="1.8" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+
+                <!-- Confirmada -->
+                <div class="notificacao-icone notificacao-icone--confirmada" *ngSwitchCase="'confirmada'">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="#22C55E" stroke-width="1.8" />
+                    <path d="M8 12.5L10.5 15L16 9" stroke="#22C55E" stroke-width="1.8" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+
+                <!-- Receita -->
+                <div class="notificacao-icone notificacao-icone--receita" *ngSwitchCase="'receita'">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 3C9.23858 3 7 5.23858 7 8V11.5L5.5 14.5C5.22386 15.0523 5.5 15.75 6.1 15.75H17.9C18.5 15.75 18.7761 15.0523 18.5 14.5L17 11.5V8C17 5.23858 14.7614 3 12 3Z"
+                      stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
+                    <path d="M10 18C10 19.1046 10.8954 20 12 20C13.1046 20 14 19.1046 14 18" stroke="#29ABE2"
+                      stroke-width="1.6" stroke-linecap="round" />
+                  </svg>
+                </div>
+
+                <!-- Cancelada -->
+                <div class="notificacao-icone notificacao-icone--cancelada" *ngSwitchCase="'cancelada'">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="#EF4444" stroke-width="1.8" />
+                    <path d="M9 9L15 15M15 9L9 15" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" />
+                  </svg>
+                </div>
+
+                <!-- Avaliação (fallback também) -->
+                <div class="notificacao-icone notificacao-icone--avaliacao" *ngSwitchDefault>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L14.9 8.6L22 9.3L16.7 14.1L18.2 21.2L12 17.6L5.8 21.2L7.3 14.1L2 9.3L9.1 8.6L12 2Z"
+                      stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
+                  </svg>
+                </div>
+
+                <div class="notificacao-texto">
+                  <div class="notificacao-topo">
+                    <span class="notificacao-titulo" style="font-family: 'Nunito', Arial, sans-serif;">{{
+                      notificacao.titulo }}</span>
+                    <span class="dot-nao-lida" *ngIf="!notificacao.lida"></span>
+                  </div>
+                  <p class="notificacao-mensagem">{{ notificacao.mensagem }}</p>
+                  <span class="notificacao-data">{{ horarioFormatado(notificacao) }}</span>
+
+                </div>
+
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!-- Estado vazio -->
+        <ng-template #vazio>
+          <div class="empty-state">
+            <img style="border-radius: 40px;" src="../../../assets/mail.png">
+
+            <h3 class="empty-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Nenhuma notificação ainda</h3>
+            <p class="empty-texto">
+              Suas notificações vão aparecer aqui assim que você recebê-las.
+            </p>
+          </div>
+        </ng-template>
+
+        <div class="bottom-spacer"></div>
+      </div>
+
+    </div>
+  </ng-template>
+</ion-content>

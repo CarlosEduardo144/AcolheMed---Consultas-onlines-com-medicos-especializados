@@ -9,6 +9,8 @@ import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CommonModule } from '@angular/common'; // 1. Importe o módulo
 import { forkJoin } from 'rxjs';
+import { ConsultaService } from 'src/app/services/consulta-service';
+import { ConsultaResponseModel } from 'src/app/model/consulta-response';
 
 
 @Component({
@@ -25,17 +27,22 @@ export class InicioPage implements OnInit {
   medicosDisponiveis: number;
   especialidadesDisponiveis: number;
   usuario!: PacienteModel | MedicoModel;
+  consultaEmAndamento: ConsultaResponseModel;
   carregandoInicial = true;
+  qtdConsultas: number;
 
   constructor(
     private navCtrl: NavController,
     private usuarioService: UsuarioService,
     private especialidadeService: EspecialidadeService,
     private loginService: LoginService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private consultaService: ConsultaService
   ) {
     this.medicosDisponiveis = 0;
+    this.qtdConsultas = 0;
     this.especialidadesDisponiveis = 0;
+    this.consultaEmAndamento = new ConsultaResponseModel();
   }
 
   ngOnInit() {
@@ -65,6 +72,10 @@ export class InicioPage implements OnInit {
         this.usuario = usuario;
         this.medicosDisponiveis = medicos.length;
         this.especialidadesDisponiveis = especialidades.length;
+        this.carregarConsultasEmAndamento();
+        if (usuario.tipoUsuario == "medico") {
+          this.carregarAgenda();
+        }
         this.carregandoInicial = false;
       },
       error: (erro) => {
@@ -74,11 +85,31 @@ export class InicioPage implements OnInit {
     });
   }
 
+  carregarAgenda() {
+    this.consultaService.getAgendaDoMedico(this.loginService.getUsuario()).subscribe({
+      next: (resultado) => {
+        this.qtdConsultas = resultado.length;
+      },
+      error: (erro) => {
+        this.exibirMensagem("Erro ao carrgar informações da agenda do médico");
+      }
+    });
+  }
+
+  carregarConsultasEmAndamento() {
+    this.consultaService.buscarConsultasEmAndamento(this.loginService.getUsuario()).subscribe({
+      next: (resultado) => {
+        this.consultaEmAndamento = resultado;
+      },
+      error: () => {
+      }
+    });
+  }
+
   carregarUsuario(exibirCarregamento = true) {
     if (exibirCarregamento) {
       this.carregandoInicial = true;
     }
-
     this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
       next: (usuario) => {
 
@@ -118,19 +149,16 @@ export class InicioPage implements OnInit {
     toast.present()
   }
 
-  agendarConsulta() {
-    // navegação para o fluxo de agendamento
-  }
-
   abrirNotificacoes() {
-    // navegação para a tela de notificações
+    this.navCtrl.navigateForward("/notificacoes");
   }
 
   abrirChat() {
     // navegação para o chat da consulta em andamento
   }
 
-  iniciarChamada() {
-    // navegação/ação para iniciar a chamada de vídeo
+  iniciarChamada(linkConsulta: string) {
+    this.consultaService.definirConsultaEmAndamento(this.consultaEmAndamento.id);
+    window.open(linkConsulta, '_system');
   }
 }

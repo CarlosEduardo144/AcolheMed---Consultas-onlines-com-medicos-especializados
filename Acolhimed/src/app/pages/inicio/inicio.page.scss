@@ -210,6 +210,35 @@ $green: #22C55E;
   flex-shrink: 0;
 }
 
+// ---- Empty state ----
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 32px;
+}
+
+.empty-illustration {
+  margin-bottom: 18px;
+}
+
+.empty-titulo {
+  font-size: 17px;
+  font-weight: 800;
+  color: $black;
+  margin: 0 0 6px;
+}
+
+.empty-texto {
+  font-size: 13.5px;
+  color: $gray;
+  margin: 0;
+  max-width: 260px;
+  line-height: 1.5;
+}
+
 // ---- Corpo ----
 .corpo-content {
   padding: 24px 20px 0;

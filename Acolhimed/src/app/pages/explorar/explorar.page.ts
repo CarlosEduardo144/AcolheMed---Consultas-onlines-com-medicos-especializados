@@ -24,6 +24,7 @@ export class ExplorarPage {
 
   medicos: MedicoModel[];
   medicosFiltrados: MedicoModel[];
+  medicosBemAvaliados: MedicoModel[]
   especialidades: EspecialidadeModel[];
   textoBusca: string = '';
   especialidadesFiltradas: EspecialidadeModel[] = [];
@@ -31,28 +32,6 @@ export class ExplorarPage {
   carregandoMedicos: boolean = false;
   carregandoInicial: boolean = true;
   usuario: any;
-
-  dicasSaude = [
-    {
-      icone: 'alimentacao',
-      imagemUrl: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200',
-      titulo: 'Alimentação balanceada',
-      descricao: 'Inclua frutas, legumes e água na rotina para mais energia.'
-    },
-    {
-      icone: 'sono',
-      imagemUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=200',
-      titulo: 'Durma bem',
-      descricao: '7 a 8 horas de sono fortalecem a imunidade e a mente.'
-    },
-    {
-      icone: 'coracao',
-      imagemUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200',
-      titulo: 'Cuide do coração',
-      descricao: 'Exercícios leves diários reduzem riscos cardiovasculares.'
-    }
-  ];
-
 
   constructor(private toastController: ToastController,
     private navCtrl: NavController,
@@ -62,6 +41,7 @@ export class ExplorarPage {
     private router: Router) {
     this.medicos = [];
     this.medicosFiltrados = [];
+    this.medicosBemAvaliados = [];
     this.especialidades = [];
     addIcons({ hardwareChipOutline, medkitOutline, arrowForwardOutline });
 
@@ -73,9 +53,9 @@ export class ExplorarPage {
       next: ({ usuario, especialidades, medicos }) => {
         this.usuario = usuario;
         this.especialidades = especialidades;
-        this.especialidadesFiltradas = especialidades;
         this.medicos = medicos;
-        this.carregandoInicial = false;
+        this.especialidadesFiltradas = especialidades;
+        this.carregarMedicosBemAvaliados()
       },
       error: (erro) => {
         this.carregandoInicial = false;
@@ -84,7 +64,21 @@ export class ExplorarPage {
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
+
+  carregarMedicosBemAvaliados(){
+     this.usuarioService.getMedicosMaisBemAvaliados().subscribe({
+      next: (medicos) => {
+       this.medicosBemAvaliados = medicos;
+        this.carregandoInicial = false;
+      },
+      error: (erro) => {
+        this.carregandoInicial = false;
+        this.exibirMensagem("Erro ao carregar médicos mais bem avaliados.")
+      }
+    });
+  }
 
   get medicosComEspecialidade() {
     return this.medicos.filter(medico => medico.especialidades.length > 0);

@@ -21,16 +21,24 @@ export class ConsultaService {
     return this.http.get<ConsultaResponseModel[]>(`${this.API_URL}/consultas/usuario/${usuarioId}`);
   }
 
+  getAgendaDoMedico(usuarioId: string): Observable<ConsultaResponseModel[]> {
+    return this.http.get<ConsultaResponseModel[]>(`${this.API_URL}/consultas/medico/${usuarioId}/agenda`);
+  }
+
   buscarPorId(consultaID: string): Observable<ConsultaResponseModel> {
     return this.http.get<ConsultaResponseModel>(`${this.API_URL}/consultas/${consultaID}`);
   }
 
-  remarcar(consulta: ConsultaModel): Observable<ConsultaResponseModel> {
-    return this.http.put<ConsultaResponseModel>(`${this.API_URL}/consultas/remarcar/${consulta.id}`, this.montarPayload(consulta));
+  cancelar(consultaId: string, motivoCancelamento: string): Observable<ConsultaResponseModel> {
+    return this.http.patch<ConsultaResponseModel>(`${this.API_URL}/consultas/cancelar/${consultaId}`, motivoCancelamento);
   }
 
-  cancelar(consulta: ConsultaResponseModel): Observable<ConsultaResponseModel> {
-    return this.http.patch<ConsultaResponseModel>(`${this.API_URL}/consultas/cancelar/${consulta.id}`, consulta);
+  definirConsultaEmAndamento(consultaId: string): Observable<ConsultaResponseModel> {
+    return this.http.patch<ConsultaResponseModel>(`${this.API_URL}/consultas/em_andamento/${consultaId}`, {});
+  }
+
+  buscarConsultasEmAndamento(usuarioId: string): Observable<ConsultaResponseModel> {
+    return this.http.get<ConsultaResponseModel>(`${this.API_URL}/consultas/em_andamento/${usuarioId}`);
   }
 
   private montarPayload(consulta: ConsultaModel) {

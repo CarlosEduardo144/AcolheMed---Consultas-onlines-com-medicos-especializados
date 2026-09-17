@@ -1,8 +1,7 @@
 package br.cefet.acolhimed.entity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
-
-import com.google.type.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -36,7 +34,7 @@ public class Avaliacao {
     private Double nota;
 
     @Column(nullable = false)
-    private Date data;
+    private LocalDateTime data;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consulta_id", nullable = false)

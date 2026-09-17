@@ -187,7 +187,7 @@ $star: #FACC15;
   height: 76px;
   border-radius: 16px;
   overflow: hidden;
-  background-color: #1a6fa8;
+  background-color: #2424a2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -573,3 +573,39 @@ $star: #FACC15;
     background: $blue-dark;
   }
 }
+
+.especialidades-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 4px 20px 12px;
+}
+
+.especialidade-card-solido {
+  border-radius: 16px;
+  padding: 16px;
+  height: 70px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.15s ease;
+  box-shadow: 0 6px 10px rgba(8, 41, 80, 0.323);
+
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &.tom-0 { background: linear-gradient(135deg, #2a60a1 0%, #2424a2 100%); }
+  &.tom-1 { background: linear-gradient(135deg, #1b1b95 0%, #2b96de 100%); }
+  &.tom-2 { background: linear-gradient(135deg, #2d2dc1 0%, #2424a2 100%); }
+  &.tom-3 { background: linear-gradient(135deg, #2424a2 0%, #2a5677 100%); }
+}
+
+.esp-nome-solido {
+  color: $white;
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+

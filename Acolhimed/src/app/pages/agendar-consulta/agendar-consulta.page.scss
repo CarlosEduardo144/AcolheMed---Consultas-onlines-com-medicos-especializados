@@ -438,3 +438,18 @@ $star: #FACC15;
     background: rgba(255, 255, 255, 0.12);
   }
 }
+
+.agendandoConsulta {
+  position: fixed;
+  inset: 0;
+  z-index: 9998; // abaixo do overlay de sucesso (9999), mas acima de tudo mais
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.55); // 👈 fundo semi-transparente, não preto
+  backdrop-filter: blur(6px);             // 👈 é isso que borra o CONTEÚDO por trás
+  -webkit-backdrop-filter: blur(6px);     // 👈 suporte Safari/iOS
+
+  animation: fadeIn 0.2s ease;
+}

@@ -37,9 +37,16 @@ public class ConsultaController {
     }
 
     @GetMapping("/usuario/{usuarioId}")
-    @Operation(summary = "Listar Consultas do Usuario")
-    public ResponseEntity<List<ConsultaResponseDTO>> listarPorUsuario(@PathVariable String usuarioId) {
+    @Operation(summary = "Listar Consultas do usuario")
+    public ResponseEntity<List<ConsultaResponseDTO>> listarConsultasDoUsuario(@PathVariable String usuarioId) {
         List<ConsultaResponseDTO> consultas = consultaService.listarConsultasDoUsuario(usuarioId);
+        return ResponseEntity.ok(consultas);
+    }
+
+    @GetMapping("/medico/{medicoId}/agenda")
+    @Operation(summary = "Listar Consultas do usuario")
+    public ResponseEntity<List<ConsultaResponseDTO>> listarAgendaDoDia(@PathVariable String medicoId) {
+        List<ConsultaResponseDTO> consultas = consultaService.listarAgendaDoDia(medicoId);
         return ResponseEntity.ok(consultas);
     }
 
@@ -47,6 +54,13 @@ public class ConsultaController {
     @Operation(summary = "Buscar consulta por ID")
     public ResponseEntity<ConsultaResponseDTO> buscarPorId(@PathVariable String id) {
         ConsultaResponseDTO consultaResponseDTO = consultaService.buscarPorId(id);
+        return ResponseEntity.ok(consultaResponseDTO);
+    }
+
+    @GetMapping("/em_andamento/{id}")
+    @Operation(summary = "Buscar consulta por ID")
+    public ResponseEntity<ConsultaResponseDTO> buscarConsultaEmAndamento(@PathVariable String id) {
+        ConsultaResponseDTO consultaResponseDTO = consultaService.buscarConsultaEmAndamento(id);
         return ResponseEntity.ok(consultaResponseDTO);
     }
 
@@ -72,6 +86,15 @@ public class ConsultaController {
             @PathVariable String id,
             @RequestBody String motivoCancelamento) {
         ConsultaResponseDTO consultaResponseDTO = consultaService.cancelarConsulta(id, motivoCancelamento);
+        return ResponseEntity.ok(consultaResponseDTO);
+    }
+
+    @PatchMapping("/em_andamento/{id}")
+    @Operation(summary = "Definir consulta em andamento")
+    public ResponseEntity<ConsultaResponseDTO> definirConsultaEmAndamento(
+            @PathVariable String id,
+            @RequestBody String motivoCancelamento) {
+        ConsultaResponseDTO consultaResponseDTO = consultaService.definirConsultaEmAndamento(id);
         return ResponseEntity.ok(consultaResponseDTO);
     }
 }

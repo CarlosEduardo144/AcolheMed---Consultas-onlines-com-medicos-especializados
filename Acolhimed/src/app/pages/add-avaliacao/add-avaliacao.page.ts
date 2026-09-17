@@ -91,7 +91,6 @@ export class AddAvaliacaoPage implements OnInit {
   }
 
   enviarAvaliacao() {
-    debugger
     if (!this.podeEnviar || !this.consulta) return;
 
     this.enviando = true;
@@ -99,6 +98,7 @@ export class AddAvaliacaoPage implements OnInit {
     let avaliacao = new AvaliacaoModel();
     avaliacao.comentario = this.comentario;
     if(this.nota < 1 || this.nota > 5){
+      this.enviando = false;
       this.exibirMensagem("A nota deve ser entre 1 e 5");
       return;
     }
@@ -107,12 +107,13 @@ export class AddAvaliacaoPage implements OnInit {
 
     this.avaliacaoService.salvar(avaliacao).subscribe({
       next: (avaliacao) => {
-        this.carregando = false;
+        this.enviando = false;
+        this.avaliacaoEnviada = true;
         this.exibirMensagem("Avaliação salva com sucesso!");
       },
       error: (erro) => {
         console.error(erro);
-        this.carregando = false;
+        this.enviando = false;
         this.exibirMensagem(erro?.error?.message ?? 'Erro ao salvar avaliação');
       }
     });

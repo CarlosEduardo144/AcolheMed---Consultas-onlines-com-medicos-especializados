@@ -9,7 +9,6 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { LoginService } from 'src/app/services/login.service';
 import { ToastController } from '@ionic/angular';
 import { ConsultaResponseModel } from 'src/app/model/consulta-response';
-import Swal from 'sweetalert2';
 
 
 export enum StatusConsulta {
@@ -191,57 +190,10 @@ export class ConsultasPage implements OnInit {
 
   }
 
-  iniciarChamada(linkConsulta: string, event: Event) {
+  iniciarChamada(consulta: ConsultaResponseModel, event: Event) {
+    this.consultaService.definirConsultaEmAndamento(consulta.id);
     event.stopPropagation();
-    window.open(linkConsulta, '_system');
-  }
-
-  cancelarConsulta(consulta: ConsultaResponseModel, event: Event) {
-    event.stopPropagation();
-
-    Swal.fire({
-      title: 'Tem certeza?',
-      text: `Deseja realmente cancelar a consulta?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3880ff',
-      cancelButtonColor: '#222428',
-      confirmButtonText: 'Sim, cancelar!',
-      cancelButtonText: 'Não, manter',
-      // ESTAS DUAS LINHAS ABAIXO CORRIGEM O PROBLEMA NO IONIC:
-      heightAuto: false,
-      target: 'body',
-
-      customClass: {
-        popup: 'custom-swal-card',
-        icon: 'custom-swal-icon'
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.consultaService.cancelar(consulta).subscribe({
-          next: () => {
-            this.carregarConsultas();
-
-            Swal.fire({
-              title: 'Cancelada!',
-              text: 'A consulta foi cancelada com sucesso.',
-              icon: 'success',
-              heightAuto: false,
-
-              customClass: {
-                popup: 'custom-swal-card',
-                icon: 'custom-swal-icon'
-              }
-            });
-
-          },
-          error: (erro) => {
-            console.error(erro);
-            this.exibirMensagem("Erro ao cancelar consulta. " + erro.error.message);
-          }
-        });
-      }
-    });
+    window.open(consulta.linkConsulta, '_system');
   }
 
   abrirDetalhesPopup(consulta: ConsultaResponseModel) {
@@ -273,7 +225,6 @@ export class ConsultasPage implements OnInit {
   remarcarConsulta() {
     const consulta = this.consultaSelecionada!;
     this.fecharPopup();
-    //Agendar
   }
 
   confirmarCancelamento() {
@@ -284,7 +235,7 @@ export class ConsultasPage implements OnInit {
 
     this.cancelando = true;
     if (this.consultaSelecionada != null) {
-      this.consultaService.cancelar(this.consultaSelecionada).subscribe({
+      this.consultaService.cancelar(this.consultaSelecionada.id, this.motivoCancelamento).subscribe({
         next: () => {
           this.cancelando = false;
           this.exibirMensagem('Consulta cancelada.');
@@ -293,7 +244,8 @@ export class ConsultasPage implements OnInit {
         },
         error: (erro) => {
           this.cancelando = false;
-          this.exibirMensagem(erro?.error?.message ?? 'Erro ao cancelar consulta.');
+          console.log(erro)
+          this.exibirMensagem(erro?.message ?? 'Erro ao cancelar consulta.');
         }
       });
     }

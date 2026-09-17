@@ -1,6 +1,6 @@
 package br.cefet.acolhimed.dto;
 
-import com.google.type.Date;
+import java.time.LocalDateTime;
 
 import br.cefet.acolhimed.entity.Avaliacao;
 import lombok.Getter;
@@ -10,7 +10,7 @@ public class AvaliacaoResponseDTO {
     private String id;
     private String comentario;
     private Double nota;
-    private Date data;
+    private LocalDateTime data;
     private String medicoNome;
     private String pacienteNome; 
     private String consultaId;

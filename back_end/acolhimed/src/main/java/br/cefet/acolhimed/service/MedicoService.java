@@ -1,5 +1,6 @@
 package br.cefet.acolhimed.service;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import br.cefet.acolhimed.entity.Medico;
 import br.cefet.acolhimed.enums.TipoUsuario;
 import br.cefet.acolhimed.exception.BusinessException;
 import br.cefet.acolhimed.exception.ResourceNotFoundException;
+import br.cefet.acolhimed.repository.AvaliacaoRepository;
 import br.cefet.acolhimed.repository.MedicoRepository;
 import br.cefet.acolhimed.repository.UsuarioRepository;
 import java.util.Optional;
@@ -25,11 +27,30 @@ public class MedicoService {
     @Autowired
     private UsuarioRepository UsuarioRepository;
 
+    @Autowired 
+    private AvaliacaoRepository avaliacaoRepository;
 
     @Transactional(readOnly = true)
     public List<MedicoResponseDTO> listar() {
         List<Medico> Medicos = MedicoRepository.findAll();
         return Medicos.stream().map(MedicoResponseDTO::new).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<MedicoResponseDTO> listarMedicosBemAvaliados() {
+
+        List<Medico> medicos = MedicoRepository.findAll();
+
+        return medicos.stream()
+                .map(medico -> {
+                    Double media = avaliacaoRepository.calcularMediaAvaliacao(medico.getId());
+                    return new MedicoResponseDTO(medico, media);
+                })
+                .sorted(Comparator.comparing(
+                        MedicoResponseDTO::getMediaAvaliacao,
+                        Comparator.nullsLast(Comparator.reverseOrder())))
+                .limit(20)
+                .toList();
     }
 
     @Transactional
@@ -43,7 +64,7 @@ public class MedicoService {
             throw new BusinessException("Ja existe um usuario com esse email.");
         }
 
-         if(!"medico".equalsIgnoreCase(dto.getTipoUsuario())){
+        if (!"medico".equalsIgnoreCase(dto.getTipoUsuario())) {
             throw new BusinessException("Apenas médicos podem ser cadastrados neste endpoint.");
         }
 
