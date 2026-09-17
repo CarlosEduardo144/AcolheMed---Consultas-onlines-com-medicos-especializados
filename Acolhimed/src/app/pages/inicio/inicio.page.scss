@@ -488,3 +488,20 @@ $green: #22C55E;
     font-weight: 600;
   }
 }
+
+.btn-chat[disabled],
+.btn-chamada[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.status-dot--bloqueado {
+  background-color: #9E9E9E; // substitui a cor de "online" enquanto travado
+}
+
+.consulta-aviso-bloqueio {
+  font-size: 12px;
+  color: #737373;
+  margin: 4px 0 8px;
+}
