@@ -20,19 +20,28 @@ public class ConsultaResponseDTO {
     private StatusConsulta status;
     private String linkConsulta;
     private String observacoes;
+    private Boolean possuiAvaliacao;
+    private Boolean possuiPrescricao;
 
-    public ConsultaResponseDTO(Consulta consulta) {
-        this.id = consulta.getId();
-        this.motivoCancelamento = consulta.getMotivoCancelamento();
-        this.paciente = new PacienteResponseDTO(consulta.getPaciente());
-        this.medico = new MedicoResponseDTO(consulta.getMedico());
-        this.dataHora = consulta.getDataHora();
-        this.pacienteNome = consulta.getPaciente().getNome();
-        this.medicoNome = consulta.getMedico().getNome();
-        this.especialidadeId = consulta.getEspecialidade().getId();
-        this.especialidadeNome = consulta.getEspecialidade().getNome();
-        this.status = consulta.getStatus();
-        this.linkConsulta = consulta.getLinkConsulta();
-        this.observacoes = consulta.getObservacoes();
+    
+    public ConsultaResponseDTO(Consulta consulta, MedicoResponseDTO medicoDTO) {
+        this(consulta, medicoDTO, false, false);
     }
+
+    public ConsultaResponseDTO(Consulta consulta, MedicoResponseDTO medicoDTO, Boolean possuiAvaliacao, Boolean possuiPrescricao) {
+    this.id = consulta.getId();
+    this.motivoCancelamento = consulta.getMotivoCancelamento();
+    this.paciente = new PacienteResponseDTO(consulta.getPaciente());
+    this.medico = medicoDTO;
+    this.dataHora = consulta.getDataHora();
+    this.pacienteNome = consulta.getPaciente().getNome();
+    this.medicoNome = consulta.getMedico().getNome();
+    this.especialidadeId = consulta.getEspecialidade().getId();
+    this.especialidadeNome = consulta.getEspecialidade().getNome();
+    this.status = consulta.getStatus();
+    this.linkConsulta = consulta.getLinkConsulta();
+    this.observacoes = consulta.getObservacoes();
+    this.possuiAvaliacao = possuiAvaliacao;
+    this.possuiPrescricao = possuiPrescricao;
+}
 }

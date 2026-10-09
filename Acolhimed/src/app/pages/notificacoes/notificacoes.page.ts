@@ -26,11 +26,10 @@ export class NotificacoesPage implements OnInit {
   notificacoes: NotificacaoModel[] = [];
   carregando = true;
 
-  constructor(private navCtrl: NavController, private toastController: ToastController, private loginService: LoginService, private notificacaoService: NotificacaoService) {}
+  constructor(private navCtrl: NavController, private toastController: ToastController, private loginService: LoginService, private notificacaoService: NotificacaoService) { }
 
   ngOnInit() {
     this.carregarNotificacoes();
-    this.marcarComoLidas();
   }
 
   private carregarNotificacoes() {
@@ -38,6 +37,9 @@ export class NotificacoesPage implements OnInit {
       next: (notificacoes) => {
         this.notificacoes = notificacoes;
         this.carregando = false;
+        if (notificacoes.length > 0) {
+          this.marcarComoLidas();
+        }
       },
       error: (erro) => {
         this.exibirMensagem(erro?.error?.message || 'Erro ao tentar carregar notificações');
@@ -45,7 +47,7 @@ export class NotificacoesPage implements OnInit {
     });
   }
 
-   private marcarComoLidas() {
+  private marcarComoLidas() {
     this.notificacaoService.marcarComoLidas(this.loginService.getUsuario()).subscribe({
       next: () => {
       },

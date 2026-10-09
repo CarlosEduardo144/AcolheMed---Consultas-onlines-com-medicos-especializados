@@ -50,8 +50,11 @@
                   d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
                   fill="#FACC15" stroke="#FACC15" stroke-width="1.5" stroke-linejoin="round" />
               </svg>
-              <!-- <span>{{ mediaFormatada() }} ({{ totalAvaliacoes() }} avaliações)</span> -->
-              <span>4.5 (231 avaliações)</span>
+              @if (medico?.mediaAvaliacao) {
+              <span>{{medico.mediaAvaliacao}}</span>
+              } @else{
+                <span>0.0</span>
+              }
             </div>
           </div>
         </div>

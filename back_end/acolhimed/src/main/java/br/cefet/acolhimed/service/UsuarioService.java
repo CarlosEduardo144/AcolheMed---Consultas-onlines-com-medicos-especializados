@@ -12,6 +12,7 @@ import br.cefet.acolhimed.dto.UsuarioResponseDTO;
 import br.cefet.acolhimed.entity.Medico;
 import br.cefet.acolhimed.entity.Usuario;
 import br.cefet.acolhimed.exception.ResourceNotFoundException;
+import br.cefet.acolhimed.repository.AvaliacaoRepository;
 import br.cefet.acolhimed.repository.UsuarioRepository;
 
 @Service
@@ -19,6 +20,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private AvaliacaoRepository avaliacaoRepository;
 
     @Transactional(readOnly = true)
     public List<UsuarioResponseDTO> listar() {
@@ -31,8 +35,9 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado. Id: " + id));
 
-        if (usuario instanceof Medico) {
-            return new MedicoResponseDTO((Medico) usuario);
+        if (usuario instanceof Medico medico) {
+            Double media = avaliacaoRepository.calcularMediaAvaliacao(medico.getId());
+            return new MedicoResponseDTO(medico, media);
         }
 
         return new UsuarioResponseDTO(usuario);
@@ -56,8 +61,9 @@ public class UsuarioService {
             throw new RuntimeException("E-mail ou senha incorretos.");
         }
 
-        if (usuario instanceof Medico) {
-            return new MedicoResponseDTO((Medico) usuario);
+        if (usuario instanceof Medico medico) {
+            Double media = avaliacaoRepository.calcularMediaAvaliacao(medico.getId());
+            return new MedicoResponseDTO(medico, media);
         }
 
         return new UsuarioResponseDTO(usuario);

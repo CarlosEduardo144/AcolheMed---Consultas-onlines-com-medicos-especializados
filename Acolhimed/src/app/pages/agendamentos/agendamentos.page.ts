@@ -17,6 +17,8 @@ export enum StatusConsulta {
   cancelada = 'cancelada',
 }
 
+const JANELA_CANCELAMENTO_HORAS = 1;
+
 interface GrupoDia {
   label: string;
   consultas: ConsultaResponseModel[];
@@ -64,6 +66,7 @@ export class AgendamentosPage implements OnInit {
   }
 
   ngOnInit() {
+    this.fecharPopup();
     this.carregarUsuario();
   }
 
@@ -189,6 +192,15 @@ export class AgendamentosPage implements OnInit {
     return diffMinutos <= JANELA_CHAMADA_MINUTOS;
   }
 
+  podePrescrever(consulta: ConsultaResponseModel): boolean {
+    return consulta.status === StatusConsulta.em_andamento && !consulta.possuiPrescricao;
+  }
+
+  irParaPrescricao() {
+    const consulta = this.consultaSelecionada!;
+    this.navCtrl.navigateForward(['/add-prescricao', consulta.id]);
+  }
+
   horarioFormatado(consulta: ConsultaResponseModel): string {
     return consulta.dataHora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   }
@@ -198,7 +210,6 @@ export class AgendamentosPage implements OnInit {
     return nome.trim().slice(0, 2).toUpperCase();
   }
 
-  // ---- Ações ----
   trocarAba(aba: 'hoje' | 'todas') {
     this.abaAtiva = aba;
   }
@@ -208,7 +219,13 @@ export class AgendamentosPage implements OnInit {
   }
 
   iniciarChamada(consulta: ConsultaResponseModel, event: Event) {
-    this.consultaService.definirConsultaEmAndamento(consulta.id);
+    this.consultaService.definirConsultaEmAndamento(consulta.id).subscribe({
+      next: () => {
+      },
+      error: (erro) => {
+        console.log(erro);
+      }
+    });
     event.stopPropagation();
     window.open(consulta.linkConsulta, '_system');
   }
@@ -226,6 +243,12 @@ export class AgendamentosPage implements OnInit {
 
   irParaCancelamento() {
     this.modoPopup = 'cancelar';
+  }
+
+  podeCancelar(consulta: ConsultaResponseModel) {
+    if (consulta.status !== StatusConsulta.agendada) return false;
+    const horasAteConsulta = (consulta.dataHora.getTime() - Date.now()) / (1000 * 60 * 60);
+    return horasAteConsulta >= JANELA_CANCELAMENTO_HORAS;
   }
 
   voltarParaDetalhes() {

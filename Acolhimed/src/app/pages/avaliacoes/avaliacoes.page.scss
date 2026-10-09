@@ -3,6 +3,7 @@ $blue-dark: #1a6fa8;
 $black: #141414;
 $gray: #737373;
 $gray-light: #F5F5F5;
+$navy: #10243E;
 $border: #E8E8E8;
 $white: #FFFFFF;
 $amber: #F5A623;
@@ -53,7 +54,6 @@ $amber: #F5A623;
 .btn-icon-header {
   position: relative;
   width: 40px;
-  margin-top: 3px;
   height: 40px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
@@ -188,7 +188,7 @@ $amber: #F5A623;
   cursor: pointer;
 
   &--ativo {
-    background: $blue;
+    background: $navy;
     color: $white;
     font-weight: 700;
   }
@@ -236,7 +236,7 @@ img {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: black;
+  background: #10243E;
   color: $white;
   display: flex;
   align-items: center;
@@ -312,7 +312,7 @@ img {
 }
 
 .empty-texto {
-  font-size: 13.5px;
+  font-size: 15px;
   color: $gray;
   text-align: center;
   margin: 16px 0 0;

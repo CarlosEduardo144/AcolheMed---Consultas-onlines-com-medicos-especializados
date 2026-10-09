@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.cefet.acolhimed.dto.AvaliacaoRequestDTO;
 import br.cefet.acolhimed.dto.AvaliacaoResponseDTO;
-import br.cefet.acolhimed.dto.HorarioResponseDTO;
+import java.time.ZoneId;
 import br.cefet.acolhimed.entity.Avaliacao;
 import br.cefet.acolhimed.entity.Consulta;
 import br.cefet.acolhimed.entity.Medico;
@@ -55,7 +55,7 @@ public class AvaliacaoService {
 
         Avaliacao avaliacao = new Avaliacao();
         avaliacao.setComentario(dto.getComentario());
-        avaliacao.setData(LocalDateTime.now());
+        avaliacao.setData(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         avaliacao.setNota(dto.getNota());
         avaliacao.setConsulta(consulta);
 

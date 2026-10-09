@@ -1,0 +1,96 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+<ion-content class="validar-content" [fullscreen]="true">
+
+  <!-- Hero -->
+  <div class="hero-banner">
+    <div class="hero-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+    </div>
+
+  <div class="hero-topbar">
+    <button class="header-back" onclick="history.back()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M21 12C21 12.4142 20.6642 12.75 20.25 12.75H5.56031L11.0306 18.2194C11.3237 18.5124 11.3237 18.9876 11.0306 19.2806C10.7376 19.5737 10.2624 19.5737 9.96937 19.2806L3.21937 12.5306C3.07854 12.3899 2.99941 12.1991 2.99941 12C2.99941 11.8009 3.07854 11.6101 3.21937 11.4694L9.96937 4.71938C10.2624 4.42632 10.7376 4.42632 11.0306 4.71938C11.3237 5.01243 11.3237 5.48757 11.0306 5.78062L5.56031 11.25H20.25C20.6642 11.25 21 11.5858 21 12Z"
+          fill="white" />
+      </svg>
+    </button>
+
+    <div class="hero-titulos">
+      <span class="hero-marca">AcolhiMed</span>
+      <h1 style="font-family: Nunito;">Validar prescrição</h1>
+    </div>
+  </div>
+  </div>
+
+  <!-- Resultado -->
+  <div class="resultado-card" aria-live="polite" [ngSwitch]="estado">
+
+    <!-- Carregando -->
+    <ng-container *ngSwitchCase="'carregando'">
+      <div class="icone-circulo icone-circulo--carregando">
+        <svg class="spinner" width="44" height="44" viewBox="0 0 44 44" fill="none">
+          <path d="M22 5C31.3888 5 39 12.6112 39 22" stroke="#0B84E8" stroke-width="4" stroke-linecap="round" />
+        </svg>
+      </div>
+      <h2 class="resultado-titulo resultado-titulo--neutro" style="font-family: Nunito;">Verificando prescrição...</h2>
+      <p class="resultado-texto">Consultando o token no banco de dados do <strong>AcolhiMed</strong>.</p>
+    </ng-container>
+
+    <!-- Válida -->
+    <ng-container *ngSwitchCase="'valida'">
+      <div class="icone-circulo icone-circulo--valida">
+        <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+          <circle class="anim-anel" cx="28" cy="28" r="25" stroke="#22C55E" stroke-width="3.4" />
+          <path class="anim-marca" d="M17 29L25 37L40 20" stroke="#22C55E" stroke-width="4" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2 class="resultado-titulo resultado-titulo--valida" style="font-family: Nunito;">Prescrição válida</h2>
+      <p class="resultado-texto">Esta prescrição foi emitida pelo <strong>AcolhiMed</strong> e é autêntica.</p>
+    </ng-container>
+
+    <!-- Não encontrada -->
+    <ng-container *ngSwitchCase="'invalida'">
+      <div class="icone-circulo icone-circulo--invalida">
+        <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+          <circle cx="28" cy="28" r="25" stroke="#EF4444" stroke-width="3.4" />
+          <path d="M20 20L36 36M36 20L20 36" stroke="#EF4444" stroke-width="4" stroke-linecap="round" />
+        </svg>
+      </div>
+      <h2 class="resultado-titulo resultado-titulo--invalida" style="font-family: Nunito;">Prescrição não encontrada
+      </h2>
+      <p class="resultado-texto">
+        O token da prescrição não foi encontrado no <strong>AcolhiMed</strong>.
+        Verifique o link novamente.
+      </p>
+    </ng-container>
+
+    <!-- Falha de conexão (não significa que a prescrição é inválida) -->
+    <ng-container *ngSwitchCase="'erro'">
+      <div class="icone-circulo icone-circulo--erro">
+        <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+          <circle cx="28" cy="28" r="25" stroke="#F59E0B" stroke-width="3.4" />
+          <path d="M28 16V31" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" />
+          <circle cx="28" cy="39" r="2.4" fill="#F59E0B" />
+        </svg>
+      </div>
+      <h2 class="resultado-titulo resultado-titulo--neutro">Não foi possível verificar</h2>
+      <p class="resultado-texto">
+        Não conseguimos consultar o <strong>AcolhiMed</strong> agora.
+        Verifique sua conexão e tente novamente.
+      </p>
+      <button type="button" class="btn-tentar" (click)="validar()">Tentar novamente</button>
+    </ng-container>
+
+  </div>
+
+  <p class="nota-rodape">
+    A validação confirma apenas a autenticidade da emissão, sem exibir dados sigilosos do paciente.
+  </p>
+
+</ion-content>

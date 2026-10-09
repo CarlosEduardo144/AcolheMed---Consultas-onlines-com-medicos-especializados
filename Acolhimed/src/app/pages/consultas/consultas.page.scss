@@ -211,13 +211,63 @@ $amber: #F5A623;
   }
 
   &--andamento {
-    background: $navy;
+    background: rgb(213, 117, 7);
   }
 
   &--agendada {
     background: $gray-light;
   }
 }
+
+.filtro-painel {
+    background: $white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(15, 40, 70, 0.203);
+    animation: expandir 0.2s ease;
+}
+
+.filtro-secao-titulo {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    color: $gray;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+
+    &:not(:first-child) {
+        margin-top: 18px;
+    }
+}
+
+.filtro-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filtro-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 9px 14px;
+    border-radius: 20px;
+    background: $gray-light;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    cursor: pointer;
+
+    &--ativo {
+        background: $navy;
+        color: $white;
+        font-weight: 700;
+    }
+}
+
 
 // ---- Card da consulta ----
 .consulta-card {
@@ -626,6 +676,18 @@ $amber: #F5A623;
     background: #ffdddd;
     color: $red;
   }
+
+   &--imprimir {
+        background: #10243E;
+        border: none;
+        color: #FFFFFF;
+        box-shadow: 0 4px 14px rgba(16, 36, 62, 0.3);
+
+        &:active {
+            background: #1a3350;
+            opacity: 0.9;
+        }
+    }
 }
 
 // ---- Cancelar ----

@@ -211,7 +211,7 @@ $amber: #F5A623;
     }
 
     &--andamento {
-        background: $navy;
+        background:  rgb(213, 117, 7);
     }
 
     &--agendada {
@@ -362,7 +362,7 @@ $amber: #F5A623;
     justify-content: center;
     background-color: rgb(240, 240, 240);
     border-radius: 25px;
-    border: 1px solid  rgb(218, 218, 218);
+    border: 1px solid rgb(218, 218, 218);
     margin: 20px;
     padding-bottom: 100px;
 }
@@ -627,7 +627,7 @@ $amber: #F5A623;
     cursor: pointer;
 
     &--outline {
-        background: #F5F5F5;
+        background: #e4f0fe;
         color: $blue;
         border: 1.5px solid $blue;
 
@@ -637,6 +637,19 @@ $amber: #F5A623;
         border: 1.5px solid red;
         background: #ffdddd;
         color: $red;
+    }
+
+
+    &--prescrever {
+        background: #10243E;
+        border: none;
+        color: #FFFFFF;
+        box-shadow: 0 4px 14px rgba(16, 36, 62, 0.3);
+
+        &:active {
+            background: #1a3350;
+            opacity: 0.9;
+        }
     }
 }
 
@@ -675,12 +688,12 @@ $amber: #F5A623;
 }
 
 .filtro-painel {
-  background: $white;
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 10px rgba(15, 40, 70, 0.203);
-  animation: expandir 0.2s ease;
+    background: $white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(15, 40, 70, 0.203);
+    animation: expandir 0.2s ease;
 }
 
 .filtro-secao-titulo {
@@ -717,7 +730,7 @@ $amber: #F5A623;
     cursor: pointer;
 
     &--ativo {
-        background: $blue;
+        background: $navy;
         color: $white;
         font-weight: 700;
     }

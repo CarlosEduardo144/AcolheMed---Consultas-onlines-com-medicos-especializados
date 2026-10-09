@@ -33,21 +33,4 @@ public class MedicoResponseDTO extends UsuarioResponseDTO {
         this.mediaAvaliacao = mediaAvaliacao;
     }
 
-    public MedicoResponseDTO(Medico medico) {
-        this.setId(medico.getId());
-        this.setNome(medico.getNome());
-        this.setEmail(medico.getEmail());
-        this.setDataNascimento(medico.getDataNascimento());
-        this.setCpf(medico.getCpf());
-        this.setFoto(medico.getFoto());
-        this.setTipoUsuario(TipoUsuario.medico);
-        this.sobreMim = medico.getSobreMim();
-        this.crm = medico.getCrm();
-        this.formacaoAcademica = medico.getFormacaoAcademica();
-        this.ufEmissao = medico.getUfEmissao();
-        this.especialidades = medico.getEspecialidades().stream()
-                .map(medicoEspec -> new EspecialidadeResponseDTO(medicoEspec.getEspecialidade()))
-                .toArray(EspecialidadeResponseDTO[]::new);
-        this.mediaAvaliacao = 0.0;
-    }
 }

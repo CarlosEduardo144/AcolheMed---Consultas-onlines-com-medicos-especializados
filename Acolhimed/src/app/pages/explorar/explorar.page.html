@@ -20,11 +20,11 @@
 
       <div class="hero-topbar">
         <h1 class="hero-titulo" style="font-family: 'Nunito', Arial, sans-serif;">Explorar</h1>
-        <button class="btn-filtro">
+        <!-- <button class="btn-filtro">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M4 6H20M7 12H17M10 18H14" stroke="white" stroke-width="1.8" stroke-linecap="round" />
           </svg>
-        </button>
+        </button> -->
       </div>
 
       <div class="search-box">
@@ -150,8 +150,38 @@
         </div>
       </div>
 
+      <div class="card-especialista" *ngIf="!textoBusca && !especialidadeSelecionada && medicosBemAvaliados.length == 0">
+        <div class="icone-especialista">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+            <path d="M8.5 4.5C8.5 3.12 9.62 2 11 2H13C14.38 2 15.5 3.12 15.5 4.5V5.5" stroke="currentColor"
+              stroke-width="1.8" stroke-linecap="round" />
+
+            <path d="M8 5C5.79 5 4 6.79 4 9V12C4 14.76 6.24 17 9 17H10V20" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" />
+
+            <path d="M16 5C18.21 5 20 6.79 20 9V12C20 14.76 17.76 17 15 17H14V20" stroke="currentColor"
+              stroke-width="1.8" stroke-linecap="round" />
+
+            <circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="1.8" />
+
+            <path d="M18.5 17V20M17 18.5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <div class="texto-especialista">
+          <h3>Encontre o especialista ideal</h3>
+
+          <p>
+            Explore nossas especialidades e encontre
+            médicos qualificados para você.
+          </p>
+        </div>
+
+      </div>
+
       <!-- Médicos em destaque -->
-      <div class="section" *ngIf="!textoBusca && !especialidadeSelecionada && medicos.length > 0">
+      <div class="section" *ngIf="!textoBusca && !especialidadeSelecionada && medicosBemAvaliados.length > 0">
         <div class="section-header">
           <h2 class="section-title">Médicos em destaque</h2>
         </div>

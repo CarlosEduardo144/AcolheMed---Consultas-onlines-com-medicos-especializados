@@ -314,21 +314,6 @@ export class AgendarCosultaPage implements OnInit {
     return !!this.diaSelecionado && !!this.horarioSelecionado;
   }
 
-  /*
-  mediaAvaliacoes(): number {
-    if (!this.medico?.avaliacoes?.length) return 0;
-    const soma = this.medico.avaliacoes.reduce((acc, av) => acc + av.nota, 0);
-    return soma / this.medico.avaliacoes.length;
-  }
-
-  mediaFormatada(): string {
-    return this.mediaAvaliacoes().toFixed(1).replace('.', ',');
-  }
-
-  totalAvaliacoes(): number {
-    return this.medico?.avaliacoes?.length ?? 0;
-  }*/
-
   confirmarAgendamento() {
     this.agendandoConsulta = true;
     let consulta = new ConsultaModel;

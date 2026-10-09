@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
 import {
   IonContent,
@@ -60,7 +60,8 @@ export class PerfilPage {
     private loginService: LoginService,
     private usuarioService: UsuarioService,
     private toastController: ToastController,
-    private horarioService: HorarioService
+    private horarioService: HorarioService,
+    private router: Router
   ) {
     this.buscarUsuario();
   }
@@ -88,6 +89,23 @@ export class PerfilPage {
 
   ionViewWillEnter() {
     this.buscarUsuario();
+  }
+
+  abrirAvaliacoes() {
+    if (!this.usuario) {
+      return;
+    }
+
+    if (this.usuario.tipoUsuario === 'medico') {
+      this.router.navigate(['/avaliacoes', this.usuario.id]);
+    } else {
+      this.router.navigate(['/consultas'], {
+        queryParams: {
+          aba: 'historico',
+          status: 'finalizada'
+        }
+      });
+    }
   }
 
   buscarUsuario() {

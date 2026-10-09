@@ -71,14 +71,14 @@ public class ConsultaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(consultaResponseDTO);
     }
 
-    @PutMapping("/remarcar/{id}")
-    @Operation(summary = "Remarcar Consulta")
-    public ResponseEntity<ConsultaResponseDTO> remarcar(
-            @PathVariable String id,
-            @RequestBody ConsultaRequestDTO consultaRequestDTO) {
-        ConsultaResponseDTO consultaResponseDTO = consultaService.remarcarConsulta(id, consultaRequestDTO);
-        return ResponseEntity.ok(consultaResponseDTO);
-    }
+    // @PutMapping("/remarcar/{id}")
+    // @Operation(summary = "Remarcar Consulta")
+    // public ResponseEntity<ConsultaResponseDTO> remarcar(
+    //         @PathVariable String id,
+    //         @RequestBody ConsultaRequestDTO consultaRequestDTO) {
+    //     ConsultaResponseDTO consultaResponseDTO = consultaService.remarcarConsulta(id, consultaRequestDTO);
+    //     return ResponseEntity.ok(consultaResponseDTO);
+    // }
 
     @PatchMapping("/cancelar/{id}")
     @Operation(summary = "Cancelar Consulta")

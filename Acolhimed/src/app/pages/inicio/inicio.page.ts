@@ -30,6 +30,7 @@ export class InicioPage implements OnInit {
   consultaEmAndamento: ConsultaResponseModel;
   carregandoInicial = true;
   qtdConsultas: number;
+  qtdPacientesAtendidos: number;
 
   constructor(
     private navCtrl: NavController,
@@ -41,6 +42,7 @@ export class InicioPage implements OnInit {
   ) {
     this.medicosDisponiveis = 0;
     this.qtdConsultas = 0;
+    this.qtdPacientesAtendidos = 0;
     this.especialidadesDisponiveis = 0;
     this.consultaEmAndamento = new ConsultaResponseModel();
   }
@@ -73,6 +75,7 @@ export class InicioPage implements OnInit {
         this.medicosDisponiveis = medicos.length;
         this.especialidadesDisponiveis = especialidades.length;
         this.carregarConsultasEmAndamento();
+        this.carregarQtdPacientesAtendidos();
         if (usuario.tipoUsuario == "medico") {
           this.carregarAgenda();
         }
@@ -81,6 +84,20 @@ export class InicioPage implements OnInit {
       error: (erro) => {
         this.carregandoInicial = false;
         this.exibirMensagem(erro.error?.message || 'Erro ao carregar informações iniciais.');
+      }
+    });
+  }
+
+
+  carregarQtdPacientesAtendidos() {
+    this.consultaService.getConsultas(this.loginService.getUsuario()).subscribe({
+      next: (resultado) => {
+        this.qtdPacientesAtendidos = resultado.filter(
+          consulta => consulta.status === 'finalizada'
+        ).length;
+      },
+      error: (erro) => {
+        this.exibirMensagem('Erro ao carregar consultas do médico');
       }
     });
   }

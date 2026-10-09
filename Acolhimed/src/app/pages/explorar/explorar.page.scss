@@ -203,6 +203,8 @@ $star: #FACC15;
   }
 }
 
+
+
 .medico-info-wrap-h {
   flex: 1;
   min-width: 0;
@@ -274,6 +276,70 @@ $star: #FACC15;
   }
 }
 
+//card 
+.card-especialista {
+  margin: 24px 24px 0;
+  padding: 12px 10px;
+
+  display: flex;
+  align-items: start;
+  gap: 15px;
+
+  background: #eaf6ff;
+  border-radius: 24px;
+
+  color: #17458f;
+
+  box-sizing: border-box;
+}
+
+.icone-especialista {
+  width: 60px;
+  height: 60px;
+
+  min-width: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #dcefff;
+  border-radius: 22px;
+
+  color: #1478d4;
+}
+
+.texto-especialista {
+  flex: 1;
+}
+
+.texto-especialista h3 {
+  margin: 0 0 8px;
+
+  font-size: 18px;
+  font-family: 'Nunito';
+  line-height: 1.2;
+  font-weight: 700;
+
+  color: #123d82;
+}
+
+.texto-especialista p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+
+  color: #5f789c;
+}
+
+.titulo-especialidades {
+  margin: 30px 24px 18px;
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #171717;
+}
+
 // ---- Médico card destaque ----
 .medico-card-destaque {
   flex-shrink: 0;
@@ -283,6 +349,7 @@ $star: #FACC15;
   border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
+  box-shadow: 5px 6px 16px rgba(9, 54, 109, 0.156);
 
   &:active {
     opacity: 0.85;

@@ -90,5 +90,21 @@ export const routes: Routes = [
     path: 'agendamentos',
     loadComponent: () => import('./pages/agendamentos/agendamentos.page').then( m => m.AgendamentosPage)
   },
+  {
+    path: 'add-prescricao',
+    loadComponent: () => import('./pages/add-prescricao/add-prescricao.page').then( m => m.AddPrescricaoPage)
+  },
+  {
+    path: 'add-prescricao/:id',
+    loadComponent: () => import('./pages/add-prescricao/add-prescricao.page').then( m => m.AddPrescricaoPage)
+  },
+  {
+    path: 'validar-prescricao',
+    loadComponent: () => import('./pages/validar-prescricao/validar-prescricao.page').then( m => m.ValidarPrescricaoPage)
+  },
+  {
+    path: 'validar-prescricao/:token',
+    loadComponent: () => import('./pages/validar-prescricao/validar-prescricao.page').then( m => m.ValidarPrescricaoPage)
+  },
 ];
 

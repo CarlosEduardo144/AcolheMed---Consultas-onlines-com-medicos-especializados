@@ -122,7 +122,8 @@
               stroke="#29ABE2" stroke-width="1.6" stroke-linejoin="round" />
           </svg>
         </div>
-        <span class="section-title" style="font-family: 'Nunito', Arial, sans-serif;">{{ totalAvaliacoes }} avaliações</span>
+        <span *ngIf="totalAvaliacoes == 0" style="color: gray;">Este médico ainda não possui avaliações.</span>
+        <span *ngIf="totalAvaliacoes > 0" style="color: black; font-family: Nunito;">Avaliações</span>
       </div>
 
       <div class="resumo-avaliacoes" *ngIf="totalAvaliacoes > 0">

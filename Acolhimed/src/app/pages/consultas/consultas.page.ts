@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ConsultaModel } from 'src/app/model/consulta.model';
 import { ConsultaService } from 'src/app/services/consulta-service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { LoginService } from 'src/app/services/login.service';
 import { ToastController } from '@ionic/angular';
 import { ConsultaResponseModel } from 'src/app/model/consulta-response';
+import { PrescricaoService } from 'src/app/services/prescricao-service';
 
 
 export enum StatusConsulta {
@@ -17,6 +18,9 @@ export enum StatusConsulta {
   finalizada = 'finalizada',
   cancelada = 'cancelada',
 }
+
+type FiltroOrdenacaoAgendamento = 'recentes' | 'antigas';
+type FiltroStatusAgendamento = 'todas' | StatusConsulta;
 
 interface GrupoDia {
   label: string;
@@ -40,6 +44,10 @@ export class ConsultasPage implements OnInit {
   consultasCarregadas = false;
   usuario: any;
 
+  painelFiltroAberto = false;
+  filtroOrdenacao: FiltroOrdenacaoAgendamento = 'recentes';
+  filtroStatus: FiltroStatusAgendamento = 'todas';
+
   consultaSelecionada: ConsultaResponseModel | null = null;
   modoPopup: 'detalhes' | 'cancelar' = 'detalhes';
   motivoCancelamento = '';
@@ -53,13 +61,23 @@ export class ConsultasPage implements OnInit {
     private consultaService: ConsultaService,
     private usuarioService: UsuarioService,
     private loginService: LoginService,
-    private toastController: ToastController
+    private prescricaoService: PrescricaoService,
+    private toastController: ToastController,
+    private route: ActivatedRoute
   ) {
     this.consultas = [];
   }
 
   ngOnInit() {
     this.carregarUsuario();
+    this.route.queryParams.subscribe(params => {
+      if (params['aba']) {
+        this.abaAtiva = params['aba'];
+      }
+      if (params['status']) {
+        this.filtroStatus = params['status'];
+      }
+    });
   }
 
   carregarConsultas() {
@@ -104,19 +122,41 @@ export class ConsultasPage implements OnInit {
 
   // ---- Filtragem por aba + busca ----
   get consultasFiltradas(): ConsultaResponseModel[] {
-    const statusProximas = [StatusConsulta.agendada, StatusConsulta.em_andamento];
-    const statusHistorico = [StatusConsulta.finalizada, StatusConsulta.cancelada];
+    const statusProximas = [
+      StatusConsulta.agendada,
+      StatusConsulta.em_andamento
+    ];
 
-    const statusPermitidos = this.abaAtiva === 'proximas' ? statusProximas : statusHistorico;
+    const statusHistorico = [
+      StatusConsulta.finalizada,
+      StatusConsulta.cancelada
+    ];
+
+    const statusPermitidos =
+      this.abaAtiva === 'proximas' ? statusProximas : statusHistorico;
+
     const termo = this.textoBusca.trim().toLowerCase();
 
     return this.consultas
+      // Filtra conforme a aba selecionada
       .filter(c => statusPermitidos.includes(c.status as StatusConsulta))
-      .filter(c => !termo || c.medicoNome.toLowerCase().includes(termo))
+
+      // Aplica o filtro de status escolhido
+      .filter(c =>
+        this.filtroStatus === 'todas' ||
+        c.status === this.filtroStatus
+      )
+
+      // Aplica a busca pelo nome do médico
+      .filter(c =>
+        !termo || c.medicoNome.toLowerCase().includes(termo)
+      )
+
+      // Aplica a ordenação escolhida
       .sort((a, b) =>
-        this.abaAtiva === 'proximas'
-          ? a.dataHora.getTime() - b.dataHora.getTime()
-          : b.dataHora.getTime() - a.dataHora.getTime()
+        this.filtroOrdenacao === 'recentes'
+          ? b.dataHora.getTime() - a.dataHora.getTime()
+          : a.dataHora.getTime() - b.dataHora.getTime()
       );
   }
 
@@ -166,10 +206,18 @@ export class ConsultasPage implements OnInit {
 
   podeChamar(consulta: ConsultaResponseModel): boolean {
     if (consulta.status === StatusConsulta.em_andamento) return true;
-    if (!consulta.linkConsulta) return false;
+    if (consulta.linkConsulta) return false;
     if (consulta.status !== StatusConsulta.agendada) return false;
     const diffMinutos = Math.abs(consulta.dataHora.getTime() - Date.now()) / (1000 * 60);
     return diffMinutos <= JANELA_CHAMADA_MINUTOS;
+  }
+
+  podeAvaliar(consulta: ConsultaResponseModel): boolean {
+    return consulta.status === StatusConsulta.finalizada && !consulta.possuiAvaliacao;
+  }
+
+  podeImprimirPrescricao(consulta: ConsultaResponseModel): boolean {
+    return consulta.status === StatusConsulta.finalizada && consulta.possuiPrescricao;
   }
 
   horarioFormatado(consulta: ConsultaResponseModel): string {
@@ -191,7 +239,13 @@ export class ConsultasPage implements OnInit {
   }
 
   iniciarChamada(consulta: ConsultaResponseModel, event: Event) {
-    this.consultaService.definirConsultaEmAndamento(consulta.id);
+    this.consultaService.definirConsultaEmAndamento(consulta.id).subscribe({
+      next: () => {
+      },
+      error: (erro) => {
+        console.log(erro);
+      }
+    });
     event.stopPropagation();
     window.open(consulta.linkConsulta, '_system');
   }
@@ -256,12 +310,39 @@ export class ConsultasPage implements OnInit {
     this.navCtrl.navigateForward(['/avaliar-consulta', consulta.id]);
   }
 
+  imprimirPrescricao(consulta: ConsultaResponseModel) {
+    this.prescricaoService.buscarPrescricaoPorConsulta(consulta.id).subscribe({
+      next: (prescricao) => {
+        this.prescricaoService.imprimirPrescricao(prescricao.id).subscribe({
+          next: (pdf) => {
+            const url = URL.createObjectURL(pdf);
+            window.open(url, '_blank');
+          },
+          error: (erro) => {
+            this.exibirMensagem(erro.error?.message ?? 'Erro ao gerar PDF da prescrição.');
+          }
+        });
+      },
+      error: (erro) => {
+        this.exibirMensagem(erro.error?.message ?? 'Prescrição não encontrada.');
+      }
+    });
+  }
+
   abrirNotificacoes() {
     this.navCtrl.navigateForward('/notificacoes');
   }
 
   abrirFiltros() {
-    this.navCtrl.navigateForward('/filtros-consultas');
+    this.painelFiltroAberto = !this.painelFiltroAberto;
+  }
+
+  selecionarFiltroStatus(status: FiltroStatusAgendamento) {
+    this.filtroStatus = status;
+  }
+
+  selecionarOrdenacao(ordenacao: FiltroOrdenacaoAgendamento) {
+    this.filtroOrdenacao = ordenacao;
   }
 
   async exibirMensagem(texto: string) {

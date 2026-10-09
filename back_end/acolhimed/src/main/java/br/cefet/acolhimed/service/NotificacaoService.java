@@ -15,6 +15,7 @@ import br.cefet.acolhimed.enums.TipoNotificacao;
 import br.cefet.acolhimed.exception.ResourceNotFoundException;
 import br.cefet.acolhimed.repository.MedicoRepository;
 import br.cefet.acolhimed.repository.NotificacaoRepository;
+import java.time.ZoneId;
 import br.cefet.acolhimed.repository.PacienteRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,7 @@ public class NotificacaoService {
         notificacao.setTipo(tipo);
         notificacao.setTitulo(titulo);
         notificacao.setMensagem(mensagem);
-        notificacao.setDataHora(LocalDateTime.now());
+        notificacao.setDataHora(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         notificacao.setLida(false);
 
         notificacaoRepository.save(notificacao);

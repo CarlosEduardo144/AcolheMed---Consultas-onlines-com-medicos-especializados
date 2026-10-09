@@ -9,13 +9,22 @@ import org.springframework.data.repository.query.Param;
 import br.cefet.acolhimed.entity.Avaliacao;
 import br.cefet.acolhimed.entity.Medico;
 
-public interface AvaliacaoRepository extends JpaRepository<Avaliacao, String>{
+public interface AvaliacaoRepository extends JpaRepository<Avaliacao, String> {
     List<Avaliacao> findByConsultaMedico(Medico medico);
 
+    boolean existsByConsultaId(String consultaId);
+
     @Query("""
-        SELECT AVG(a.nota)
-        FROM Avaliacao a
-        WHERE a.consulta.medico.id = :id
-    """)
+                SELECT AVG(a.nota)
+                FROM Avaliacao a
+                WHERE a.consulta.medico.id = :id
+            """)
     Double calcularMediaAvaliacao(@Param("id") String id);
+
+    @Query("""
+                SELECT COUNT(a)
+                FROM Avaliacao a
+                WHERE a.consulta.medico.id = :id
+            """)
+    Long contarAvaliacoesDoMedico(@Param("id") String id);
 }

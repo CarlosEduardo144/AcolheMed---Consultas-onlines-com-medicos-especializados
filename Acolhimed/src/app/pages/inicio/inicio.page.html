@@ -124,9 +124,9 @@
             </div>
             @if(usuario?.tipoUsuario == "medico"){
             <span class="stat-label">Pacientes atendidos</span>
-            <span class="stat-numero">238</span>
+            <span class="stat-numero">{{qtdPacientesAtendidos}}</span>
             } @else{
-            <span class="stat-label">Médicos online</span>
+            <span class="stat-label">Médicos disponíveis</span>
             <span class="stat-numero">{{ medicosDisponiveis }}</span>
             }
 
@@ -150,7 +150,7 @@
                 </svg>
             </div>
 
-            <h3 style="font-size: 15px; color: black;">Nenhuma consulta por aqui</h3>
+            <h3 style="font-size: 15px; color: gray;">Nenhuma consulta por aqui</h3>
           </div>
 
           <div *ngIf="consultaEmAndamento.id != ''" class="consulta-card">

@@ -1,0 +1,225 @@
+$hero-de: #0B8BEF;
+$hero-ate: #0052B0;
+$navy: #10243E;
+$titulo: #0F1B2D;
+$cinza: #5B6573;
+$azul: #0B84E8;
+$azul-claro: #DDEEFF;
+$verde: #16A34A;
+$verde-claro: #DDF6E7;
+$vermelho: #EF4444;
+$vermelho-claro: #FDE7E7;
+$ambar-claro: #FFF1D6;
+$branco: #FFFFFF;
+
+.validar-content {
+  --background: #f6f6f6;
+}
+
+// ---- Hero ----
+.hero-banner {
+  position: relative;
+  background: linear-gradient(160deg, #216eeb 0%, #1657c0 100%);
+  padding: 20px 20px 28px;
+  border-radius: 0 0 25px 25px;
+  overflow: hidden;
+}
+
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+
+  &-1 {
+    width: 200px;
+    height: 200px;
+    top: -90px;
+    right: -60px;
+  }
+
+  &-2 {
+    width: 100px;
+    height: 100px;
+    bottom: 20px;
+    left: -30px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.hero-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+   margin-bottom: 24px;
+}
+
+
+.header-back {
+  top: 25px;
+  left: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.35);
+  }
+}
+
+.hero-titulos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: $branco;
+  }
+}
+
+.hero-marca {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+// ---- Card de resultado ----
+.resultado-card {
+  position: relative;
+  z-index: 2;
+  margin: -15px 24px 0;
+  padding: 40px 28px 44px;
+  background: $branco;
+  border-radius: 32px;
+  box-shadow: 0 10px 30px rgba(15, 40, 70, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+
+.icone-circulo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+
+  &--carregando { background: $azul-claro; }
+  &--valida { background: $verde-claro; }
+  &--invalida { background: $vermelho-claro; }
+  &--erro { background: $ambar-claro; }
+}
+
+.resultado-titulo {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+
+  &--neutro { color: $titulo; }
+  &--valida { color: $verde; }
+  &--invalida { color: $vermelho; }
+}
+
+.resultado-texto {
+  margin: 0;
+  max-width: 290px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: $cinza;
+
+  strong {
+    color: $titulo;
+    font-weight: 800;
+  }
+}
+
+.btn-tentar {
+  margin-top: 26px;
+  height: 48px;
+  padding: 0 30px;
+  border: none;
+  border-radius: 24px;
+  background: $navy;
+  color: $branco;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(16, 36, 62, 0.22);
+
+  &:active { opacity: 0.9; }
+}
+
+.nota-rodape {
+  margin: 28px 28px 32px;
+  font-size: 13px;
+  line-height: 1.55;
+  text-align: center;
+  color: $cinza;
+}
+
+// ---- Animações ----
+.spinner {
+  animation: girar 0.9s linear infinite;
+}
+
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// círculo (r=25 → perímetro ≈ 157) e marca do check (≈ 34) se "desenham" em sequência
+.anim-anel {
+  stroke-dasharray: 158;
+  stroke-dashoffset: 158;
+  animation: desenhar 0.5s ease-out forwards;
+}
+
+.anim-marca {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: desenhar 0.35s ease-out 0.45s forwards;
+}
+
+@keyframes desenhar {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-anel,
+  .anim-marca {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .spinner { animation-duration: 2.4s; }
+}

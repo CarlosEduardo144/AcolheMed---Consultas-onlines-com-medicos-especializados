@@ -17,6 +17,8 @@ export class ConsultaResponseModel {
     pacienteNome: string;
     medicoNome: string
     linkConsulta: string;
+    possuiAvaliacao: boolean;
+    possuiPrescricao: boolean;
 
     constructor() {
         this.id = '';
@@ -31,5 +33,7 @@ export class ConsultaResponseModel {
         this.medicoNome = "";
         this.pacienteNome = "";
         this.linkConsulta = "";
+        this.possuiAvaliacao = false;
+        this.possuiPrescricao = false;
     }
 }

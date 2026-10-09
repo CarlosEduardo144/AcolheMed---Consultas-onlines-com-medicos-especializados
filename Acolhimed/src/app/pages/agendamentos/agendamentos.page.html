@@ -43,7 +43,6 @@
                 <path d="M10 18C10 19.1046 10.8954 20 12 20C13.1046 20 14 19.1046 14 18" stroke="white"
                   stroke-width="1.6" stroke-linecap="round" />
               </svg>
-              <span class="badge-notificacao"></span>
             </button>
           </div>
         </div>
@@ -176,8 +175,8 @@
                   </div>
                   <div class="status-icone status-icone--andamento" *ngSwitchCase="StatusConsulta.em_andamento">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="9" stroke="#737373" stroke-width="1.8" />
-                      <path d="M12 7V12L15.5 14" stroke="#737373" stroke-width="1.8" stroke-linecap="round"
+                      <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.8" />
+                      <path d="M12 7V12L15.5 14" stroke="white" stroke-width="1.8" stroke-linecap="round"
                         stroke-linejoin="round" />
                     </svg>
                   </div>
@@ -273,10 +272,7 @@
         <div class="bottom-spacer"></div>
       </div>
 
-      <h2 style="margin-left: 20px; color: rgb(135, 135, 135); font-size: 14px;" [style.font-family]="'Nunito, Arial, sans-serif'">
-        Amanhã
-      </h2>
-
+      <!--
       <div class="card-agenda-amanha" *ngIf="abaAtiva == 'hoje'">
 
         <div>
@@ -292,6 +288,7 @@
         <h3 style="font-size: 15px; color: rgb(176, 176, 176);">3 agendamentos marcados</h3>
         <a style="font-size: 15px; color: rgb(0, 162, 255)">Ver agenda de amanhã</a>
       </div>
+      -->
 
     </div>
 
@@ -381,7 +378,7 @@
         </div>
 
         <div class="detalhes-extras">
-          <span class="detalhe-label" style="font-family: 'Nunito', Arial, sans-serif;">Descrição:</span>
+          <span class="detalhe-label" style="font-family: 'Nunito', Arial, sans-serif;">Descrição do paciente:</span>
           <span class="detalhe-valor">{{ consultaSelecionada.observacoes}}</span>
         </div>
 
@@ -401,9 +398,19 @@
             Chat
           </button>
 
-          <button type="button" class="btn-sheet btn-sheet--solido" *ngIf="consultaSelecionada.status == 'em_andamento'"
+          <button type="button" class="btn-sheet btn-sheet--solido" *ngIf="podeCancelar(consultaSelecionada)"
             (click)="irParaCancelamento()">
             Cancelar consulta
+          </button>
+        </div>
+
+        <div class="sheet-acoes-linha">
+          <button type="button" class="btn-sheet btn-sheet--prescrever" *ngIf="podePrescrever(consultaSelecionada)"
+            (click)="irParaPrescricao()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5V19M5 12H19" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+            Prescrever
           </button>
         </div>
 

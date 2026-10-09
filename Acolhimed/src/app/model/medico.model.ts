@@ -19,6 +19,6 @@ export class MedicoModel extends UsuarioModel{
     this.ufEmissao = "";
     this.sobreMim = "";
     this.horariosConfigurados = false;
-    this.mediaAvaliacao = 0;
+    this.mediaAvaliacao = 0.0;
   }
 }   

@@ -61,4 +61,5 @@ public class Consulta {
     @ManyToOne
     @JoinColumn(name = "especialidade_id", nullable = false)
     private Especialidade especialidade;
+
 }
