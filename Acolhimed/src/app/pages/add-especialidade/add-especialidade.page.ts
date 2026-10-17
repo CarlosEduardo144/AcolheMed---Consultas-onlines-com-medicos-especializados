@@ -7,8 +7,9 @@ import { EspecialidadeService } from 'src/app/services/especialidade.service';
 import { EspecialidadeModel } from 'src/app/model/especialidade.model';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
-import { LoginService } from 'src/app/services/login.service';
 import { forkJoin } from 'rxjs';
+import { TokenModel } from 'src/app/model/token-model';
+import { TokenService } from 'src/app/services/token-service';
 
 @Component({
   selector: 'app-add-especialidade',
@@ -22,18 +23,26 @@ export class AddEspecialidadePage implements OnInit {
   especialidades: EspecialidadeModel[];
   selecionadas = new Set<string>();
   carregando = true;
+  token: TokenModel;
 
   constructor(
     private especialidadeService: EspecialidadeService,
     private toastController: ToastController,
-    private loginService: LoginService
+    private tokenService: TokenService
   ) {
     addIcons({ closeOutline });
     this.especialidades = [];
+    this.token = new TokenModel();
   }
 
   ngOnInit() {
-    this.carregarDadosIniciais();
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    }else{
+      this.carregarDadosIniciais();
+    }
   }
 
   carregarDadosIniciais() {
@@ -41,7 +50,7 @@ export class AddEspecialidadePage implements OnInit {
 
     forkJoin({
       especialidades: this.especialidadeService.listar(),
-      medicoEspecialidades: this.especialidadeService.getMedicoEspecialidades(this.loginService.getUsuario()),
+      medicoEspecialidades: this.especialidadeService.getMedicoEspecialidades(this.token.id),
     }).subscribe({
       next: ({ especialidades, medicoEspecialidades }) => {
         this.especialidades = especialidades;
@@ -104,7 +113,7 @@ export class AddEspecialidadePage implements OnInit {
 
     const credenciais = {
       idsSelecionados: Array.from(this.selecionadas),
-      medicoId: this.loginService.getUsuario()
+      medicoId: this.token.id
     };
 
     this.especialidadeService.salvar(credenciais).subscribe({

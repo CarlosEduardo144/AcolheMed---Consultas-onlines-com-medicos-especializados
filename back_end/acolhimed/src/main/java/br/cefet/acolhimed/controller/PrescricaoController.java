@@ -49,10 +49,10 @@ public class PrescricaoController {
         return ResponseEntity.ok(prescricaoResponseDTO);
     }
 
-    @GetMapping("/usuario/{usuarioId}")
+    @GetMapping("/usuario")
     @Operation(summary = "Buscar Prescricao por Usuario")
-    public ResponseEntity<PrescricaoResponseDTO> buscarPrescricaoPorUsuario(@PathVariable String usuarioId) {
-        PrescricaoResponseDTO prescricaoResponseDTO = prescricaoService.buscarPorUsuario(usuarioId);
+    public ResponseEntity<PrescricaoResponseDTO> buscarPrescricaoPorUsuario() {
+        PrescricaoResponseDTO prescricaoResponseDTO = prescricaoService.buscarPorUsuario();
         return ResponseEntity.ok(prescricaoResponseDTO);
     }
 

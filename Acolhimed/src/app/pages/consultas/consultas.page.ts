@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ConsultaModel } from 'src/app/model/consulta.model';
+import { IonContent, NavController } from '@ionic/angular/standalone';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ConsultaService } from 'src/app/services/consulta-service';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { LoginService } from 'src/app/services/login.service';
 import { ToastController } from '@ionic/angular';
 import { ConsultaResponseModel } from 'src/app/model/consulta-response';
 import { PrescricaoService } from 'src/app/services/prescricao-service';
+import { TokenService } from 'src/app/services/token-service';
+import { TokenModel } from 'src/app/model/token-model';
 
 
 export enum StatusConsulta {
@@ -52,6 +52,7 @@ export class ConsultasPage implements OnInit {
   modoPopup: 'detalhes' | 'cancelar' = 'detalhes';
   motivoCancelamento = '';
   cancelando = false;
+  token: TokenModel;
 
   abaAtiva: 'proximas' | 'historico' = 'proximas';
   textoBusca = '';
@@ -60,24 +61,32 @@ export class ConsultasPage implements OnInit {
     private navCtrl: NavController,
     private consultaService: ConsultaService,
     private usuarioService: UsuarioService,
-    private loginService: LoginService,
     private prescricaoService: PrescricaoService,
     private toastController: ToastController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private tokenService: TokenService
   ) {
     this.consultas = [];
+    this.token = new TokenModel();
   }
 
   ngOnInit() {
-    this.carregarUsuario();
-    this.route.queryParams.subscribe(params => {
-      if (params['aba']) {
-        this.abaAtiva = params['aba'];
-      }
-      if (params['status']) {
-        this.filtroStatus = params['status'];
-      }
-    });
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    } else {
+      this.carregarUsuario();
+      this.route.queryParams.subscribe(params => {
+        if (params['aba']) {
+          this.abaAtiva = params['aba'];
+        }
+        if (params['status']) {
+          this.filtroStatus = params['status'];
+        }
+      });
+    }
+
   }
 
   carregarConsultas() {
@@ -100,8 +109,12 @@ export class ConsultasPage implements OnInit {
     });
   }
 
+  ionViewWillEnter(){
+    this.carregarUsuario();
+  }
+
   carregarUsuario() {
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
         this.usuario = usuario;
 
@@ -206,7 +219,6 @@ export class ConsultasPage implements OnInit {
 
   podeChamar(consulta: ConsultaResponseModel): boolean {
     if (consulta.status === StatusConsulta.em_andamento) return true;
-    if (consulta.linkConsulta) return false;
     if (consulta.status !== StatusConsulta.agendada) return false;
     const diffMinutos = Math.abs(consulta.dataHora.getTime() - Date.now()) / (1000 * 60);
     return diffMinutos <= JANELA_CHAMADA_MINUTOS;

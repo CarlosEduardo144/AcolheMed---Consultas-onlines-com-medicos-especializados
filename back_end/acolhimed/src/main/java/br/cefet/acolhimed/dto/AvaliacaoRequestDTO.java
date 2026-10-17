@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class AvaliacaoRequestDTO {
-    private String id;
 
-    @NotNull(message = "O campo consultaId é obrigatório")
+    @NotNull(message = "O campo consulta é obrigatório")
     private String consultaId;
 
     @NotBlank(message = "O campo comentário é obrigatório")

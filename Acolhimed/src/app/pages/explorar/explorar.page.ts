@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonTextarea, IonButton, IonCardHeader, IonCardTitle, IonItem, IonCardSubtitle, IonButtons, IonCard, IonCardContent, IonIcon, IonLabel } from '@ionic/angular/standalone';
-import { Router, RouterModule } from '@angular/router';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonTextarea, IonButton, IonCardHeader, IonCardTitle, IonItem, IonCardSubtitle, IonButtons, IonCard, IonCardContent, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { RouterModule } from '@angular/router';
 import { EspecialidadeModel } from 'src/app/model/especialidade.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { EspecialidadeService } from 'src/app/services/especialidade.service';
@@ -10,8 +10,9 @@ import { MedicoModel } from 'src/app/model/medico.model';
 import { ToastController } from '@ionic/angular';
 import { arrowForwardOutline, hardwareChipOutline, medkitOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { LoginService } from 'src/app/services/login.service';
 import { forkJoin } from 'rxjs';
+import { TokenModel } from 'src/app/model/token-model';
+import { TokenService } from 'src/app/services/token-service';
 
 @Component({
   selector: 'app-explorar',
@@ -32,21 +33,23 @@ export class ExplorarPage {
   carregandoMedicos: boolean = false;
   carregandoInicial: boolean = true;
   usuario: any;
+  token: TokenModel;
 
   constructor(private toastController: ToastController,
-    private navCtrl: NavController,
     private usuarioService: UsuarioService,
     private especialidadeService: EspecialidadeService,
-    private loginService: LoginService,
-    private router: Router) {
+    private tokenService: TokenService) {
     this.medicos = [];
+    this.token = new TokenModel();
     this.medicosFiltrados = [];
     this.medicosBemAvaliados = [];
     this.especialidades = [];
     addIcons({ hardwareChipOutline, medkitOutline, arrowForwardOutline });
+  }
 
+  carregarDados(){
     forkJoin({
-      usuario: this.usuarioService.buscarPorId(this.loginService.getUsuario()),
+      usuario: this.usuarioService.buscarPorId(this.token.id),
       especialidades: this.especialidadeService.listar(),
       medicos: this.usuarioService.getMedicos(),
     }).subscribe({
@@ -65,12 +68,19 @@ export class ExplorarPage {
   }
 
   ngOnInit() {
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    }else{
+      this.carregarDados();
+    }
   }
 
-  carregarMedicosBemAvaliados(){
-     this.usuarioService.getMedicosMaisBemAvaliados().subscribe({
+  carregarMedicosBemAvaliados() {
+    this.usuarioService.getMedicosMaisBemAvaliados().subscribe({
       next: (medicos) => {
-       this.medicosBemAvaliados = medicos;
+        this.medicosBemAvaliados = medicos;
         this.carregandoInicial = false;
       },
       error: (erro) => {
@@ -132,10 +142,6 @@ export class ExplorarPage {
     this.medicosFiltrados = [];
     this.especialidadesFiltradas = this.especialidades;
   }
-
-  openFiltros() {
-  }
-
 
   filtrarMedicos(especialidade: string) {
     const especialidadeEncontrada = this.especialidades.find(item => item.nome === especialidade);

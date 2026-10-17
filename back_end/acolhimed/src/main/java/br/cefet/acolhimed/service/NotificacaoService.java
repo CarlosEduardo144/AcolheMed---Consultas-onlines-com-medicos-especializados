@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import br.cefet.acolhimed.dto.NotificacaoResponseDTO;
@@ -18,6 +20,7 @@ import br.cefet.acolhimed.repository.NotificacaoRepository;
 import java.time.ZoneId;
 import br.cefet.acolhimed.repository.PacienteRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
 
 @Service
 public class NotificacaoService {
@@ -51,22 +54,36 @@ public class NotificacaoService {
     }
 
     @Transactional
-    public void marcarTodasComoLidas(String usuarioId) {
+    public void marcarTodasComoLidas() {
+
+        String usuarioId = obterIdUsuarioAutenticado();
+
         notificacaoRepository.marcarTodasComoLidas(usuarioId);
     }
 
     @Transactional(readOnly = true)
-    public List<NotificacaoResponseDTO> listarPorUsuario(String usuarioId) {
+    public List<NotificacaoResponseDTO> listarPorUsuario() {
+        
+        String usuarioId = obterIdUsuarioAutenticado();
+
         Medico medico = medicoRepository.findById(usuarioId).orElse(null);
         Paciente paciente = pacienteRepository.findById(usuarioId).orElse(null);
 
         if (medico == null && paciente == null) {
-            throw new ResourceNotFoundException("Usuario nao encontrado. Id: " + usuarioId);
+            throw new ResourceNotFoundException("Usuário não encontrado. Id: " + usuarioId);
         }
 
         return notificacaoRepository.findByUsuarioId(usuarioId)
                 .stream()
                 .map(NotificacaoResponseDTO::new)
                 .toList();
+    }
+
+    private String obterIdUsuarioAutenticado(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetails usuario = (UserDetails) authentication.getPrincipal();
+
+        return usuario.getUsername();
     }
 }

@@ -4,10 +4,11 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, A
 import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonButton, ToastController, IonText } from '@ionic/angular/standalone';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { MedicoModel } from 'src/app/model/medico.model';
-import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { PacienteModel } from 'src/app/model/paciente.model';
+import { TokenService } from 'src/app/services/token-service';
+import { TokenModel } from 'src/app/model/token-model';
 
 function cpfValidator(control: AbstractControl): ValidationErrors | null {
   const cpf = (control.value ?? '').replace(/\D/g, '');
@@ -22,6 +23,38 @@ function cpfValidator(control: AbstractControl): ValidationErrors | null {
   const d1 = calcDigit(cpf.slice(0, 9));
   const d2 = calcDigit(cpf.slice(0, 10));
   return d1 === +cpf[9] && d2 === +cpf[10] ? null : { cpfInvalido: true };
+}
+
+function dataNascimentoValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  if (!control.value) return null;
+
+  const data = new Date(`${control.value}T00:00:00`);
+
+  const dataMinima = new Date(1900, 0, 1);
+
+  const dataMaxima = new Date();
+  dataMaxima.setFullYear(2008);
+  dataMaxima.setHours(0, 0, 0, 0);
+
+  if (isNaN(data.getTime())) {
+    return { dataInvalida: true };
+  }
+
+  if (data < dataMinima) {
+    return { dataMinima: true };
+  }
+
+  if (data > dataMaxima) {
+    return { dataFutura: true };
+  }
+
+  if (data > dataMaxima) {
+    return { dataFutura: true };
+  }
+
+  return null;
 }
 
 @Component({
@@ -41,21 +74,33 @@ export class AlterarDadosPage implements OnInit, OnDestroy {
   fotoSelecionada: File | null = null;
   fotoPreviewUrl: string | null = null;
   carregandoInicial = true;
+  token: TokenModel;
 
-  constructor(private navController: NavController, private toastController: ToastController, private usuarioService: UsuarioService, private loginService: LoginService, private fb: FormBuilder) {
+  constructor(private navController: NavController,
+    private toastController: ToastController,
+    private usuarioService: UsuarioService,
+    private tokenService: TokenService,
+    private fb: FormBuilder) {
     this.alterarForm = this.fb.group(
       {
         nome: [this.usuario?.nome ?? '', [Validators.required]],
         email: [this.usuario?.email ?? '', [Validators.required, Validators.email]],
-        dataNascimento: [this.usuario?.dataNascimento ?? '', [Validators.required]],
+        dataNascimento: [this.usuario?.dataNascimento ?? '', [Validators.required, dataNascimentoValidator]],
         cpf: [this.usuario?.cpf ?? '', [Validators.required, cpfValidator]],
         senha: [''],
       }
     );
+    this.token = new TokenModel();
   }
 
   ngOnInit() {
-    this.buscarUsuario();
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    } else {
+      this.buscarUsuario();
+    }
   }
 
   ngOnDestroy() {
@@ -65,7 +110,7 @@ export class AlterarDadosPage implements OnInit, OnDestroy {
   buscarUsuario() {
     this.carregandoInicial = true;
 
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
         this.usuario = usuario;
 
@@ -80,6 +125,7 @@ export class AlterarDadosPage implements OnInit, OnDestroy {
           dataNascimento: this.usuario.dataNascimento,
           cpf: this.usuario.cpf
         });
+        this.alterarForm.updateValueAndValidity();
         this.carregandoInicial = false;
       },
       error: (erro) => {
@@ -93,7 +139,7 @@ export class AlterarDadosPage implements OnInit, OnDestroy {
   salvar() {
     let usuarioAtualizado;
 
-    if (this.loginService.getTipoUsuario() == "medico") {
+    if (this.token.tipoUsuario == "medico") {
       usuarioAtualizado = new MedicoModel();
     } else {
       usuarioAtualizado = new PacienteModel();
@@ -120,7 +166,7 @@ export class AlterarDadosPage implements OnInit, OnDestroy {
         this.exibirMensagem('Usuário atualizado com sucesso!!!');
       },
       error: (erro) => {
-            this.exibirMensagem(erro?.error?.message || 'Erro ao atualizar informações do usuário');
+        this.exibirMensagem(erro?.error?.message || 'Erro ao atualizar informações do usuário');
       }
     });
 

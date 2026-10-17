@@ -15,10 +15,9 @@ import {
   IonIcon,
   NavController,
 } from '@ionic/angular/standalone';
-import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastController } from '@ionic/angular';
-import { LoginService } from 'src/app/services/login.service';
+import { TokenService } from 'src/app/services/token-service';
 
 @Component({
   selector: 'app-login',
@@ -49,9 +48,9 @@ export class LoginPage {
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
-    private loginService: LoginService,
     private toastController: ToastController,
-    private navController: NavController
+    private navController: NavController,
+    private tokenService: TokenService
   ) {
 
     this.loginForm = this.fb.group({
@@ -69,6 +68,10 @@ export class LoginPage {
     return this.loginForm.get('senha');
   }
 
+  ngOnInit(){
+    this.tokenService.excluir();
+  }
+
   login() {
     const credenciais = {
       email: this.loginForm.value.email,
@@ -76,8 +79,8 @@ export class LoginPage {
     };
 
     this.usuarioService.login(credenciais).subscribe({
-      next: (usuario) => {
-        this.loginService.setUsuario(usuario.id, usuario.tipoUsuario);
+      next: (resposta) => {
+        this.tokenService.salvar(resposta.token);
         this.navController.navigateRoot('/inicio');
       },
       error: (erro) => {

@@ -22,21 +22,17 @@ public class NotificacaoController {
     @Autowired
     private NotificacaoService notificacaoService;
 
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<NotificacaoResponseDTO>> listarPorUsuario(
-            @PathVariable String usuarioId) {
+    @GetMapping("/usuario")
+    public ResponseEntity<List<NotificacaoResponseDTO>> listarPorUsuario() {
 
-        List<NotificacaoResponseDTO> notificacoes = notificacaoService.listarPorUsuario(usuarioId);
-
+        List<NotificacaoResponseDTO> notificacoes = notificacaoService.listarPorUsuario();
         return ResponseEntity.ok(notificacoes);
     }
 
-    @PatchMapping("/usuario/{usuarioId}/lidas")
-    public ResponseEntity<Void> marcarTodasComoLidas(
-            @PathVariable String usuarioId) {
+    @PatchMapping("/usuario/lidas")
+    public ResponseEntity<Void> marcarTodasComoLidas() {
 
-        notificacaoService.marcarTodasComoLidas(usuarioId);
-
+        notificacaoService.marcarTodasComoLidas();
         return ResponseEntity.noContent().build();
     }
 }

@@ -3,9 +3,13 @@ package br.cefet.acolhimed.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.cefet.acolhimed.dto.AutenticacaoResponseDTO;
 import br.cefet.acolhimed.dto.LoginRequestDTO;
 import br.cefet.acolhimed.dto.MedicoResponseDTO;
 import br.cefet.acolhimed.dto.UsuarioResponseDTO;
@@ -14,26 +18,36 @@ import br.cefet.acolhimed.entity.Usuario;
 import br.cefet.acolhimed.exception.ResourceNotFoundException;
 import br.cefet.acolhimed.repository.AvaliacaoRepository;
 import br.cefet.acolhimed.repository.UsuarioRepository;
+import br.cefet.acolhimed.security.JwtService;
 
 @Service
 public class UsuarioService {
 
-    @Autowired
+    @Autowired  
     private UsuarioRepository usuarioRepository;
 
     @Autowired
     private AvaliacaoRepository avaliacaoRepository;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtService jwtService;
+
     @Transactional(readOnly = true)
     public List<UsuarioResponseDTO> listar() {
-        List<Usuario> Usuarios = usuarioRepository.findAll();
-        return Usuarios.stream().map(UsuarioResponseDTO::new).toList();
+        return usuarioRepository.findAll()
+                .stream()
+                .map(UsuarioResponseDTO::new)
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public UsuarioResponseDTO buscarPorId(String id) {
+
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado. Id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado. Id: " + id));
 
         if (usuario instanceof Medico medico) {
             Double media = avaliacaoRepository.calcularMediaAvaliacao(medico.getId());
@@ -41,32 +55,23 @@ public class UsuarioService {
         }
 
         return new UsuarioResponseDTO(usuario);
-    }
-
-    @Transactional
-    public void excluir(String id) {
-        if (!usuarioRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Usuario nao encontrado com ID: " + id);
-        }
-
-        usuarioRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
     public Object autenticar(LoginRequestDTO credenciais) {
-        Usuario usuario = usuarioRepository.findByEmail(credenciais.getEmail())
-                .orElseThrow(() -> new RuntimeException("E-mail ou senha incorretos."));
-
-        if (!usuario.getSenha().equals(credenciais.getSenha())) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(credenciais.getEmail(), credenciais.getSenha()));
+        } catch (BadCredentialsException ex) {
             throw new RuntimeException("E-mail ou senha incorretos.");
         }
 
-        if (usuario instanceof Medico medico) {
-            Double media = avaliacaoRepository.calcularMediaAvaliacao(medico.getId());
-            return new MedicoResponseDTO(medico, media);
-        }
+        Usuario usuario = usuarioRepository.findByEmail(credenciais.getEmail())
+                .orElseThrow(() -> new RuntimeException("E-mail ou senha incorretos."));
 
-        return new UsuarioResponseDTO(usuario);
+        String token = jwtService.gerarToken(usuario);
+
+        return new AutenticacaoResponseDTO(token);
     }
 
 }

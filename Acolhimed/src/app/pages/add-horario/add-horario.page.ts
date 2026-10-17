@@ -5,7 +5,8 @@ import { RouterModule } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar, ToastController } from '@ionic/angular/standalone';
 import { HorarioModel } from 'src/app/model/horario.model';
 import { HorarioService } from 'src/app/services/horario.service';
-import { LoginService } from 'src/app/services/login.service';
+import { TokenModel } from 'src/app/model/token-model';
+import { TokenService } from 'src/app/services/token-service';
 
 export type Periodo = 'manha' | 'tarde' | 'noite';
 
@@ -21,10 +22,12 @@ export class AddHorarioPage implements OnInit {
 
   infoExpandido = false;
   carregandoInicial = true;
+  token: TokenModel;
 
   constructor(private horarioService: HorarioService,
-    private loginService: LoginService,
+    private tokenService: TokenService,
     private toastController: ToastController) {
+      this.token = new TokenModel();
   }
 
   diasSemana: HorarioModel[] = [
@@ -38,13 +41,19 @@ export class AddHorarioPage implements OnInit {
   ];
 
   ngOnInit() {
-    this.carregarHorarios();
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    }else{
+      this.carregarHorarios();
+    }
   }
 
   carregarHorarios() {
     this.carregandoInicial = true;
 
-    this.horarioService.buscarPorMedico(this.loginService.getUsuario()).subscribe({
+    this.horarioService.buscarPorMedico(this.token.id).subscribe({
       next: (horarios) => {
         horarios.forEach(horario => {
           const dia = this.diasSemana.find(d => d.dia === horario.dia);
@@ -118,7 +127,7 @@ export class AddHorarioPage implements OnInit {
 
   salvarHorario() {
     const horario = {
-      medicoId: this.loginService.getUsuario(),
+      medicoId: this.token.id,
       horarios: this.diasSemana
     };
 

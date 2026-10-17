@@ -377,7 +377,7 @@
           </span>
         </div>
 
-        <div class="detalhes-extras">
+        <div *ngIf="consultaSelecionada.observacoes" class="detalhes-extras">
           <span class="detalhe-label" style="font-family: 'Nunito', Arial, sans-serif;">Descrição do paciente:</span>
           <span class="detalhe-valor">{{ consultaSelecionada.observacoes}}</span>
         </div>

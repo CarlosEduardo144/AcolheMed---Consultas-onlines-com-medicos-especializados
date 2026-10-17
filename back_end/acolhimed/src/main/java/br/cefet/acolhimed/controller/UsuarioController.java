@@ -15,8 +15,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import br.cefet.acolhimed.service.MedicoService;
 import br.cefet.acolhimed.service.UsuarioService;
 import br.cefet.acolhimed.dto.LoginRequestDTO;
+import br.cefet.acolhimed.dto.MedicoResponseDTO;
 import br.cefet.acolhimed.dto.UsuarioResponseDTO;
 
 
@@ -29,7 +31,7 @@ public class UsuarioController {
     private UsuarioService UsuarioService;
 
     @GetMapping
-    @Operation(summary = "Listar Usuarios")
+    @Operation(summary = "Listar usuários")
     public ResponseEntity<List<UsuarioResponseDTO>> listar() {
         List<UsuarioResponseDTO> usuarios = UsuarioService.listar();
         return ResponseEntity.ok(usuarios);
@@ -38,15 +40,9 @@ public class UsuarioController {
     @GetMapping("/{id}")
     @Operation(summary = "Buscar Usuario por ID")
     public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable String id) {
+
         UsuarioResponseDTO usuarioResponseDTO = UsuarioService.buscarPorId(id);
         return ResponseEntity.ok(usuarioResponseDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Excluir Usuario")
-    public ResponseEntity<Void> excluir(@PathVariable String id) {
-        UsuarioService.excluir(id);
-        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/login")
@@ -57,5 +53,4 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioResponseDTO);
 
     }
-
 }

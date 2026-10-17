@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, NavController, IonText, ToastController, IonButton, IonButtons, IonLabel, IonInput } from '@ionic/angular/standalone';
-import { UsuarioModel } from 'src/app/model/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { LoginService } from 'src/app/services/login.service';
 import { MedicoModel } from 'src/app/model/medico.model';
-import { PacienteModel } from 'src/app/model/paciente.model';
+import { TokenModel } from 'src/app/model/token-model';
+import { TokenService } from 'src/app/services/token-service';
 
 @Component({
   selector: 'app-add-formacao-profissional',
@@ -17,31 +16,43 @@ import { PacienteModel } from 'src/app/model/paciente.model';
 })
 export class AddFormacaoProfissionalPage implements OnInit {
   usuario!: any;
+  token: TokenModel;
   alterarForm: FormGroup;
   carregandoInicial = true;
 
-  constructor(private navController: NavController, private toastController: ToastController, private usuarioService: UsuarioService, private loginService: LoginService, private fb: FormBuilder) {
+  constructor(private navController: NavController,
+    private toastController: ToastController, 
+    private usuarioService: UsuarioService, 
+    private tokenService: TokenService, 
+    private fb: FormBuilder) {
     this.usuario = new MedicoModel();
+    this.token = new TokenModel();
     this.alterarForm = this.fb.group({
       formacaoAcademica: [
         this.usuario?.formacaoAcademica ?? '',
-        [Validators.required, Validators.maxLength(300)] 
+        [Validators.required, Validators.maxLength(300)]
       ],
       sobreMim: [
         this.usuario?.sobreMim ?? '',
-        [Validators.required, Validators.maxLength(300)] 
+        [Validators.required, Validators.maxLength(300)]
       ],
     });
   }
 
   ngOnInit() {
-    this.carregarUsuario();
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    } else {
+      this.carregarUsuario();
+    }
   }
 
   carregarUsuario() {
     this.carregandoInicial = true;
 
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
         if (!this.usuario) {
           this.navController.navigateBack('/login');

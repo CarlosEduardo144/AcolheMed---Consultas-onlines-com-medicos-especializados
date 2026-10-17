@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,9 +22,9 @@ public class ArquivoController {
     @Autowired
     private ArquivoService arquivoService;
 
-    @PostMapping("{idUsuario}")
-    public ResponseEntity<Foto> upload(@RequestParam("arquivo") MultipartFile arquivo, @PathVariable String idUsuario) throws IOException {
-        Foto resultado = arquivoService.salvar(arquivo, idUsuario);
+    @PostMapping
+    public ResponseEntity<Foto> upload(@RequestParam("arquivo") MultipartFile arquivo) throws IOException {
+        Foto resultado = arquivoService.salvar(arquivo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
     }

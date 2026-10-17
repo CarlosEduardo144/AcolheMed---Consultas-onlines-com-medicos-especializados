@@ -11,7 +11,6 @@ import { PrescricaoModel } from 'src/app/model/prescricao-model';
 
 const MAX_ITENS = 10;
 
-
 interface ItemPrescricaoUI extends ItemPrescricao {
   expandido: boolean;
 }

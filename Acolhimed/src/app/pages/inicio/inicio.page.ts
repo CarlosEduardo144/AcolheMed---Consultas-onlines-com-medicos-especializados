@@ -5,12 +5,13 @@ import { IonIcon, IonButton, IonContent, IonHeader, IonTabBar, IonTabButton, Ion
 import { MedicoModel } from 'src/app/model/medico.model';
 import { PacienteModel } from 'src/app/model/paciente.model';
 import { EspecialidadeService } from 'src/app/services/especialidade.service';
-import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CommonModule } from '@angular/common'; // 1. Importe o módulo
 import { forkJoin } from 'rxjs';
 import { ConsultaService } from 'src/app/services/consulta-service';
 import { ConsultaResponseModel } from 'src/app/model/consulta-response';
+import { TokenService } from 'src/app/services/token-service';
+import { TokenModel } from 'src/app/model/token-model';
 
 
 @Component({
@@ -31,20 +32,22 @@ export class InicioPage implements OnInit {
   carregandoInicial = true;
   qtdConsultas: number;
   qtdPacientesAtendidos: number;
+  token: TokenModel;
 
   constructor(
     private navCtrl: NavController,
     private usuarioService: UsuarioService,
     private especialidadeService: EspecialidadeService,
-    private loginService: LoginService,
     private toastController: ToastController,
-    private consultaService: ConsultaService
+    private consultaService: ConsultaService,
+    private tokenService: TokenService
   ) {
     this.medicosDisponiveis = 0;
     this.qtdConsultas = 0;
     this.qtdPacientesAtendidos = 0;
     this.especialidadesDisponiveis = 0;
     this.consultaEmAndamento = new ConsultaResponseModel();
+    this.token = new TokenModel();
   }
 
   ngOnInit() {
@@ -52,16 +55,21 @@ export class InicioPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    if (!this.carregandoInicial && this.loginService.getUsuario()) {
+    if (!this.carregandoInicial && this.token.id) {
       this.carregarUsuario(false);
     }
   }
 
   carregarDadosIniciais() {
     this.carregandoInicial = true;
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    }
 
     forkJoin({
-      usuario: this.usuarioService.buscarPorId(this.loginService.getUsuario()),
+      usuario: this.usuarioService.buscarPorId(this.token.id),
       medicos: this.usuarioService.getMedicos(),
       especialidades: this.especialidadeService.listar(),
     }).subscribe({
@@ -90,7 +98,7 @@ export class InicioPage implements OnInit {
 
 
   carregarQtdPacientesAtendidos() {
-    this.consultaService.getConsultas(this.loginService.getUsuario()).subscribe({
+    this.consultaService.getConsultas(this.token.id).subscribe({
       next: (resultado) => {
         this.qtdPacientesAtendidos = resultado.filter(
           consulta => consulta.status === 'finalizada'
@@ -103,7 +111,7 @@ export class InicioPage implements OnInit {
   }
 
   carregarAgenda() {
-    this.consultaService.getAgendaDoMedico(this.loginService.getUsuario()).subscribe({
+    this.consultaService.getAgendaDoMedico(this.token.id).subscribe({
       next: (resultado) => {
         this.qtdConsultas = resultado.length;
       },
@@ -114,7 +122,7 @@ export class InicioPage implements OnInit {
   }
 
   carregarConsultasEmAndamento() {
-    this.consultaService.buscarConsultasEmAndamento(this.loginService.getUsuario()).subscribe({
+    this.consultaService.buscarConsultasEmAndamento(this.token.id).subscribe({
       next: (resultado) => {
         this.consultaEmAndamento = resultado;
       },
@@ -127,13 +135,8 @@ export class InicioPage implements OnInit {
     if (exibirCarregamento) {
       this.carregandoInicial = true;
     }
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
-
-        if (!usuario) {
-          this.navCtrl.navigateBack('/login');
-        }
-
         this.usuario = usuario;
         if (exibirCarregamento) {
           this.carregandoInicial = false;
@@ -174,8 +177,14 @@ export class InicioPage implements OnInit {
     // navegação para o chat da consulta em andamento
   }
 
-  iniciarChamada(linkConsulta: string) {
-    this.consultaService.definirConsultaEmAndamento(this.consultaEmAndamento.id);
-    window.open(linkConsulta, '_system');
+  iniciarChamada(consulta: ConsultaResponseModel) {
+    this.consultaService.definirConsultaEmAndamento(consulta.id).subscribe({
+      next: () => {
+      },
+      error: (erro) => {
+        console.log(erro);
+      }
+    });
+    window.open(consulta.linkConsulta, '_system');
   }
 }

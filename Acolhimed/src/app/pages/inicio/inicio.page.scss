@@ -6,6 +6,7 @@ $gray-light: #F5F5F5;
 $border: #E8E8E8;
 $white: #FFFFFF;
 $green: #22C55E;
+$navy: #10243E;
 
 .inicio-content {
   --background: rgb(250, 250, 250);
@@ -414,8 +415,9 @@ $green: #22C55E;
 }
 
 .btn-chamada {
-  background: linear-gradient(135deg, $blue 0%, $blue-dark 100%);
+  background: $navy;
   color: $white;
+  border: none;
   box-shadow: 0 4px 14px rgba(41, 171, 226, 0.3);
 }
 

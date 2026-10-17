@@ -39,11 +39,4 @@ public class AvaliacaoController {
         AvaliacaoResponseDTO avaliacaoResponseDTO = avaliacaoService.inserir(avaliacaoRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(avaliacaoResponseDTO);
     }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Excluir avaliação")
-    public ResponseEntity<Void> excluir(@PathVariable String id) {
-        avaliacaoService.excluir(id);
-        return ResponseEntity.noContent().build();
-    }
 }

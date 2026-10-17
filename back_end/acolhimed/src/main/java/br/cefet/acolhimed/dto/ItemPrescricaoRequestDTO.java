@@ -9,16 +9,16 @@ import lombok.NoArgsConstructor;
 public class ItemPrescricaoRequestDTO {
     private String id;
 
-    @NotBlank(message = "O campo medicamento e obrigatorio")
+    @NotBlank(message = "O campo medicamento é obrigatório")
     private String medicamento;
 
-    @NotBlank(message = "O campo dosagem e obrigatorio")
+    @NotBlank(message = "O campo dosagem é obrigatório")
     private String dosagem;
 
-    @NotBlank(message = "O campo frequencia e obrigatorio")
+    @NotBlank(message = "O campo frequência é obrigatório")
     private String frequencia;
 
-    @NotBlank(message = "O campo duracao e obrigatorio")
+    @NotBlank(message = "O campo duracao é obrigatório")
     private String duracao;
 
     private String via;

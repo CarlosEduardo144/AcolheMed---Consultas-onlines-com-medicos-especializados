@@ -138,16 +138,17 @@
         <ng-container>
           <h2 class="secao-titulo">Consulta em andamento</h2>
 
-          <div style="background-color: rgb(240, 240, 240); border-radius: 25px;" *ngIf="consultaEmAndamento.id == ''" class="empty-state">
+          <div style="background-color: rgb(240, 240, 240); border-radius: 25px;" *ngIf="consultaEmAndamento.id == ''"
+            class="empty-state">
             <div class="empty-illustration">
-               <svg width="100" height="100" viewBox="0 0 140 140" fill="none">
-                  <circle cx="70" cy="70" r="70" fill="#E8F6FD" />
-                  <rect x="40" y="45" width="60" height="55" rx="8" stroke="#29ABE2" stroke-width="5" fill="white" />
-                  <path d="M52 45V38M88 45V38" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+              <svg width="100" height="100" viewBox="0 0 140 140" fill="none">
+                <circle cx="70" cy="70" r="70" fill="#E8F6FD" />
+                <rect x="40" y="45" width="60" height="55" rx="8" stroke="#29ABE2" stroke-width="5" fill="white" />
+                <path d="M52 45V38M88 45V38" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
 
-                  <line x1="58" y1="62" x2="82" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
-                  <line x1="82" y1="62" x2="58" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
-                </svg>
+                <line x1="58" y1="62" x2="82" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+                <line x1="82" y1="62" x2="58" y2="84" stroke="#29ABE2" stroke-width="5" stroke-linecap="round" />
+              </svg>
             </div>
 
             <h3 style="font-size: 15px; color: gray;">Nenhuma consulta por aqui</h3>
@@ -180,8 +181,10 @@
                   {{consultaEmAndamento.medico.crm}}-{{consultaEmAndamento.medico.ufEmissao}}</span>
                 <span class="consulta-horario-chip">
                   <span class="dot-chip"></span>
-                  consultaEmAndamento.dataHora
+                  Hoje, às {{consultaEmAndamento.dataHora | date:'HH:mm'}}
                 </span>
+                <span *ngIf="consultaEmAndamento.status == 'em_andamento'" class="medico-especialidade">O médico já iniciou a chamada</span>
+
               </div>
               }@else{
               <div class="consulta-info">
@@ -189,8 +192,9 @@
                 <span class="medico-especialidade">{{consultaEmAndamento.especialidadeNome}}</span>
                 <span class="consulta-horario-chip">
                   <span class="dot-chip"></span>
-                  {{consultaEmAndamento.dataHora}}
+                  Hoje, às {{consultaEmAndamento.dataHora | date:'HH:mm'}}
                 </span>
+                <span *ngIf="consultaEmAndamento.status == 'em_andamento'" class="medico-especialidade">O paciente já iniciou a chamada</span>
               </div>
               }
             </div>
@@ -205,7 +209,7 @@
                 Chat
               </button>
 
-              <button class="btn-chamada" (click)="iniciarChamada(consultaEmAndamento.linkConsulta)">
+              <button class="btn-chamada" (click)="iniciarChamada(consultaEmAndamento)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M15 10.5L21 7.5V16.5L15 13.5" stroke="white" stroke-width="1.7" stroke-linejoin="round" />
                   <rect x="3" y="6" width="12" height="12" rx="2" stroke="white" stroke-width="1.7" />

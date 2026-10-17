@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
 import { NotificacaoModel } from 'src/app/model/notificacao-model';
-import { LoginService } from 'src/app/services/login.service';
 import { NotificacaoService } from 'src/app/services/notificacao-service';
 import { ToastController } from '@ionic/angular';
+import { TokenModel } from 'src/app/model/token-model';
+import { TokenService } from 'src/app/services/token-service';
 
 
 interface GrupoNotificacoesDia {
@@ -25,15 +26,27 @@ export class NotificacoesPage implements OnInit {
   // Vem do serviço/backend — populado em ngOnInit
   notificacoes: NotificacaoModel[] = [];
   carregando = true;
+  token: TokenModel;
 
-  constructor(private navCtrl: NavController, private toastController: ToastController, private loginService: LoginService, private notificacaoService: NotificacaoService) { }
+  constructor(private navCtrl: NavController,
+    private toastController: ToastController,
+    private tokenService: TokenService,
+    private notificacaoService: NotificacaoService) {
+    this.token = new TokenModel();
+  }
 
   ngOnInit() {
-    this.carregarNotificacoes();
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    }else{
+      this.carregarNotificacoes();
+    }
   }
 
   private carregarNotificacoes() {
-    this.notificacaoService.listar(this.loginService.getUsuario()).subscribe({
+    this.notificacaoService.listar(this.token.id).subscribe({
       next: (notificacoes) => {
         this.notificacoes = notificacoes;
         this.carregando = false;
@@ -48,7 +61,7 @@ export class NotificacoesPage implements OnInit {
   }
 
   private marcarComoLidas() {
-    this.notificacaoService.marcarComoLidas(this.loginService.getUsuario()).subscribe({
+    this.notificacaoService.marcarComoLidas(this.token.id).subscribe({
       next: () => {
       },
       error: (erro) => {

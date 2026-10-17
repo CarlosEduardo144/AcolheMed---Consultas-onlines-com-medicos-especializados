@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
-import { ConsultaModel } from 'src/app/model/consulta.model';
 import { ConsultaService } from 'src/app/services/consulta-service';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { LoginService } from 'src/app/services/login.service';
 import { ToastController } from '@ionic/angular';
 import { ConsultaResponseModel } from 'src/app/model/consulta-response';
+import { TokenService } from 'src/app/services/token-service';
+import { TokenModel } from 'src/app/model/token-model';
 
 export enum StatusConsulta {
   agendada = 'agendada',
@@ -42,6 +42,7 @@ export class AgendamentosPage implements OnInit {
   consultas: ConsultaResponseModel[];
   consultasCarregadas = false;
   usuario: any;
+  token: TokenModel;
 
   painelFiltroAberto = false;
   filtroOrdenacao: FiltroOrdenacaoAgendamento = 'recentes';
@@ -59,13 +60,26 @@ export class AgendamentosPage implements OnInit {
     private navCtrl: NavController,
     private consultaService: ConsultaService,
     private usuarioService: UsuarioService,
-    private loginService: LoginService,
+    private tokenService: TokenService,
     private toastController: ToastController
   ) {
     this.consultas = [];
+    this.token = new TokenModel();
   }
 
   ngOnInit() {
+    this.fecharPopup();
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    }else{
+      this.carregarUsuario();
+    }
+    
+  }
+
+  ionViewWillEnter(){
     this.fecharPopup();
     this.carregarUsuario();
   }
@@ -91,7 +105,7 @@ export class AgendamentosPage implements OnInit {
   }
 
   carregarUsuario() {
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
         this.usuario = usuario;
 

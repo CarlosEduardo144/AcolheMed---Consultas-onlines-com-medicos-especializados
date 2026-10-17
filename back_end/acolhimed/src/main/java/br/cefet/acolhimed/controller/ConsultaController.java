@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,24 +28,17 @@ public class ConsultaController {
     @Autowired
     private ConsultaService consultaService;
 
-    @GetMapping
-    @Operation(summary = "Listar Consultas")
-    public ResponseEntity<List<ConsultaResponseDTO>> listar() {
-        List<ConsultaResponseDTO> consultas = consultaService.listar();
+    @GetMapping("/usuario")
+    @Operation(summary = "Listar Consultas do usuario")
+    public ResponseEntity<List<ConsultaResponseDTO>> listarConsultasDoUsuario() {
+        List<ConsultaResponseDTO> consultas = consultaService.listarConsultasDoUsuario();
         return ResponseEntity.ok(consultas);
     }
 
-    @GetMapping("/usuario/{usuarioId}")
-    @Operation(summary = "Listar Consultas do usuario")
-    public ResponseEntity<List<ConsultaResponseDTO>> listarConsultasDoUsuario(@PathVariable String usuarioId) {
-        List<ConsultaResponseDTO> consultas = consultaService.listarConsultasDoUsuario(usuarioId);
-        return ResponseEntity.ok(consultas);
-    }
-
-    @GetMapping("/medico/{medicoId}/agenda")
-    @Operation(summary = "Listar Consultas do usuario")
-    public ResponseEntity<List<ConsultaResponseDTO>> listarAgendaDoDia(@PathVariable String medicoId) {
-        List<ConsultaResponseDTO> consultas = consultaService.listarAgendaDoDia(medicoId);
+    @GetMapping("/medico/agenda")
+    @Operation(summary = "Listar agenda do dia do médico")
+    public ResponseEntity<List<ConsultaResponseDTO>> listarAgendaDoDia() {
+        List<ConsultaResponseDTO> consultas = consultaService.listarAgendaDoDia();
         return ResponseEntity.ok(consultas);
     }
 
@@ -57,10 +49,10 @@ public class ConsultaController {
         return ResponseEntity.ok(consultaResponseDTO);
     }
 
-    @GetMapping("/em_andamento/{id}")
-    @Operation(summary = "Buscar consulta por ID")
-    public ResponseEntity<ConsultaResponseDTO> buscarConsultaEmAndamento(@PathVariable String id) {
-        ConsultaResponseDTO consultaResponseDTO = consultaService.buscarConsultaEmAndamento(id);
+    @GetMapping("/em_andamento")
+    @Operation(summary = "Buscar consulta em andamento por usuario")
+    public ResponseEntity<ConsultaResponseDTO> buscarConsultaEmAndamento() {
+        ConsultaResponseDTO consultaResponseDTO = consultaService.buscarConsultaEmAndamento();
         return ResponseEntity.ok(consultaResponseDTO);
     }
 
@@ -70,15 +62,6 @@ public class ConsultaController {
         ConsultaResponseDTO consultaResponseDTO = consultaService.inserir(consultaRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(consultaResponseDTO);
     }
-
-    // @PutMapping("/remarcar/{id}")
-    // @Operation(summary = "Remarcar Consulta")
-    // public ResponseEntity<ConsultaResponseDTO> remarcar(
-    //         @PathVariable String id,
-    //         @RequestBody ConsultaRequestDTO consultaRequestDTO) {
-    //     ConsultaResponseDTO consultaResponseDTO = consultaService.remarcarConsulta(id, consultaRequestDTO);
-    //     return ResponseEntity.ok(consultaResponseDTO);
-    // }
 
     @PatchMapping("/cancelar/{id}")
     @Operation(summary = "Cancelar Consulta")

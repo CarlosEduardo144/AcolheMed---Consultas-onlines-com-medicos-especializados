@@ -20,9 +20,10 @@ import {
 } from '@ionic/angular/standalone';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { MedicoModel } from 'src/app/model/medico.model';
-import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { HorarioService } from 'src/app/services/horario.service';
+import { TokenService } from 'src/app/services/token-service';
+import { TokenModel } from 'src/app/model/token-model';
 
 @Component({
   selector: 'app-perfil',
@@ -54,23 +55,30 @@ export class PerfilPage {
   usuario!: UsuarioModel | MedicoModel;
   possuiHorarios = true;
   carregandoInicial = true;
+  token: TokenModel
 
   constructor(
     private navController: NavController,
-    private loginService: LoginService,
+    private tokenService: TokenService,
     private usuarioService: UsuarioService,
     private toastController: ToastController,
     private horarioService: HorarioService,
     private router: Router
   ) {
+    this.token = new TokenModel();
     this.buscarUsuario();
   }
 
   ngOnInit() {
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    }
   }
 
   checarHorarios() {
-    this.horarioService.buscarPorMedico(this.loginService.getUsuario()).subscribe({
+    this.horarioService.buscarPorMedico(this.token.id).subscribe({
       next: (horarios) => {
         if (horarios) {
           horarios.forEach(horario => {
@@ -112,7 +120,7 @@ export class PerfilPage {
     this.carregandoInicial = true;
     this.possuiHorarios = true;
 
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
         this.usuario = usuario;
 
@@ -153,7 +161,7 @@ export class PerfilPage {
   }
 
   logout() {
-    this.loginService.logout();
+    this.tokenService.excluir();
     this.navController.navigateForward('/login');
   }
 

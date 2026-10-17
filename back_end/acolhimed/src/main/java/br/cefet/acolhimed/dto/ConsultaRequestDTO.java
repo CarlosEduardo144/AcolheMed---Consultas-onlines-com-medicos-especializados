@@ -2,10 +2,7 @@ package br.cefet.acolhimed.dto;
 
 import java.time.LocalDateTime;
 
-import br.cefet.acolhimed.entity.Especialidade;
-import br.cefet.acolhimed.entity.Medico;
-import br.cefet.acolhimed.entity.Paciente;
-import br.cefet.acolhimed.enums.StatusConsulta;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,23 +10,18 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ConsultaRequestDTO {
-    private String id;
 
-    @NotNull(message = "O campo paciente e obrigatorio")
-    private Paciente paciente;
+    @NotBlank(message = "O campo paciente é obrigatório")
+    private String pacienteId;
 
-    @NotNull(message = "O campo medico e obrigatorio")
-    private Medico medico;
+    @NotBlank(message = "O campo médico é obrigatório")
+    private String medicoId;
 
-    @NotNull(message = "O campo especialidade e obrigatorio")
-    private Especialidade especialidade;
+    @NotBlank(message = "O campo especialidade é obrigatório")
+    private String especialidadeId;
 
-    private StatusConsulta status;
-
-    @NotNull(message = "O campo dataHora nao pode ser vazio")
+    @NotNull(message = "A data e o horário são obrigatórios")
     private LocalDateTime dataHora;
-
-    private String motivoCancelamento;
 
     private String observacoes;
 }

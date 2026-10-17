@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,8 @@ import br.cefet.acolhimed.entity.Medico;
 import br.cefet.acolhimed.exception.ResourceNotFoundException;
 import br.cefet.acolhimed.repository.HorarioRepository;
 import br.cefet.acolhimed.repository.MedicoRepository;
+
+import org.springframework.security.core.Authentication;
 
 @Service
 public class HorarioService {
@@ -26,8 +30,14 @@ public class HorarioService {
     @Transactional
     public List<Horario> salvar(HorarioRequestDTO dto) {
 
-        Medico medico = medicoRepository.findById(dto.getMedicoId())
-                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado. Id: " + dto.getMedicoId()));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetails usuario = (UserDetails) authentication.getPrincipal();
+
+        String medicoId = usuario.getUsername();
+
+        Medico medico = medicoRepository.findById(medicoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado. Id: " + medicoId));
 
         // Remove todos os horários antigos
         horarioRepository.deleteByMedico(medico);
@@ -52,10 +62,10 @@ public class HorarioService {
     }
 
     @Transactional(readOnly = true)
-    public List<HorarioResponseDTO> buscarPorMedico(String medicoId) {
+    public List<HorarioResponseDTO> buscarPorMedico(String id) {
 
-        Medico medico = medicoRepository.findById(medicoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado. Id: " + medicoId));
+        Medico medico = medicoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado. Id: " + id));
 
         return horarioRepository.findByMedico(medico)
                 .stream()

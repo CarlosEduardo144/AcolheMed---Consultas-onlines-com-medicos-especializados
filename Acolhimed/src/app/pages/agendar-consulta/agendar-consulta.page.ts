@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
 import { HorarioModel } from 'src/app/model/horario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { LoginService } from 'src/app/services/login.service';
+import { ActivatedRoute } from '@angular/router';
 import { HorarioService } from 'src/app/services/horario.service';
 import { ToastController } from '@ionic/angular';
 import { EspecialidadeService } from 'src/app/services/especialidade.service';
@@ -15,6 +14,8 @@ import { PacienteModel } from 'src/app/model/paciente.model';
 import { ConsultaService } from 'src/app/services/consulta-service';
 import { forkJoin, switchMap } from 'rxjs';
 import { ConsultaResponseModel } from 'src/app/model/consulta-response';
+import { TokenModel } from 'src/app/model/token-model';
+import { TokenService } from 'src/app/services/token-service';
 
 interface DiaCalendario {
   data: Date;
@@ -68,6 +69,7 @@ export class AgendarCosultaPage implements OnInit {
   agendandoConsulta = false;
   carregandoInicial = true;
   consultasDoMedico: ConsultaResponseModel[] = [];
+  token: TokenModel;
 
 
   private hoje = new Date();
@@ -79,10 +81,11 @@ export class AgendarCosultaPage implements OnInit {
     private horarioService: HorarioService,
     private toastController: ToastController,
     private especialidadeService: EspecialidadeService,
-    private loginService: LoginService,
+    private tokenService: TokenService,
     private navController: NavController,
     private consultaService: ConsultaService
   ) {
+    this.token = new TokenModel();
   }
 
   ngOnInit() {
@@ -90,7 +93,13 @@ export class AgendarCosultaPage implements OnInit {
     this.limiteMinimo = new Date(this.hoje.getFullYear(), this.hoje.getMonth(), 1);
     this.limiteMaximo = new Date(this.hoje.getFullYear(), this.hoje.getMonth() + JANELA_MAXIMA_MESES, 1);
     this.mesExibido = new Date(this.hoje.getFullYear(), this.hoje.getMonth(), 1);
-    this.carregarDadosIniciais();
+    this.token = this.tokenService.extrair();
+    if (!this.token.id) {
+      this.exibirMensagem('Erro ao identificar usuário.');
+      return;
+    } else {
+      this.carregarDadosIniciais();
+    }
   }
 
   carregarDadosIniciais() {
@@ -316,32 +325,33 @@ export class AgendarCosultaPage implements OnInit {
 
   confirmarAgendamento() {
     this.agendandoConsulta = true;
-    let consulta = new ConsultaModel;
 
-    this.usuarioService.buscarPorId(this.loginService.getUsuario()).subscribe({
-      next: (paciente) => {
-        consulta.paciente = paciente as PacienteModel;
-        consulta.dataHora = this.montarDataHoraCompleta();
+    let especialidade = new EspecialidadeModel();
 
-        if (this.especialidadeSelecionada == null) {
-          consulta.especialidade = this.medico?.especialidades[0]
-        } else {
-          consulta.especialidade = this.especialidadeSelecionada;
+    if (this.especialidadeSelecionada == null) {
+      especialidade = this.medico?.especialidades[0]
+    } else {
+      especialidade = this.especialidadeSelecionada;
+    }
 
-        }
-        consulta.medico = this.medico;
-        consulta.observacoes = this.observacoes;
+    const consulta = {
+      dataHora: this.montarDataHoraCompleta(),
+      medicoId: this.medico?.id,
+      pacienteId: this.token?.id,
+      observacoes: this.observacoes,
+      especialidadeId: especialidade.id
+    };
 
-        this.finalizarAgendamento(consulta);
-      },
-      error: (erro) => {
-        this.agendandoConsulta = false;
-        this.exibirMensagem('Erro ao buscar o paciente. ' + erro.message);
-      }
-    });
+    this.finalizarAgendamento(consulta);
   }
 
-  finalizarAgendamento(consulta: ConsultaModel) {
+  finalizarAgendamento(consulta: {
+    dataHora: Date;
+    medicoId: string;
+    pacienteId: string;
+    observacoes: string;
+    especialidadeId: string;
+  }) {
     this.consultaService.salvar(consulta).subscribe({
       next: () => {
         this.agendandoConsulta = false;

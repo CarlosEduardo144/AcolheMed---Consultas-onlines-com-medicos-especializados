@@ -7,14 +7,19 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
 
+import br.cefet.acolhimed.entity.Consulta;
 import br.cefet.acolhimed.entity.Foto;
 import br.cefet.acolhimed.entity.Usuario;
+import br.cefet.acolhimed.exception.BusinessException;
 import br.cefet.acolhimed.exception.ResourceNotFoundException;
 import br.cefet.acolhimed.repository.FotoRepository;
 import br.cefet.acolhimed.repository.UsuarioRepository;
@@ -35,12 +40,18 @@ public class ArquivoService {
     private FotoRepository fotoRepository;
 
     @Transactional
-    public Foto salvar(MultipartFile arquivo, String idUsuario) throws IOException {
+    public Foto salvar(MultipartFile arquivo) throws IOException {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+
+        String idUsuario = user.getUsername();
 
         validarTamanhoArquivo(arquivo);
 
         Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado. Id: " + idUsuario));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado. Id: " + idUsuario));
         List<Foto> fotosAntigas = fotoRepository.findByIdUsuario(idUsuario);
 
         Map<?, ?> uploadResult = cloudinary.uploader().upload(

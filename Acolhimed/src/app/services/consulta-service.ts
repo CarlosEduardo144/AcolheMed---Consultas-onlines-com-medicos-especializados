@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { ConsultaModel } from '../model/consulta.model';
 import { Observable } from 'rxjs';
 import { ConsultaResponseModel } from '../model/consulta-response';
+import { TokenService } from './token-service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,37 +11,49 @@ import { ConsultaResponseModel } from '../model/consulta-response';
 export class ConsultaService {
   private readonly API_URL = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  salvar(consulta: ConsultaModel): Observable<ConsultaResponseModel> {
-    return this.http.post<ConsultaResponseModel>(`${this.API_URL}/consultas`, this.montarPayload(consulta));
+  salvar(consulta: {
+    dataHora: Date;
+    medicoId: string;
+    pacienteId: string;
+    observacoes: string;
+    especialidadeId: string;
+  }): Observable<ConsultaResponseModel> {
+    return this.http.post<ConsultaResponseModel>(`${this.API_URL}/consultas`, this.montarPayload(consulta), { headers: this.tokenService.gerarCabecalhoAutenticacao() });
   }
 
   getConsultas(usuarioId: string): Observable<ConsultaResponseModel[]> {
-    return this.http.get<ConsultaResponseModel[]>(`${this.API_URL}/consultas/usuario/${usuarioId}`);
+    return this.http.get<ConsultaResponseModel[]>(`${this.API_URL}/consultas/usuario`, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
   }
 
   getAgendaDoMedico(usuarioId: string): Observable<ConsultaResponseModel[]> {
-    return this.http.get<ConsultaResponseModel[]>(`${this.API_URL}/consultas/medico/${usuarioId}/agenda`);
+    return this.http.get<ConsultaResponseModel[]>(`${this.API_URL}/consultas/medico/agenda`, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
   }
 
   buscarPorId(consultaID: string): Observable<ConsultaResponseModel> {
-    return this.http.get<ConsultaResponseModel>(`${this.API_URL}/consultas/${consultaID}`);
+    return this.http.get<ConsultaResponseModel>(`${this.API_URL}/consultas/${consultaID}`, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
   }
 
   cancelar(consultaId: string, motivoCancelamento: string): Observable<ConsultaResponseModel> {
-    return this.http.patch<ConsultaResponseModel>(`${this.API_URL}/consultas/cancelar/${consultaId}`, motivoCancelamento);
+    return this.http.patch<ConsultaResponseModel>(`${this.API_URL}/consultas/cancelar/${consultaId}`, motivoCancelamento, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
   }
 
   definirConsultaEmAndamento(consultaId: string): Observable<ConsultaResponseModel> {
-    return this.http.patch<ConsultaResponseModel>(`${this.API_URL}/consultas/em_andamento/${consultaId}`, {});
+    return this.http.patch<ConsultaResponseModel>(`${this.API_URL}/consultas/em_andamento/${consultaId}`, {}, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
   }
 
   buscarConsultasEmAndamento(usuarioId: string): Observable<ConsultaResponseModel> {
-    return this.http.get<ConsultaResponseModel>(`${this.API_URL}/consultas/em_andamento/${usuarioId}`);
+    return this.http.get<ConsultaResponseModel>(`${this.API_URL}/consultas/em_andamento`, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
   }
 
-  private montarPayload(consulta: ConsultaModel) {
+  private montarPayload(consulta: {
+  dataHora: Date;
+  medicoId: string;
+  pacienteId: string;
+  observacoes: string;
+  especialidadeId: string;
+}) {
     return {
       ...consulta,
       dataHora: this.formatarDataHoraLocal(consulta.dataHora),

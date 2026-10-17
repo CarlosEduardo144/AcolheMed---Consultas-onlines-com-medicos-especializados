@@ -24,12 +24,10 @@ public class EspecialidadeMedicoController {
     @Autowired
     private EspecialidadeMedicoService especialidadeMedicoService;
 
-    @GetMapping("/{medicoId}")
-    public ResponseEntity<List<EspecialidadeResponseDTO>> getEspecialidadesDoMedico(
-            @PathVariable String medicoId) {
+    @GetMapping
+    public ResponseEntity<List<EspecialidadeResponseDTO>> getEspecialidadesDoMedico() {
 
-        return ResponseEntity.ok(especialidadeMedicoService.getEspecialidadesDoMedico(medicoId)
-        );
+        return ResponseEntity.ok(especialidadeMedicoService.getEspecialidadesDoMedico());
     }
 
     @PutMapping

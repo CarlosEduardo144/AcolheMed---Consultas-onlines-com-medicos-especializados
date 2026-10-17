@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,13 +27,6 @@ public class PacienteController {
     @Autowired
     private PacienteService pacienteService;
 
-    @GetMapping
-    @Operation(summary = "Listar Pacientes")
-    public ResponseEntity<List<UsuarioResponseDTO>> listar() {
-        List<UsuarioResponseDTO> Pacientes = pacienteService.listar();
-        return ResponseEntity.ok(Pacientes);
-    }
-
     @PostMapping
     @Operation(summary = "Cadastrar Paciente")
     public ResponseEntity<UsuarioResponseDTO> inserir(@Valid @RequestBody UsuarioRequestDTO PacienteRequestDTO) {
@@ -42,11 +34,11 @@ public class PacienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioResponseDTO);
     }
     
-    @PutMapping("/{id}")
+    @PutMapping
     @Operation(summary = "Atualizar Paciente")
-    public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable String id, @Valid @RequestBody UsuarioRequestDTO PacienteRequestDTO) {
+    public ResponseEntity<UsuarioResponseDTO> atualizar(@Valid @RequestBody UsuarioRequestDTO PacienteRequestDTO) {
 
-    	UsuarioResponseDTO UsuarioResponseDTO = pacienteService.atualizar(id, PacienteRequestDTO);
+    	UsuarioResponseDTO UsuarioResponseDTO = pacienteService.atualizar(PacienteRequestDTO);
 
         return ResponseEntity.ok(UsuarioResponseDTO);
     }    

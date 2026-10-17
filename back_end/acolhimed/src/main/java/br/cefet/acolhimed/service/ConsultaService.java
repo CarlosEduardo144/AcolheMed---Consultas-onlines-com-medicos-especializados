@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,12 +70,10 @@ public class ConsultaService {
     }
 
     @Transactional(readOnly = true)
-    public List<ConsultaResponseDTO> listar() {
-        return consultaRepository.findAll().stream().map(this::montarDTO).toList();
-    }
+    public List<ConsultaResponseDTO> listarConsultasDoUsuario() {
 
-    @Transactional(readOnly = true)
-    public List<ConsultaResponseDTO> listarConsultasDoUsuario(String usuarioId) {
+        String usuarioId = obterIdUsuarioAutenticado();
+
         Medico medico = medicoRepository.findById(usuarioId).orElse(null);
         Paciente paciente = pacienteRepository.findById(usuarioId).orElse(null);
 
@@ -87,7 +88,9 @@ public class ConsultaService {
     }
 
     @Transactional(readOnly = true)
-    public List<ConsultaResponseDTO> listarAgendaDoDia(String medicoId) {
+    public List<ConsultaResponseDTO> listarAgendaDoDia() {
+
+        String medicoId =  obterIdUsuarioAutenticado();
 
         Medico medico = medicoRepository.findById(medicoId).orElse(null);
 
@@ -116,11 +119,20 @@ public class ConsultaService {
         Consulta consulta = consultaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada. Id: " + id));
 
+        String usuarioId =  obterIdUsuarioAutenticado();
+
+        if (!usuarioId.equals(consulta.getPaciente().getId()) && !usuarioId.equals(consulta.getMedico().getId())) {
+            throw new BusinessException(
+                    "Apenas o paciente ou o médico atrelado a esta consulta podem ter acesso a ela.");
+        }
+
         return montarDTO(consulta);
     }
 
     @Transactional(readOnly = true)
-    public ConsultaResponseDTO buscarConsultaEmAndamento(String usuarioId) {
+    public ConsultaResponseDTO buscarConsultaEmAndamento() {
+
+        String usuarioId =  obterIdUsuarioAutenticado();
 
         LocalDateTime agora = LocalDateTime.now(
                 ZoneId.of("America/Sao_Paulo"));
@@ -142,17 +154,19 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaResponseDTO inserir(ConsultaRequestDTO dto) {
-        Medico medico = medicoRepository.findById(dto.getMedico().getId())
+        Medico medico = medicoRepository.findById(dto.getMedicoId())
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Medico nao encontrado. Id: " + dto.getMedico().getId()));
+                        () -> new ResourceNotFoundException("Médico não encontrado. Id: " + dto.getMedicoId()));
 
-        Paciente paciente = pacienteRepository.findById(dto.getPaciente().getId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Paciente nao encontrado. Id: " + dto.getPaciente().getId()));
+        String pacienteId =  obterIdUsuarioAutenticado();
 
-        Especialidade especialidade = especialidadeRepository.findById(dto.getEspecialidade().getId())
+        Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Especialidade nao encontrada. Id: " + dto.getEspecialidade().getId()));
+                        "Paciente não encontrado. Id: " + pacienteId));
+
+        Especialidade especialidade = especialidadeRepository.findById(dto.getEspecialidadeId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Especialidade nao encontrada. Id: " + dto.getEspecialidadeId()));
 
         validarHorarioDisponivel(medico, dto.getDataHora());
 
@@ -194,19 +208,40 @@ public class ConsultaService {
     public ConsultaResponseDTO cancelarConsulta(String id, String motivoCancelamento) {
         Consulta consulta = buscarConsulta(id);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetails usuario = (UserDetails) authentication.getPrincipal();
+
+        String usuarioId =  obterIdUsuarioAutenticado();
+
+        String tipoUsuario = usuario.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
+
+        if (!usuarioId.equals(consulta.getPaciente().getId()) && !usuarioId.equals(consulta.getMedico().getId())) {
+            throw new BusinessException("Apenas o paciente ou o médico atrelado a esta consulta podem cancelá-la.");
+        }
+
         if (consulta.getStatus() == StatusConsulta.cancelada || consulta.getStatus() == StatusConsulta.finalizada) {
             throw new BusinessException("Consulta cancelada ou finalizada não pode ser cancelada.");
         }
 
-        if (!LocalDateTime.now().plusDays(1).isBefore(consulta.getDataHora())) {
-            throw new BusinessException("A consulta so pode ser cancelada com mais de 1 dia de antecedencia.");
+        if (tipoUsuario.equals("paciente")) {
+            if (!LocalDateTime.now().plusDays(1).isBefore(consulta.getDataHora())) {
+                throw new BusinessException("A consulta so pode ser cancelada com mais de 1 dia de antecedência.");
+            }
+        } else {
+            if (!LocalDateTime.now().plusMinutes(10).isBefore(consulta.getDataHora())) {
+                throw new BusinessException("A consulta so pode ser cancelada com mais de 10 minutos de antecedência.");
+            }
         }
 
         consulta.setStatus(StatusConsulta.cancelada);
-        if (!motivoCancelamento.isBlank() && motivoCancelamento != null) {
+        if (motivoCancelamento != null && !motivoCancelamento.isBlank()) {
             consulta.setMotivoCancelamento(motivoCancelamento);
         } else {
-            throw new BusinessException("O motivo do cancelamento não existe ou está nulo");
+            throw new BusinessException("O motivo do cancelamento não pode ser vazio.");
         }
 
         // criar notificacoes
@@ -228,7 +263,15 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaResponseDTO definirConsultaEmAndamento(String id) {
+
         Consulta consulta = buscarConsulta(id);
+
+        String usuarioId =  obterIdUsuarioAutenticado();
+
+        if (!usuarioId.equals(consulta.getPaciente().getId()) && !usuarioId.equals(consulta.getMedico().getId())) {
+            throw new BusinessException(
+                    "Apenas o paciente ou o médico atrelado a esta consulta podem defini-la em andamento.");
+        }
 
         if (consulta.getStatus() == StatusConsulta.cancelada || consulta.getStatus() == StatusConsulta.finalizada) {
             throw new BusinessException("Consulta cancelada ou finalizada não pode ser cancelada.");
@@ -249,70 +292,23 @@ public class ConsultaService {
         return montarDTO(consultaEmAndamento);
     }
 
-    /*
-     * @Transactional
-     * public ConsultaResponseDTO remarcarConsulta(String id, ConsultaRequestDTO
-     * dto) {
-     * Consulta consulta = buscarConsulta(id);
-     * LocalDateTime novaDataHora = validarNovaDataHora(dto);
-     * 
-     * if (consulta.getStatus() == StatusConsulta.cancelada || consulta.getStatus()
-     * == StatusConsulta.finalizada) {
-     * throw new
-     * BusinessException("Consulta cancelada ou finalizada não pode ser remarcada."
-     * );
-     * }
-     * 
-     * if (!LocalDateTime.now().plusDays(2).isBefore(consulta.getDataHora())) {
-     * throw new
-     * BusinessException("A consulta so pode ser remarcada com mais de 2 dias de antecedencia."
-     * );
-     * }
-     * 
-     * if (novaDataHora.isBefore(LocalDateTime.now())) {
-     * throw new
-     * BusinessException("Não e permitido remarcar consulta para um horario que ja passou."
-     * );
-     * }
-     * 
-     * validarHorarioDisponivelParaRemarcacao(consulta, novaDataHora);
-     * 
-     * consulta.setDataHora(novaDataHora);
-     * 
-     * return new ConsultaResponseDTO(consultaRepository.save(consulta));
-     * }
-     */
-
     private Consulta buscarConsulta(String id) {
         return consultaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Consulta nao encontrada. Id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada. Id: " + id));
+
     }
-
-    // private LocalDateTime validarNovaDataHora(ConsultaRequestDTO dto) {
-    // if (dto == null || dto.getDataHora() == null) {
-    // throw new BusinessException("O campo dataHora é obrigatorio para remarcar a
-    // consulta.");
-    // }
-
-    // return dto.getDataHora();
-    // }
 
     private void validarHorarioDisponivel(Medico medico, LocalDateTime dataHora) {
         if (consultaRepository.existsByMedicoAndDataHoraAndStatusNot(medico, dataHora, StatusConsulta.cancelada)) {
-            throw new BusinessException("Ja existe uma consulta para este medico neste horario.");
+            throw new BusinessException("Já existe uma consulta para este médico neste horário.");
         }
     }
 
-    // private void validarHorarioDisponivelParaRemarcacao(Consulta consulta,
-    // LocalDateTime novaDataHora) {
-    // if (consultaRepository.existsByMedicoAndDataHoraAndStatusNotAndIdNot(
-    // consulta.getMedico(),
-    // novaDataHora,
-    // StatusConsulta.cancelada,
-    // consulta.getId())) {
-    // throw new BusinessException("Ja existe uma consulta para este medico neste
-    // horario.");
-    // }
-    // }
+    private String obterIdUsuarioAutenticado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        UserDetails usuario = (UserDetails) authentication.getPrincipal();
+
+        return usuario.getUsername();
+    }
 }

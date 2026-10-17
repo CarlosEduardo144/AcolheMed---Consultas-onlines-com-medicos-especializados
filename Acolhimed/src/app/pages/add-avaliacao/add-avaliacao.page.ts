@@ -7,7 +7,6 @@ import { ActivatedRoute } from '@angular/router';
 import { ConsultaService } from 'src/app/services/consulta-service';
 import { AvaliacaoModel } from 'src/app/model/avaliacao-model';
 import { AvaliacaoService } from 'src/app/services/avaliacao-service';
-import { ConsultaModel } from 'src/app/model/consulta.model';
 
 const LIMITE_COMENTARIO = 400;
 

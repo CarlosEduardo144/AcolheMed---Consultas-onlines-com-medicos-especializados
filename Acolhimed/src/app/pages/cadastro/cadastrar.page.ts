@@ -11,7 +11,6 @@ import {
 } from '@ionic/angular/standalone';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { MedicoModel } from 'src/app/model/medico.model';
-import { LoginService } from 'src/app/services/login.service';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { PacienteModel } from 'src/app/model/paciente.model';
 
@@ -60,7 +59,7 @@ export class CadastrarPage {
   showSenha = false;
   userType: any;
 
-  constructor(private fb: FormBuilder, private loginService: LoginService, private navController: NavController, private usuarioService: UsuarioService, private toastController: ToastController) {
+  constructor(private fb: FormBuilder, private navController: NavController, private usuarioService: UsuarioService, private toastController: ToastController) {
     this.cadastrarForm = this.fb.group(
       {
         nome: ['', [Validators.required]],
@@ -121,7 +120,6 @@ export class CadastrarPage {
 
         this.usuarioService.salvar(medico).subscribe({
           next: (usuarioSalvo) => {
-            this.loginService.setUsuario(medico.id, medico.tipoUsuario);
             this.exibirMensagem('Usuário cadastrado com sucesso!!!');
             this.navController.navigateBack('/login');
           },  
@@ -139,7 +137,6 @@ export class CadastrarPage {
 
         this.usuarioService.salvar(paciente).subscribe({
           next: (usuarioSalvo) => {
-            this.loginService.setUsuario(paciente.id, paciente.tipoUsuario);
             this.exibirMensagem('Usuário cadastrado com sucesso!!!');
             this.navController.navigateBack('/login');
 

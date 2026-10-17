@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +35,14 @@ public class EspecialidadeMedicoService {
     @Transactional
     public List<EspecialidadeMedico> salvar(EspecialidadeMedicoRequestDTO dto) {
 
-        Medico medico = medicoRepository.findById(dto.getMedicoId())
-                .orElseThrow(() -> new ResourceNotFoundException("Medico não encontrado. Id: " + dto.getMedicoId()));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetails usuario = (UserDetails) authentication.getPrincipal();
+
+        String medicoId = usuario.getUsername();
+
+        Medico medico = medicoRepository.findById(medicoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado. Id: " + medicoId));
 
         //exclui todas antigas
         especialidadeMedicoRepository.deleteByMedico(medico);
@@ -57,7 +66,13 @@ public class EspecialidadeMedicoService {
     }
 
     @Transactional
-    public List<EspecialidadeResponseDTO> getEspecialidadesDoMedico(String medicoId) {
+    public List<EspecialidadeResponseDTO> getEspecialidadesDoMedico() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetails usuario = (UserDetails) authentication.getPrincipal();
+
+        String medicoId = usuario.getUsername();
 
         return especialidadeMedicoRepository.findByMedicoId(medicoId)
                 .stream()

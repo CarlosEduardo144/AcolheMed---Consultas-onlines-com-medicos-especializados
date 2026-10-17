@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { AvaliacaoModel } from '../model/avaliacao-model';
 import { Observable } from 'rxjs';
+import { TokenService } from './token-service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,21 +11,17 @@ import { Observable } from 'rxjs';
 export class AvaliacaoService {
   private readonly API_URL = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   salvar(avaliacao: AvaliacaoModel): Observable<AvaliacaoModel> {
     return this.http.post<AvaliacaoModel>(`${this.API_URL}/avaliacoes`, {
       consultaId: avaliacao.consultaId,
       comentario: avaliacao.comentario,
       nota: avaliacao.nota,
-    });
-  }
-
-  excluir(avaliacaoID: String): Observable<AvaliacaoModel> {
-    return this.http.delete<AvaliacaoModel>(`${this.API_URL}/avaliacoes/${avaliacaoID}`);
+    }, {headers: this.tokenService.gerarCabecalhoAutenticacao()});
   }
 
   getAvaliacoesMedico(medicoId: String): Observable<AvaliacaoModel[]> {
-    return this.http.get<AvaliacaoModel[]>(`${this.API_URL}/avaliacoes/${medicoId}`);
+    return this.http.get<AvaliacaoModel[]>(`${this.API_URL}/avaliacoes/${medicoId}`, {headers: this.tokenService.gerarCabecalhoAutenticacao()});
   }
 }
